@@ -9,18 +9,6 @@
 
 require_once 'google-api/config.php';
 
-function debug_to_console( $data, $context = 'Debug in Console' ) {
-
-    // Buffering to solve problems frameworks, like header() in this and not a solid return.
-    ob_start();
-
-    $output  = 'console.info( \'' . $context . ':\' );';
-    $output .= 'console.log(' . json_encode( $data ) . ');';
-    $output  = sprintf( '<script>%s</script>', $output );
-
-    echo $output;
-}
-
 if (isset($_SESSION['access_token'])) { // check for access_token is set
     $client->setAccessToken($_SESSION['access_token']);
 } else if (isset($_GET['code'])) {  // check for auth code from Google API
@@ -57,9 +45,7 @@ $_SESSION['email'] = $user_data['email'];
 $_SESSION['givenName'] = $user_data['givenName'];
 $_SESSION['role'] = $user->get('role');
 
-debug_to_console($_SESSION);
-
 // redirect user to front-page
-wp_redirect(home_url('/front-page'));
+wp_redirect(home_url());
 exit();
 

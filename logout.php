@@ -17,8 +17,6 @@ unset($_SESSION['email']);
 unset($_SESSION['givenName']);
 unset($_SESSION['role']);
 
-debug_to_console($_SESSION);
-
 $client->revokeToken();
 session_destroy();
 wp_redirect(home_url('/login'));

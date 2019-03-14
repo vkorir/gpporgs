@@ -10,11 +10,9 @@
 require_once 'google-api/config.php';
 
 if (isset($_SESSION['access_token'])) {
-    wp_redirect(home_url('/front-page'));
+    wp_redirect(home_url());
     exit();
 }
-
-debug_to_console($_SESSION);
 
 get_header();
 ?>
