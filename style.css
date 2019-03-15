@@ -1,6 +1,6 @@
 /*
 	Theme Name: GPPORGS
-	Theme URI: https://gpporgs.berkeley.edu
+	Theme URI: http://gpporgs.flywheelsites.com
 	Author: Victor Korir
 	Author URI: http://victorkorir.com
 	Description: GPPORGS Database
@@ -11,7 +11,7 @@
 
 
 /* Navigation Bar */
-.navbar {
+.navbar.navbar-expand-lg {
 	background-color: #0c6099;
 }
 

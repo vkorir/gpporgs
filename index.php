@@ -7,7 +7,7 @@
  */
 
 
-session_start();
+start_session();
 
 if (!isset($_SESSION['access_token'])) {
     wp_redirect(home_url('/login'));
