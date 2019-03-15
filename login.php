@@ -15,12 +15,5 @@ if (isset($_SESSION['access_token'])) {
 }
 
 get_header();
-?>
 
-<div class="container h-100">
-    <div class="row align-items-center h-100">
-        <div class="col-md-4 mx-auto">
-            <input type="button" onclick="window.location = '<?php echo $client->createAuthUrl(); ?>';" value="Log In With Google" class="btn btn-danger">
-        </div>
-    </div>
-</div>
+get_footer();

@@ -43,7 +43,6 @@ if ($user == false) { // register a new user
 // register session variables
 $_SESSION['email'] = $user_data['email'];
 $_SESSION['givenName'] = $user_data['givenName'];
-$_SESSION['role'] = $user->get('role');
 
 // redirect user to front-page
 wp_redirect(home_url());

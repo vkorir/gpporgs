@@ -24,3 +24,6 @@ $client->setRedirectUri($redirect_uri);
 // Add scope to access user info
 $client->addScope("https://www.googleapis.com/auth/userinfo.profile");
 $client->addScope("https://www.googleapis.com/auth/userinfo.email");
+
+// save login url
+$_SESSION['login_url'] = $client->createAuthUrl();

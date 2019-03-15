@@ -17,9 +17,9 @@ if (!isset($_SESSION['access_token'])) {
 get_header();
 ?>
 
-    <div class="container">
-        <h1>GPPORGS Website</h1>
-    </div>
+<div class="container">
+
+</div>
 
 <?php get_footer(); ?>
 
