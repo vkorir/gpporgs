@@ -26,6 +26,10 @@ input[type='search'] {
 	box-shadow: 0 4px 6px #05365b;
 }
 
+input[type='search']:disabled {
+	background-color: #4885af;
+}
+
 input[type='search']:focus {
 	color: #ffffff;
 	border: none;
@@ -41,7 +45,9 @@ input[type='search']::placeholder {
 .navbar-nav .nav-item:nth-child(1) .nav-link,
 .navbar-nav .nav-item:nth-child(2) .nav-link,
 .navbar-nav .nav-item:nth-child(3) .nav-link,
-.navbar-nav .nav-item:nth-child(4) .nav-link {
+.navbar-nav .nav-item:nth-child(4) .nav-link,
+.done-with-experience .btn.practice-btn,
+.jumbotron .btn.jumbotron-login {
 	border-radius: 4px;
 	color: #ffffff;
 	font-size: 12px;
@@ -53,12 +59,93 @@ input[type='search']::placeholder {
 
 .navbar-nav .nav-item .nav-link:hover,
 .navbar-nav .nav-item .nav-link:active,
-.navbar-nav .nav-item .nav-link:focus {
+.navbar-nav .nav-item .nav-link:focus,
+.done-with-experience .btn.practice-btn:hover,
+.jumbotron .btn.jumbotron-login:hover {
 	color: #ffffff;
 	background-color: #4885af;
 }
 
-/* Login Page */
-.btn.google-login {
 
+/* Not Logged In */
+
+.container .jumbotron {
+	margin-top: 100px;
+	border: 1px solid #d9d9d9;
+	border-radius: 4px;
+	box-shadow: 0 4px 6px #d9d9d9;
+	background: #ffffff;
+}
+
+.jumbotron .btn.jumbotron-login {
+	font-size: 16px;
+	padding: 12px 24px;
+}
+
+
+/* Logged In */
+
+.rounded-container {
+	margin: 10px 0 10px 10px;
+	border: 1px solid #d9d9d9;
+	border-radius: 4px;
+	box-shadow: 0 4px 6px #d9d9d9;
+	background: #eaecee;
+	padding: 20px;
+}
+
+.rounded-container.max-height {
+	height: calc(100vh - 95px);
+	padding: 20px;
+}
+
+.rounded-container.max-height .display-5 {
+	text-align: center;
+}
+
+.rounded-container.done-with-experience,
+.rounded-container.sort-by {
+	width: calc(100% - 20px);
+}
+
+.rounded-container.done-with-experience {
+	height: 200px;
+}
+
+.done-with-experience .btn.practice-btn {
+	font-size: 14px;
+}
+
+.rounded-container.sort-by {
+	height: calc(100vh - 100px - 200px - 5px);
+}
+
+
+/* Table */
+
+.table-container {
+	overflow-y: auto;
+}
+
+table {
+	font-size: 14px;
+	font-weight: 300;
+}
+
+#org-records_info {
+	display: none;
+}
+
+.page-item .page-link {
+	color: #084e83;
+}
+
+.page-item.active .page-link {
+	background-color: #084e83;
+	color: #ffffff;
+}
+
+.page-item.active .page-link:active {
+	border: none;
+	outline: none;
 }

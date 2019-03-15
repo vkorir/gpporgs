@@ -15,7 +15,6 @@ require_once 'google-api/config.php';
 unset($_SESSION['access_token']);
 unset($_SESSION['email']);
 unset($_SESSION['givenName']);
-unset($_SESSION['role']);
 
 $client->revokeToken();
 session_destroy();

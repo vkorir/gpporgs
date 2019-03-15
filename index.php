@@ -8,18 +8,13 @@
 
 
 start_session();
+get_header();
 
-if (!isset($_SESSION['access_token'])) {
-    wp_redirect(home_url('/login'));
-    exit();
+if (isset($_SESSION['access_token'])) {
+    require 'pages/logged-in.php';
+} else {
+    require 'pages/not-logged-in.php';
 }
 
-get_header();
-?>
-
-<div class="container">
-
-</div>
-
-<?php get_footer(); ?>
+get_footer();
 

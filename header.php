@@ -3,8 +3,10 @@
 require_once 'google-api/config.php';
 
 $auth_tag = '<a href="' . $_SESSION['login_url'] . '" class="nav-link">LOGIN</a>';
+$search_bar = '<input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" disabled>';
 if (isset($_SESSION['access_token'])) {
     $auth_tag = '<a href="' . home_url("/logout") . '" class="nav-link">LOGOUT</a>';
+    $search_bar = '<input class="form-control w-100" type="search" placeholder="Search" aria-label="Search">';
 }
 ?>
 
@@ -22,27 +24,28 @@ if (isset($_SESSION['access_token'])) {
 <body <?php body_class(); ?>>
 
 <nav class="navbar navbar-expand-lg sticky-top">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarToggler">
-        <form class="form-inline col-lg-6">
-            <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search">
-        </form>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a href="<?php echo home_url(); ?>" class="nav-link">DATABASE</a>
-            </li>
-            <li class="nav-item">
-                <a href="" class="nav-link">GPP STUDENTS</a>
-            </li>
-            <li class="nav-item">
-                <a href="" class="nav-link">MY PROFILE</a>
-            </li>
-            <li class="nav-item">
-                <?php echo $auth_tag?>
-            </li>
-        </ul>
+    <div class="container">
+        <div class="collapse navbar-collapse mx-0" id="navbarToggler">
+            <form class="form-inline col-lg-6 px-0">
+                <?php echo $search_bar; ?>
+            </form>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="<?php echo home_url(); ?>" class="nav-link">DATABASE</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" class="nav-link">GPP STUDENTS</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" class="nav-link">MY PROFILE</a>
+                </li>
+                <li class="nav-item">
+                    <?php echo $auth_tag; ?>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>

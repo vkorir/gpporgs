@@ -28,6 +28,17 @@ function include_jquery() {
 }
 
 
+// load datatable library
+add_action('wp_enqueue_scripts', 'load_datatables');
+function load_datatables() {
+    wp_register_style('datatables_css', get_template_directory_uri() . '/css/datatables.min.css', array(), false, 'all');
+    wp_enqueue_style('datatables_css');
+
+    wp_register_script('datatables_js', get_template_directory_uri() . '/js/datatables.min.js', '', 1, true);
+    wp_enqueue_script('datatables_js');
+}
+
+
 // load custom js
 add_action('wp_enqueue_scripts', 'load_js');
 function load_js() {
@@ -49,7 +60,7 @@ add_action('init', 'redirect_login');
 function redirect_login() {
 	global $pagenow;
 	if ($pagenow == 'wp-login.php' && !isset($_SESSION['access_token'])) {
-		wp_redirect(home_url('/login'));
+		wp_redirect(home_url());
 		exit();
 	}
 }
