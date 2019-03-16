@@ -18,5 +18,5 @@ unset($_SESSION['givenName']);
 
 $client->revokeToken();
 session_destroy();
-wp_redirect(home_url('/login'));
+wp_redirect(home_url());
 exit();

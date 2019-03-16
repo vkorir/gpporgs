@@ -24,8 +24,8 @@ if (isset($_SESSION['access_token'])) {
 <body <?php body_class(); ?>>
 
 <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <div class="collapse navbar-collapse mx-0" id="navbarToggler">
+    <div class="container px-0 pl-2">
+        <div class="collapse navbar-collapse" id="navbarToggler">
             <form class="form-inline col-lg-6 px-0">
                 <?php echo $search_bar; ?>
             </form>

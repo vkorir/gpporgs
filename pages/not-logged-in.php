@@ -6,10 +6,10 @@
  * Time: 19:41
  */
 
-$_SESSION['access_token'] = 'test';
-$_SESSION['givenName'] = 'Victor';
-
-wp_redirect(home_url());
+//$_SESSION['access_token'] = 'test';
+//$_SESSION['givenName'] = 'Victor';
+//
+//wp_redirect(home_url());
 ?>
 
 <div class="container">

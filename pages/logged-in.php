@@ -40,7 +40,7 @@ require 'utils.php';
                     echo radio_buttons($sectors);
 
                     // price range slider
-                    echo slider('PRICE RANGE', 'price-range', '8000', '0', '10000', '500');
+                    echo slider('PRICE RANGE: $', 'price-range', '8000', '0', '10000', '500');
                 ?>
             </div>
         </div>

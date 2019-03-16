@@ -18,8 +18,8 @@ function section_subheading($value) {
     return '<h6 class="section-subheading">' . $value . '</h6>';
 }
 
-function subsection_heading($value) {
-
+function subsection_heading($name, $value, $directive) {
+    return '<label for="' .$name . '">' . $value . ': <span class="directive">' . $directive . '</span></label>';
 }
 
 function radio_button_util($id, $value) {
@@ -49,9 +49,16 @@ function slider_js_onchange($source_id, $target_id) {
 function slider($title, $id, $value, $min, $max, $step) {
     $source_id = $id . '-slider';
     $target_id = $id . '-display';
-    $price_display = '<h5 class="section-header">' . $title . ': $ <input type="number" name="' . $target_id . '" id="' . $target_id . '" value="' . $value . '" disabled /></h5>';
+    $price_display = '<h5 class="section-header">' . $title . '<input type="number" name="' . $target_id . '" id="' . $target_id . '" value="' . $value . '" disabled /></h5>';
     $slider = '<div class="price-range-slider">
                     <input class="' . $source_id . '" id="' . $source_id . '" type="range" min="'. $min . '" max="' . $max . '" step="' . $step .'" onchange="'. slider_js_onchange($source_id, $target_id) . '" />
                 </div>';
     return $price_display . $slider;
+}
+
+function fieldset_item($name, $type, $value) {
+    return '<div>
+              <label for="' . $name . '">' . $value . ': </label>
+              <input type="' . $type . '" name="' . $name . '" id="' . $name . '" />
+            </div>';
 }
