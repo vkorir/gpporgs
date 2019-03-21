@@ -6,30 +6,56 @@
  * Time: 18:20
  */
 
+
+// handle form data
+
+$form_values = array(
+    'organization-info-name' => null,
+    'organization-info-street' => null,
+    'organization-info-city' => null
+);
+
+if (isset($_POST['form_input'])) {
+    update_form_values();
+}
+if (isset($_POST['validate_form'])) {
+    validate_form();
+}
+
+function update_form_values() {
+
+}
+function validate_form() {
+    return true;
+}
+function submit_form() {
+
+}
+
+// UI utility functions
+
 function page_title($value) {
     return '<div class="mx-auto"><h3 class="display-5">' . $value . '</h3></div>';
 }
 
 function section_heading($value) {
-    return '<h6 class="section-heading">' . $value . '</h6>' . '<hr class="my-2">';
+    return '<h6 class="section-heading">' . $value . '</h6>' . '<hr />';
 }
 
 function section_subheading($value) {
-    return '<h6 class="section-subheading">' . $value . '</h6>';
+    return '<h6 class="section-subheading my-3">' . $value . '</h6>';
 }
 
 function subsection_heading($name, $value, $directive) {
-    return '<label for="' .$name . '">' . $value . ': <span class="directive">' . $directive . '</span></label>';
+    return '<label class="mt-3" for="' .$name . '">' . $value . '<span class="directive">' . $directive . '</span></label>';
 }
 
 function radio_button_util($id, $value) {
-    return '<label class="label-container w-100" id="' . $id . '">
-                 <input type="checkbox">
+    return '<label class="label-container w-100">
+                 <input id="' . $id . '" type="checkbox">
                  <span class="checkmark"></span>
                     ' . $value . '
-            </label>
-    
-    ';
+            </label>';
 }
 
 function radio_buttons($array) {
@@ -41,24 +67,22 @@ function radio_buttons($array) {
 }
 
 function slider_js_onchange($source_id, $target_id) {
-    $jquery_val = '$(#' . $source_id .').$val()';
-    return '$(#' . $target_id . ').text(' . $jquery_val . ')';
+    $jquery_val = '$(\'#' . $source_id .'\').val()';
+    return '$(\'#' . $target_id . '\').val(' . $jquery_val . ');';
 }
 
 
-function slider($title, $id, $value, $min, $max, $step) {
+function slider($title, $class, $id, $value, $min, $max, $step) {
     $source_id = $id . '-slider';
     $target_id = $id . '-display';
-    $price_display = '<h5 class="section-header">' . $title . '<input type="number" name="' . $target_id . '" id="' . $target_id . '" value="' . $value . '" disabled /></h5>';
-    $slider = '<div class="price-range-slider">
-                    <input class="' . $source_id . '" id="' . $source_id . '" type="range" min="'. $min . '" max="' . $max . '" step="' . $step .'" onchange="'. slider_js_onchange($source_id, $target_id) . '" />
-                </div>';
+    $price_display = '<h6 class="section-subheading">' . $title . ': $<input class="slider-value-display" type="number" name="' . $target_id . '" id="' . $target_id . '" value="' . $value . '" disabled /></h6>';
+    $slider = '<input class="price-range-slider ' . $class . '" id="' . $source_id . '" type="range" min="'. $min . '" max="' . $max . '" step="' . $step .'" onchange="'. slider_js_onchange($source_id, $target_id) . '" />';
     return $price_display . $slider;
 }
 
 function fieldset_item($name, $type, $value) {
     return '<div>
-              <label for="' . $name . '">' . $value . ': </label>
-              <input type="' . $type . '" name="' . $name . '" id="' . $name . '" />
+              <label class="col-lg-2 col-md-2 col-sm-1" for="' . $name . '">' . $value . ': </label>
+              <input class="col-lg-9 col-md-6 col-sm-8 px-1" type="' . $type . '" name="' . $name . '" id="' . $name . '" />
             </div>';
 }

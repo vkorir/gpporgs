@@ -10,52 +10,44 @@ require 'utils.php';
 ?>
 
 <div class="container">
-    <div class="row">
+    <div class="row mx-0">
         <div class="col-lg-3 px-0">
-            <div class="rounded-container max-height filter-section-container">
+            <div class="rounded-container max-height">
                 <?php
                     // filter by section heading
                     echo section_heading('FILTER BY');
 
                     // area subsection
                     $areas = array(
-                        'domestic' => 'domestic',
-                        'international' => 'international'
+                        'area-radio-btn-1' => 'domestic',
+                        'area-radio-btn-2' => 'international'
                     );
                     echo section_subheading('AREA');
                     echo radio_buttons($areas);
 
                     // sectors subsection
                     $sectors = array(
-                        'information-technology' => 'information technology',
-                        'education' => 'education',
-                        'environment-sustainability' => 'environment / sustainability',
-                        'business' => 'business',
-                        'healthcare' => 'healthcare',
-                        'basic-rights' => 'basic rights',
-                        'relief-mobilization' => 'relief mobilization',
-                        'gender-empowerment' => 'gender empowerment'
+                        'sectors-btn-1' => 'information technology',
+                        'sectors-btn-2' => 'education',
+                        'sectors-btn-3' => 'environment / sustainability',
+                        'sectors-btn-4' => 'business',
+                        'sectors-btn-5' => 'healthcare',
+                        'sectors-btn-6' => 'basic rights',
+                        'sectors-btn-7' => 'relief mobilization',
+                        'sectors-btn-8' => 'gender empowerment'
                     );
                     echo section_subheading('SECTOR');
                     echo radio_buttons($sectors);
 
                     // price range slider
-                    echo slider('PRICE RANGE: $', 'price-range', '8000', '0', '10000', '500');
+                    echo slider('PRICE RANGE', 'w-100', 'price-range', '8000', '0', '10000', '500');
                 ?>
             </div>
         </div>
         <div class="col-lg-6 px-0">
-            <div class="rounded-container max-height">
+            <div class="rounded-container max-height middle-section">
                 <div class="row mb-5">
                     <?php echo page_title('GPP Practice Experience Database'); ?>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        Filters: <input value="international, education" disabled>
-                    </div>
-                    <div class="col">
-                        Sort By: <input value="near UC Berkeley" disabled>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -76,11 +68,11 @@ require 'utils.php';
                 <?php
                     // render sort by
                     $sort_options = array(
-                            'closest-to-uc' => 'closest to UC Berkeley',
-                            'num-project' => 'number of projects',
-                            'ngo-non-profit' => 'NGO / Non-Profit',
-                            'responsiveness' => 'responsiveness of ord',
-                            'most-recent-projects' => 'most recent projects'
+                            'sort-by-btn-1' => 'closest to UC Berkeley',
+                            'sort-by-btn-2' => 'number of projects',
+                            'sort-by-btn-3' => 'NGO / Non-Profit',
+                            'sort-by-btn-4' => 'responsiveness of ord',
+                            'sort-by-btn-5' => 'most recent projects'
                     );
                     echo section_heading('SORT BY');
                     echo radio_buttons($sort_options);

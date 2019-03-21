@@ -23,6 +23,7 @@ if (isset($_SESSION['access_token'])) { // check for access_token is set
 $obj_res = new Google_Service_Oauth2($client);
 $user_data = $obj_res->userinfo_v2_me->get();
 $email = $user_data['email'];
+$name = ucwords(strtolower($user_data['givenName']));
 $username = substr($email, 0, strpos($email, '@'));
 
 // check if existing user
@@ -33,7 +34,7 @@ if ($user == false) { // register a new user
     $id = wp_create_user($username, $random_password, $email);
     $userdata = array(
         'ID' => $id,
-        'display_name' => $user_data['givenName'],
+        'display_name' => $name,
         'role' => 'subscriber',
         'google_id' => $user_data['id']
     );
@@ -41,8 +42,8 @@ if ($user == false) { // register a new user
 }
 
 // register session variables
-$_SESSION['email'] = $user_data['email'];
-$_SESSION['givenName'] = $user_data['givenName'];
+$_SESSION['email'] = $email;
+$_SESSION['givenName'] = $name;
 
 // redirect user to front-page
 wp_redirect(home_url());
