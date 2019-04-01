@@ -8,111 +8,13 @@
  */
 ?>
 
-<table class="table table-striped table-bordered table-sm mt-3" cellspacing="0" id="org-records">
+<table id="organizations-database-records" class="table table-striped table-bordered table-sm mt-3" cellspacing="0" style="width: 100%">
     <thead>
     <tr>
-        <th class="th-sm">Organization Name</th>
-        <th class="th-sm">Type of Organization</th>
-        <th class="th-sm">Location</th>
-        <th class="th-sm">Sector</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Location</th>
+        <th>Sectors</th>
     </tr>
     </thead>
-    <tbody>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    <tr>
-        <td>100 Strong</td>
-        <td>NGO / Non-Profit</td>
-        <td>California</td>
-        <td>Gender Empowerment</td>
-    </tr>
-    </tbody>
 </table>

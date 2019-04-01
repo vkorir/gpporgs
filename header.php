@@ -3,10 +3,10 @@
 require_once 'google-api/config.php';
 
 $auth_tag = '<a href="' . $_SESSION['login_url'] . '" class="nav-link">LOGIN</a>';
-$search_bar = '<input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" disabled>';
+$search_bar = '<input id="main-search-bar" class="form-control w-100" type="search" placeholder="Search" aria-label="Search" disabled>';
 if (isset($_SESSION['access_token'])) {
     $auth_tag = '<a href="' . home_url("/logout") . '" class="nav-link">LOGOUT</a>';
-    $search_bar = '<input class="form-control w-100" type="search" placeholder="Search" aria-label="Search">';
+    $search_bar = '<input id="main-search-bar" class="form-control w-100" type="search" placeholder="Search" aria-label="Search">';
 }
 ?>
 
@@ -34,7 +34,7 @@ if (isset($_SESSION['access_token'])) {
             </button>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="<?php echo home_url(); ?>" class="nav-link <?php if (site_url() == home_url()) echo 'nav-selected'; ?>">DATABASE</a>
+                    <a href="<?php echo home_url(); ?>" class="nav-link <?php if (site_url() == home_url() and isset($_SESSION['access_token'])) echo 'nav-selected'; ?>">DATABASE</a>
                 </li>
                 <li class="nav-item">
                     <a href="" class="nav-link">GPP STUDENTS</a>

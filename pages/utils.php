@@ -7,35 +7,10 @@
  */
 
 
-// handle form data
-
-$form_values = array(
-    'organization-info-name' => null,
-    'organization-info-street' => null,
-    'organization-info-city' => null
-);
-
-if (isset($_POST['form_input'])) {
-    update_form_values();
-}
-if (isset($_POST['validate_form'])) {
-    validate_form();
-}
-
-function update_form_values() {
-
-}
-function validate_form() {
-    return true;
-}
-function submit_form() {
-
-}
-
 // UI utility functions
 
 function page_title($value) {
-    return '<div class="mx-auto"><h3 class="display-5">' . $value . '</h3></div>';
+    return '<div class="text-center"><h3 class="display-5">' . $value . '</h3></div>';
 }
 
 function section_heading($value) {
@@ -52,7 +27,7 @@ function subsection_heading($name, $value, $directive) {
 
 function radio_button_util($id, $value) {
     return '<label class="label-container w-100">
-                 <input id="' . $id . '" type="checkbox">
+                 <input id="' . $id . '" type="checkbox" data-value="'. $value .    '">
                  <span class="checkmark"></span>
                     ' . $value . '
             </label>';

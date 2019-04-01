@@ -292,13 +292,15 @@ textarea {
 }
 #languages-spoken-input,
 #organization-type-other-input,
-#organization-sector-other-input {
+#organization-sector-other-input,
+#physical-experience-sector-other-input {
 	border-radius: 4px;
 	border: 1px solid #d9d9d9;
 }
 #languages-spoken-input:focus,
 #organization-type-other-input:focus,
-#organization-sector-other-input:focus {
+#organization-sector-other-input:focus,
+#physical-experience-sector-other-input:focus {
 	outline: none;
 	border: 1px solid #084e83;
 }
@@ -336,4 +338,18 @@ textarea {
 }
 .label-container input:checked ~ .checkmark {
 	background-color: #084e83;
+	border: 2px solid #084e83;
+}
+
+
+/* Data Tables */
+
+.dataTables_filter,
+.dataTables_info {
+	display: none;
+}
+.page-item.active,
+.page-item.active .page-link {
+	border: none !important;
+	outline: none !important;
 }

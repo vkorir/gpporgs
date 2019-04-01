@@ -45,7 +45,7 @@ require 'utils.php';
             </div>
         </div>
         <div class="col-lg-6 px-0">
-            <div class="rounded-container max-height middle-section">
+            <div class="rounded-container max-height middle-section" id="middle-section-container">
                 <div class="row mb-5">
                     <?php echo page_title('GPP Practice Experience Database'); ?>
                 </div>

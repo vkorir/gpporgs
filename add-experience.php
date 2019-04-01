@@ -35,7 +35,7 @@ get_header();
             </form>
             <?php echo subsection_heading('affiliation', 'Affiliation', ': Select all that may apply'); ?>
             <div class="row">
-                <div class="col-lg-5 col-md-5 col-sm-10">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                         $affiliation_btn_list_1 = array(
                                 'affiliation-radio-btn-1' => 'Blum Center',
@@ -45,7 +45,7 @@ get_header();
                         echo radio_buttons($affiliation_btn_list_1);
                     ?>
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-10">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                         $affiliation_btn_list_2 = array(
                                 'affiliation-radio-btn-4' => 'Student-Led Organization',
@@ -58,7 +58,7 @@ get_header();
             </div>
             <?php echo subsection_heading('organization-type', 'Type of Organization', ': Select one'); ?>
             <div class="row">
-                <div class="col-lg-5 col-md-5 col-sm-12">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                         $type_org_btn_list_1 = array(
                                 'organization-type-btn-1' => 'Government / UN-like(UNDP, World Bank, WTO)',
@@ -69,7 +69,7 @@ get_header();
                         echo radio_buttons($type_org_btn_list_1);
                     ?>
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-12">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                         $type_org_btn_list_2 = array(
                                 'organization-type-btn-5' => 'Collection Action Group (union, social movement)',
@@ -83,7 +83,7 @@ get_header();
             </div>
             <?php echo subsection_heading('organization-sector', 'Sector of Organization', ': Select all that may apply'); ?>
             <div class="row">
-                <div class="col-lg-5 col-md-5 col-sm-10">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                         $sector_org_btn_list_1 = array(
                                 'organization-sector-btn-1' => 'Agriculture / Food Security / Hunger / Malnutrition',
@@ -96,7 +96,7 @@ get_header();
                         echo radio_buttons($sector_org_btn_list_1);
                     ?>
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-10">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                         $sector_org_btn_list_2 = array(
                                 'organization-sector-btn-7' => 'Healthcare (Basic Heath, HIV/AIDS, Maternal, Child, etc)',
@@ -173,17 +173,17 @@ get_header();
                 </fieldset>
             </form>
 
-            <?php echo subsection_heading('languages-spoken', 'Languages spoken', ': Start typing and select language'); ?>
+            <?php echo subsection_heading('languages-spoken', 'Languages spoken:', ' Start typing and select language'); ?>
             <div class="ui-widget">
                 <input id="languages-spoken-input" class="col-6 px-1" aria-label="Languages spoken">
             </div>
 
             <?php echo subsection_heading('language-difficulties', 'Did you have any language difficulties?',''); ?>
-            <textarea name="" id="" class="col-lg-11 px-1" aria-label="Language difficulties"></textarea>
+            <textarea id="language-difficulties" class="col-lg-11 px-1" aria-label="Language difficulties"></textarea>
 
-            <?php echo subsection_heading('physical-experience-sector', 'What was the sector of your PE', 'Check all that apply')?>
+            <?php echo subsection_heading('physical-experience-sector', 'What was the sector of your PE? ', 'Check all that apply')?>
             <div class="row">
-                <div class="col-lg-5 col-md-5 col-sm-10">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                         $pe_sector_btn_list_1 = array(
                             'physical-experience-sector-radio-btn-1' => 'Agriculture / Food Security / Hunger / Malnutrition',
@@ -196,7 +196,7 @@ get_header();
                         echo radio_buttons($pe_sector_btn_list_1);
                     ?>
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-10">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                         $pe_sector_btn_list_2 = array(
                             'physical-experience-sector-radio-btn-7' => 'Healthcare (Basic Heath, HIV/AIDS, Maternal, Child, etc)',
@@ -208,9 +208,10 @@ get_header();
                         );
                         echo radio_buttons($pe_sector_btn_list_2);
                     ?>
+                    <input type="text" id="physical-experience-sector-other-input" class="col-10 px-1" />
                 </div>
             </div>
-            <?php echo subsection_heading('pe-cost', 'What was the cost of your PE', ': All incurred costs (i.e. transportation, housing, etc)'); ?>
+            <?php echo subsection_heading('pe-cost', 'What was the cost of your PE? ', 'All incurred costs (i.e. transportation, housing, etc)'); ?>
             <?php echo slider('Stipended paid by organization', 'col-lg-6 px-0', 'stipend-paid', '0', '0', '10000', '500'); ?>
             <?php echo slider('Cost of PE', 'col-lg-6 px-0', 'pe-cost', '0', '0', '10000', '500'); ?>
             <br />
