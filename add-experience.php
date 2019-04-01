@@ -7,7 +7,7 @@
  * Time: 10:56
  */
 
-require 'pages/utils.php';
+require 'utils.php';
 get_header();
 ?>
 

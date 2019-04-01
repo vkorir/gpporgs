@@ -7,8 +7,6 @@
  * Time: 18:59
  */
 
-require_once 'google-api/config.php';
-
 // Logout and redirect user to login page
 require_once 'google-api/config.php';
 

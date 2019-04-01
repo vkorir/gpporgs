@@ -10,8 +10,8 @@
 require_once 'vendor/autoload.php';
 
 // Set config params to access Google API
-$client_id = '228202600921-qefl9k0hlcechnm4olo6s3vllgaiu3sg.apps.googleusercontent.com';
-$client_secret = 'GrqZAf3r2xVgIcNogKP_MDZx';
+$client_id = '1035290053103-56crsjin0a9bcbdphqqqd3mhtjh3rtdv.apps.googleusercontent.com';
+$client_secret = 'x93ezf9bhuybKEh1R_UeoVWV';
 $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/callback';
 
 // Create and Request to Google API
