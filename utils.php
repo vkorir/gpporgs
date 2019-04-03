@@ -61,3 +61,15 @@ function fieldset_item($name, $type, $value) {
               <input class="col-lg-9 col-md-6 col-sm-8 px-1" type="' . $type . '" name="' . $name . '" id="' . $name . '" />
             </div>';
 }
+
+function get_regions() {
+    return array('North America', 'Mexico / Central America', 'South America', 'Europe', 'Middle East / North Africa', 'Sub-Saharan Africa', 'India', 'China', 'Other');
+}
+
+function get_countries() {
+    // GET https://restcountries.eu/rest/v2/all
+}
+
+function get_languages() {
+    // GET https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+}

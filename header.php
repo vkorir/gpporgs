@@ -1,17 +1,10 @@
 <?php
 
 require_once 'google-api/config.php';
-
-$auth_tag = '<a href="' . $_SESSION['login_url'] . '" class="nav-link">LOGIN</a>';
-$search_bar = '<input id="main-search-bar" class="form-control w-100" type="search" placeholder="Search" aria-label="Search" disabled>';
-if (isset($_SESSION['access_token'])) {
-    $auth_tag = '<a href="' . home_url("/logout") . '" class="nav-link">LOGOUT</a>';
-    $search_bar = '<input id="main-search-bar" class="form-control w-100" type="search" placeholder="Search" aria-label="Search">';
-}
 ?>
 
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -27,7 +20,13 @@ if (isset($_SESSION['access_token'])) {
     <div class="container">
         <div class="collapse navbar-collapse px-0" id="navbarToggler">
             <form class="navbar-brand form-inline col-lg-6 px-0">
-                <?php echo $search_bar; ?>
+                <?php if (isset($_SESSION['access_token'])) { ?>
+                <!--       Enable search bar         -->
+                <input id="main-search-bar" class="form-control w-100" type="search" placeholder="Search" aria-label="Search">
+                <?php } else { ?>
+                <!--       Disable search bar         -->
+                <input id="main-search-bar" class="form-control w-100" onclick="alert('Sorry, you need to be signed in to search.')" type="search" placeholder="Search" aria-label="Search" disabled>
+                <?php } ?>
             </form>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -42,9 +41,17 @@ if (isset($_SESSION['access_token'])) {
                 <li class="nav-item">
                     <a href="" class="nav-link">MY PROFILE</a>
                 </li>
+                <?php if (isset($_SESSION['access_token'])) { ?>
+                <!--        render logout button        -->
                 <li class="nav-item">
-                    <?php echo $auth_tag; ?>
+                    <a href="<?php echo home_url('/logout'); ?>" class="nav-link">LOGOUT</a>
                 </li>
+                <?php } else { ?>
+                <!--        render login button        -->
+                <li class="nav-item">
+                    <a href="<?php echo $_SESSION['login_url']; ?>" class="nav-link">LOGIN</a>
+                </li>
+                <?php } ?>
             </ul>
         </div>
     </div>

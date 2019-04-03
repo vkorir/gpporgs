@@ -15,7 +15,7 @@ if (isset($_SESSION['access_token'])) {?>
     <!--  logged in status  -->
     <div class="container">
         <div class="row mx-0">
-            <div class="col-lg-3 px-0">
+            <div class="col-rounded-container-side px-0">
                 <div class="rounded-container max-height">
                     <?php
                     // filter by section heading
@@ -48,11 +48,10 @@ if (isset($_SESSION['access_token'])) {?>
                     ?>
                 </div>
             </div>
-            <div class="col-lg-6 px-0">
+            <div class="col-rounded-container-middle px-0">
                 <div class="rounded-container max-height middle-section" id="middle-section-container">
-                    <div class="row mb-5">
-                        <?php echo page_title('GPP Practice Experience Database'); ?>
-                    </div>
+                    <?php echo page_title('GPP Practice Experience Database'); ?>
+                    <br />
                     <div class="row">
                         <div class="col">
                             <table id="organizations-database-records" class="table table-striped table-bordered table-sm mt-3" cellspacing="0" style="width: 100%">
@@ -69,12 +68,12 @@ if (isset($_SESSION['access_token'])) {?>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 px-0">
+            <div class="col-rounded-container-side px-0">
                 <div class="rounded-container done-with-experience">
-                    <h3 class="">Hi <?php echo $_SESSION['givenName']; ?>,</h3>
-                    <p class="lead">done with your practice?</p>
-                    <div class="text-center w-100">
-                        <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">Add Experience</a>
+                    <h5 class="">Hi <?php echo $_SESSION['givenName']; ?>,</h5>
+                    <p>done with your practice?</p>
+                    <div class="text-center">
+                        <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">+ Add Experience</a>
                     </div>
                 </div>
                 <div class="rounded-container sort-by">
@@ -83,8 +82,7 @@ if (isset($_SESSION['access_token'])) {?>
                     $sort_options = array(
                         'sort-by-btn-1' => 'closest to UC Berkeley',
                         'sort-by-btn-2' => 'number of projects',
-                        'sort-by-btn-3' => 'NGO / Non-Profit',
-                        'sort-by-btn-4' => 'responsiveness of ord',
+                        'sort-by-btn-4' => 'responsiveness of org',
                         'sort-by-btn-5' => 'most recent projects'
                     );
                     echo section_heading('SORT BY');
@@ -96,6 +94,7 @@ if (isset($_SESSION['access_token'])) {?>
     </div>
 <?php } else { ?>
     <!--  logged out status  -->
+    <?php if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') { $_SESSION['access_token'] = 'test'; $_SESSION['givenName'] = 'Korir'; } ?>
     <div class="container">
         <div class="jumbotron w-100 mx-0 my-5">
             <h1 class="display-4">Hello,</h1>

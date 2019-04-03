@@ -9,8 +9,15 @@ $(document).ready(function () {
         pagingType: 'numbers',
         scrollY: "500px",
         scrollCollapse: true,
+        dom: 'rt<"bottom"lp>',
+        columnDefs: [
+            {
+                targets: [4],
+                visible: false,
+                searchable: true
+            }
+        ]
     });
-    $('.dataTables_length').addClass('bs-select');
     $('#main-search-bar').keyup(function () {
         datatable.search(this.value).draw();
     });
@@ -139,7 +146,6 @@ $(document).ready(function () {
 
     function initOrganizationPEInfoFields() {
         return {
-            action: 'submission',
             organizationId: '',
             organizationName: '',
             organizationStreet: '',
@@ -192,9 +198,9 @@ $(document).ready(function () {
 
     const radioButtonIds = {
         '#affiliation-radio-btn-': [6, 'organizationAffiliations'],
-        '#organization-type-btn-': [7, 'organizationType'], // check for other, read input
-        '#organization-sector-btn-': [12, 'organizationSectors'],
-        '#physical-experience-sector-radio-btn-': [12, 'physicalExperienceSectors'],
+        '#organization-type-btn-': [7, 'organizationType'],
+        '#organization-sector-btn-': [11, 'organizationSectors'],
+        '#physical-experience-sector-radio-btn-': [11, 'physicalExperienceSectors'],
         '#pe-duration-btn-': [5, 'physicalExperienceDuration'],
         '#how-safe-radio-': [5, 'safetyScore'],
         '#how-responsive-radio-': [5, 'organizationResponsiveness']
@@ -223,15 +229,6 @@ $(document).ready(function () {
                 let val = $(targetId).attr('data-value');
                 if (id === '#how-safe-radio-' || id === '#how-responsive-radio-') {
                     val = parseInt(val[0]);
-                }
-                if (targetId === '#organization-type-btn-7') {
-                    val = $('#organization-type-other-input').val();
-                }
-                if (targetId === '#organization-sector-btn-12') {
-                    val = $('#organization-sector-other-input').val();
-                }
-                if (targetId === '#physical-experience-sector-radio-btn-12') {
-                    val = $('#physical-experience-sector-other-input').val();
                 }
                 if ($(targetId).attr('checked') === 'checked') {
                     $(targetId).prop('checked', false);
@@ -284,6 +281,7 @@ $(document).ready(function () {
     // on form submit
     function validateFormFields() {
         readOtherFormData();
+        readFormOptionsData();
         readPracticeExperienceInfo();
         flattenLists();
 
@@ -295,16 +293,15 @@ $(document).ready(function () {
         }
 
         // make a post request to php back-end
-        organizationPEInfoFields['action'] = 'submission';
         $.ajax({
             type: 'post',
-            url: '/wp-admin/admin-ajax.php',
+            url: '/wp-admin/admin-ajax.php?action=submission',
             data: organizationPEInfoFields,
             success: function (response) {
-                console.log(response);
                 alert('Data submission success!');
                 organizationPEInfoFields = initOrganizationPEInfoFields();
                 // window.location.href = '/';
+                console.log(response);
             },
             error: function () {
                 alert('Failed to post data!');
@@ -322,7 +319,6 @@ $(document).ready(function () {
             '#organization-info #city': 'organizationCity',
             '#organization-info #state': 'organizationState',
             '#organization-info #zipcode': 'organizationZipCode',
-            '#organization-info #region': 'organizationRegion',
             '#organization-info #country': 'organizationCountry',
             '#organization-info #phone': 'organizationPhone',
             '#organization-info #email': 'organizationEmail',
@@ -346,10 +342,21 @@ $(document).ready(function () {
             '#organization-contact-3 #name': 'organizationContact3Name',
             '#organization-contact-3 #role': 'organizationContact3Role',
             '#organization-contact-3 #phone': 'organizationContact3Phone',
-            '#organization-contact-3 #email': 'organizationContact3Email',
+            '#organization-contact-3 #email': 'organizationContact3Email'
         };
         for (const [elemId, dataId] of Object.entries(formDataElemIds)) {
             organizationPEInfoFields[dataId] = $(elemId).val();
+        }
+
+        // checked other option radio buttons input
+        if ($('#organization-type-btn-7').prop('checked')) {
+            storeData('organizationType', $('#organization-type-other-input').val());
+        }
+        if ($('#organization-sector-btn-12').prop('checked')) {
+            storeData('organizationSectors', $('#organization-sector-other-input').val());
+        }
+        if ($('#physical-experience-sector-radio-btn-12').prop('checked')) {
+            storeData('physicalExperienceSectors', $('#physical-experience-sector-other-input').val());
         }
 
         // parse string to number
@@ -363,6 +370,17 @@ $(document).ready(function () {
         organizationPEInfoFields['costOfPhysicalExperience'] = parseInt(peCost);
     }
 
+    function readFormOptionsData() {
+        const formElemIds = {
+            '#organization-info #region option:selected': 'organizationRegion',
+            '#practice-experience-address #region option:selected': 'physicalExperienceRegion',
+
+        };
+        for (const [elemId, dataId] of Object.entries(formElemIds)) {
+            organizationPEInfoFields[dataId] = $(elemId).text();
+        }
+    }
+
     function readPracticeExperienceInfo() {
         let id = '#practice-experience-address';
         if ($('#pe-address-diff-no').prop('checked')) {
@@ -373,7 +391,6 @@ $(document).ready(function () {
             'city': 'physicalExperienceCity',
             'state': 'physicalExperienceState',
             'zipcode': 'physicalExperienceZipCode',
-            'region': 'physicalExperienceRegion',
             'country': 'physicalExperienceCountry'
         };
         for (const [elemId, dataId] of Object.entries(fields)) {
@@ -385,7 +402,7 @@ $(document).ready(function () {
     function flattenLists() {
         for (const [key, val] of Object.entries(organizationPEInfoFields)) {
             if (typeof val === 'object') {
-                organizationPEInfoFields[key] = organizationPEInfoFields[key].join('=>');
+                organizationPEInfoFields[key] = organizationPEInfoFields[key].join('\r\n');
             }
         }
     }

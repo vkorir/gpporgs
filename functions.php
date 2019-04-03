@@ -82,7 +82,8 @@ function database_records() {
         array('db' => 'name', 'dt' => 0),
         array('db' => 'type', 'dt' => 1),
         array('db' => 'location', 'dt' => 2),
-        array('db' => 'sectors', 'dt' => 3)
+        array('db' => 'sectors', 'dt' => 3),
+	    array('db' => 'region', 'dt' => 4),
     );
     $sql_details = array(
         'user' => DB_USER,
@@ -109,39 +110,39 @@ function submission() {
     // store org address
     $table = 'gppporgs_addresses';
     $data = get_organization_pe_address_data('organization');
-    $format = array('%s', '%s', '%s', '%d', '%s', '%s');
+    $format = array('%s', '%s', '%s', '%d', '%s');
     $wpdb->insert($table, $data, $format);
-    $addr_id = $wpdb->insert_id;
+    $org_addr_id = $wpdb->insert_id;
 
     // store org contact
     $table = 'gpporgs_organization_contacts';
     $data = get_organization_contacts_data();
     $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
     $wpdb->insert($table, $data, $format);
-    $contacts_id = $wpdb->insert_id;
+    $org_contacts_id = $wpdb->insert_id;
 
 
     // store org info
     $table = 'gpporgs_organization_info';
-    $data = get_organization_info_data($addr_id, $contacts_id);
-    $format = array('%s', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
+    $data = get_organization_info_data($org_addr_id, $org_contacts_id);
+    $format = array('%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
     $wpdb->insert($table, $data, $format);
-    $organization_id = $wpdb->insert_id;
+    $org_id = $wpdb->insert_id;
 
     // store review address
     $table = 'gpporgs_addresses';
     $data = get_organization_pe_address_data('physicalExperience');
     $format = array('%s', '%s', '%s', '%d', '%s', '%s');
     $wpdb->insert($table, $data, $format);
-    $addr_id = $wpdb->insert_id;
+    $pe_addr_id = $wpdb->insert_id;
 
     // store org review
     $table = 'gpporgs_organization_reviews';
-    $data = get_organization_review_data($organization_id, $addr_id);
-    $format = array('%d', '%d', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
+    $data = get_organization_review_data($org_id, $pe_addr_id);
+    $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
     $wpdb->insert($table, $data, $format);
 
-    return "success!";
+	wp_die();
 }
 
 function get_organization_pe_address_data($prefix) {
@@ -150,7 +151,6 @@ function get_organization_pe_address_data($prefix) {
         'city' => $_POST[$prefix . 'City'],
         'state' => $_POST[$prefix . 'State'],
         'zipcode' => $_POST[$prefix . 'ZipCode'],
-        'region' => $_POST[$prefix . 'Region'],
         'country' => $_POST[$prefix . 'Country']
     );
 }
@@ -182,6 +182,7 @@ function get_organization_info_data($addr_id, $contacts_id) {
         'affiliations' => $_POST['organizationAffiliations'],
         'type' => $_POST['organizationType'],
         'location' => $_POST['organizationCountry'],
+        'region' => $_POST['organizationRegion'],
         'sectors' => $_POST['organizationSectors'],
         'contacts_id' => $contacts_id,
         'approved_status' => 0
@@ -192,9 +193,10 @@ function get_organization_review_data($organization_id, $address_id) {
     return array(
         'address_id' => $address_id,
         'organization_id' => $organization_id,
+        'region' => $_POST['physicalExperienceRegion'],
         'languages_spoken' => $_POST['languagesSpoken'],
         'language_difficulties' => $_POST['languageDifficulties'],
-        'sectors' => join(',', $_POST['physicalExperienceSectors']),
+        'sectors' => $_POST['physicalExperienceSectors'],
         'stipend_by_organization' => $_POST['stipendPaidByOrganization'],
         'cost_of_pe' => $_POST['costOfPhysicalExperience'],
         'pe_duration' => $_POST['physicalExperienceDuration'],

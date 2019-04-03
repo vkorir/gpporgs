@@ -25,8 +25,21 @@ get_header();
                     echo fieldset_item('city', 'text', 'City');
                     echo fieldset_item('state', 'text', 'State');
                     echo fieldset_item('zipcode', 'number', 'Zip Code');
-                    echo fieldset_item('region', 'text', 'Region');
-                    echo fieldset_item('country', 'text', 'Country');
+                    ?>
+                    <div>
+                        <label class="col-lg-2 col-md-2 col-sm-1" for="region">Region</label>
+                        <select class="custom-select col-lg-9 col-md-6 col-sm-8 px-1" id="region">
+                            <option selected>Select Region</option>
+                            <?php
+                            $value = 1;
+                            foreach (get_regions() as $region) {
+                                echo '<option value="' . $value . '">' . $region . '</option>';
+                                $value++;
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <?php echo fieldset_item('country', 'text', 'Country');
                     echo fieldset_item('phone', 'tel', 'Phone');
                     echo fieldset_item('email', 'email', 'Email');
                     echo fieldset_item('website', 'url', 'Website');
@@ -167,8 +180,21 @@ get_header();
                         echo fieldset_item('city', 'text', 'City');
                         echo fieldset_item('state', 'text', 'State');
                         echo fieldset_item('zipcode', 'number', 'Zip Code');
-                        echo fieldset_item('region', 'text', 'Region');
-                        echo fieldset_item('country', 'text', 'Country');
+                    ?>
+                    <div>
+                        <label class="col-lg-2 col-md-2 col-sm-1" for="region">Region</label>
+                        <select class="custom-select col-lg-9 col-md-6 col-sm-8 px-1" id="region">
+                            <option selected>Select Region</option>
+			                <?php
+			                $value = 1;
+			                foreach (get_regions() as $region) {
+				                echo '<option value="' . $value . '">' . $region . '</option>';
+				                $value++;
+			                }
+			                ?>
+                        </select>
+                    </div>
+	                <?php echo fieldset_item('country', 'text', 'Country');
                     ?>
                 </fieldset>
             </form>

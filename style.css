@@ -63,8 +63,11 @@ input[type='search']::placeholder {
 	background-color: #4885af;
 }
 
-/* Not Logged In */
+/* Home Page */
 
+hr {
+	width: 50%;
+}
 .container .jumbotron {
 	border: 1px solid #d9d9d9;
 	border-radius: 4px;
@@ -78,20 +81,17 @@ input[type='search']::placeholder {
 .jumbotron hr {
 	width: 100%;
 }
-
-/* Logged In */
-
-hr {
-	width: 50%;
-}
-
 .rounded-container {
 	margin: 10px 0;
 	border: 1px solid #d9d9d9;
 	border-radius: 4px;
 	box-shadow: 0 4px 6px #d9d9d9;
 	background: #eaecee;
-	padding: 20px;
+	padding: 8px;
+	overflow-y: scroll;
+}
+.rounded-container::-webkit-scrollbar {
+	background: transparent;
 }
 .rounded-container.max-height {
 	height: calc(100vh - 140px);
@@ -106,16 +106,21 @@ hr {
 .rounded-container.done-with-experience {
 	height: 200px;
 }
-
+.col-rounded-container-side {
+	width: 20%;
+}
+.col-rounded-container-middle {
+	width: 60%;
+}
 .done-with-experience .btn.practice-btn {
 	font-size: 14px;
+}
+.done-with-experience .btn.practice-btn {
+	padding: 5px 8px;
 }
 .rounded-container.sort-by {
 	height: calc(100vh - 100px - 200px - 50px);
 }
-
-/* Filter Page */
-
 .section-heading {
 	text-align: center;
 }
@@ -312,6 +317,8 @@ textarea {
 	position: relative;
 	padding-left: 24px;
 	margin-bottom: 10px;
+	font-size: 14px;
+	font-weight: 300;
 	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -348,8 +355,9 @@ textarea {
 .dataTables_info {
 	display: none;
 }
-.page-item.active,
-.page-item.active .page-link {
-	border: none !important;
-	outline: none !important;
+#organizations-database-records_length,
+#organizations-database-records_paginate {
+	width: 50%;
+	margin-top: 10px;
+	display: inline-block;
 }
