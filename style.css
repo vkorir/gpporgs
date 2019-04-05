@@ -107,16 +107,16 @@ hr {
 	height: 200px;
 }
 .col-rounded-container-side {
-	width: 20%;
+	width: 22%;
 }
 .col-rounded-container-middle {
-	width: 60%;
+	width: 56%;
 }
 .done-with-experience .btn.practice-btn {
 	font-size: 14px;
 }
 .done-with-experience .btn.practice-btn {
-	padding: 5px 8px;
+	padding: 10px 20px;
 }
 .rounded-container.sort-by {
 	height: calc(100vh - 100px - 200px - 50px);
@@ -156,7 +156,14 @@ input[type=range]::-webkit-slider-thumb {
 	cursor: pointer;
 	border-radius: 40px;
 }
-
+#price-range-slider::-webkit-slider-thumb {
+	width: 70px;
+}
+#price-range-display {
+	font-weight: 300;
+	color: #0b2e13;
+	font-size: 14px;
+}
 input[type=range]::-moz-range-thumb {
 	width: 110px;
 	height: 14px;
@@ -351,6 +358,9 @@ textarea {
 
 /* Data Tables */
 
+#organizations-database-records tbody tr {
+	cursor: pointer;
+}
 .dataTables_filter,
 .dataTables_info {
 	display: none;
@@ -360,4 +370,7 @@ textarea {
 	width: 50%;
 	margin-top: 10px;
 	display: inline-block;
+}
+#table-container {
+	height: calc(100% - 70px);
 }

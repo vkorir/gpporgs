@@ -7,7 +7,7 @@ $(document).ready(function () {
         serverSide: true,
         ajax: '/wp-admin/admin-ajax.php?action=database_records',
         pagingType: 'numbers',
-        scrollY: "500px",
+        scrollY: $('#table-container').height(),
         scrollCollapse: true,
         dom: 'rt<"bottom"lp>',
         columnDefs: [
@@ -17,10 +17,24 @@ $(document).ready(function () {
                 searchable: true
             }
         ]
+    }).on('click', 'tbody tr', function () {
+        console.log('clicked!');
     });
-    $('#main-search-bar').keyup(function () {
+    $('#main-search-bar').keyup(function () {   // hook main search bar with datatable
         datatable.search(this.value).draw();
     });
+    
+    // enable sectors on table filter
+    for (let num = 1; num <= 8; num++) {
+        $('#sectors-btn-' + num).click(function () {
+            for (let nm = 1; nm <= 8; nm++) {
+                if (num !== nm) {
+                    $('#sectors-btn-' + nm).prop('checked', false);
+                }
+            }
+            $('#main-search-bar').val($('#sectors-btn-' + num).data('value')).keyup();
+        });
+    }
 
     // restrict number entries
     const zipcode_ids = ['#organization-info #zipcode', '#practice-experience-address #zipcode'];

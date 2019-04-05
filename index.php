@@ -52,26 +52,24 @@ if (isset($_SESSION['access_token'])) {?>
                 <div class="rounded-container max-height middle-section" id="middle-section-container">
                     <?php echo page_title('GPP Practice Experience Database'); ?>
                     <br />
-                    <div class="row">
-                        <div class="col">
-                            <table id="organizations-database-records" class="table table-striped table-bordered table-sm mt-3" cellspacing="0" style="width: 100%">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th>Location</th>
-                                    <th>Sectors</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
+                    <div id="table-container" class="m-0 p-0">
+                        <table id="organizations-database-records" class="table table-striped table-bordered table-sm mt-3" style="width: 100%">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Sectors</th>
+                            </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="col-rounded-container-side px-0">
-                <div class="rounded-container done-with-experience">
-                    <h5 class="">Hi <?php echo $_SESSION['givenName']; ?>,</h5>
-                    <p>done with your practice?</p>
+                <div class="rounded-container done-with-experience pt-4">
+                    <h4>Hi <?php echo $_SESSION['givenName']; ?>,</h4>
+                    <p class="lead">done with your practice?</p>
                     <div class="text-center">
                         <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">+ Add Experience</a>
                     </div>
