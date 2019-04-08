@@ -12,7 +12,7 @@ $(document).ready(function () {
         dom: 'rt<"bottom"lp>',
         columnDefs: [
             {
-                targets: [4],
+                targets: [4, 5],
                 visible: false,
                 searchable: true
             }
@@ -109,15 +109,15 @@ $(document).ready(function () {
 
     // language selector jquery library
     $( function() {
-        let availableLanguages = [
-            'English',
-            'French',
-            'Spanish',
-            'Italian',
-            'Chinese',
-            'Swahili',
-            'Arabic'
-        ];
+        let availableLanguages = [];
+        $.ajax({
+            url: '/wp-content/themes/gpporgs/data/languages.json',
+            success: data => {
+                data.forEach((item, index) => {
+                    availableLanguages.push(item['name']);
+                });
+            }
+        });
         function split( val ) {
             return val.split( /,\s*/ );
         }
@@ -314,7 +314,7 @@ $(document).ready(function () {
             success: function (response) {
                 alert('Data submission success!');
                 organizationPEInfoFields = initOrganizationPEInfoFields();
-                // window.location.href = '/';
+                window.location.href = '/';
                 console.log(response);
             },
             error: function () {

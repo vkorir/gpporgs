@@ -67,9 +67,10 @@ function get_regions() {
 }
 
 function get_countries() {
-    // GET https://restcountries.eu/rest/v2/all
-}
-
-function get_languages() {
-    // GET https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+    $countries = json_decode(file_get_contents(get_template_directory_uri() . '/data/countries.json'), true);
+    $country_names = [];
+    foreach ($countries as $country) {
+        array_push($country_names, $country['name']);
+    }
+    return $country_names;
 }

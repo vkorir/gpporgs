@@ -39,7 +39,20 @@ get_header();
                             ?>
                         </select>
                     </div>
-                    <?php echo fieldset_item('country', 'text', 'Country');
+                    <div>
+                        <label class="col-lg-2 col-md-2 col-sm-1" for="country">Country</label>
+                        <select class="custom-select col-lg-9 col-md-6 col-sm-8 px-1" id="country">
+                            <option selected>Select Country</option>
+                            <?php
+                            $value = 1;
+                            foreach (get_countries() as $country) {
+                                echo '<option value="' . $value . '">' . $country . '</option>';
+                                $value++;
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <?php
                     echo fieldset_item('phone', 'tel', 'Phone');
                     echo fieldset_item('email', 'email', 'Email');
                     echo fieldset_item('website', 'url', 'Website');
@@ -194,8 +207,19 @@ get_header();
 			                ?>
                         </select>
                     </div>
-	                <?php echo fieldset_item('country', 'text', 'Country');
-                    ?>
+                    <div>
+                        <label class="col-lg-2 col-md-2 col-sm-1" for="country">Country</label>
+                        <select class="custom-select col-lg-9 col-md-6 col-sm-8 px-1" id="country">
+                            <option selected>Select Country</option>
+                            <?php
+                            $value = 1;
+                            foreach (get_countries() as $country) {
+                                echo '<option value="' . $value . '">' . $country . '</option>';
+                                $value++;
+                            }
+                            ?>
+                        </select>
+                    </div>
                 </fieldset>
             </form>
 
@@ -238,8 +262,8 @@ get_header();
                 </div>
             </div>
             <?php echo subsection_heading('pe-cost', 'What was the cost of your PE? ', 'All incurred costs (i.e. transportation, housing, etc)'); ?>
-            <?php echo slider('Stipended paid by organization', 'col-lg-6 px-0', 'stipend-paid', '0', '0', '10000', '500'); ?>
-            <?php echo slider('Cost of PE', 'col-lg-6 px-0', 'pe-cost', '0', '0', '10000', '500'); ?>
+            <?php echo slider('Stipended paid by organization', 'col-lg-6 px-0', 'stipend-paid', '5000', '0', '10000', '500'); ?>
+            <?php echo slider('Cost of PE', 'col-lg-6 px-0', 'pe-cost', '5000', '0', '10000', '500'); ?>
             <br />
             <?php echo subsection_heading('pe-duration', 'What was the duration of your PE', ''); ?>
             <div class="row">

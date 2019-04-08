@@ -84,6 +84,7 @@ function database_records() {
         array('db' => 'location', 'dt' => 2),
         array('db' => 'sectors', 'dt' => 3),
 	    array('db' => 'region', 'dt' => 4),
+        array('db' => 'avg_cost_of_pe', 'dt' => 5)
     );
     $sql_details = array(
         'user' => DB_USER,
@@ -137,7 +138,7 @@ function submission() {
     $pe_addr_id = $wpdb->insert_id;
 
     // store org review
-    $table = 'gpporgs_organization_reviews';
+    $table = 'gpporgs_practice_experience_reviews';
     $data = get_organization_review_data($org_id, $pe_addr_id);
     $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
     $wpdb->insert($table, $data, $format);
@@ -185,7 +186,8 @@ function get_organization_info_data($addr_id, $contacts_id) {
         'region' => $_POST['organizationRegion'],
         'sectors' => $_POST['organizationSectors'],
         'contacts_id' => $contacts_id,
-        'approved_status' => 0
+        'approved_status' => 0,
+        'avg_cost_of_pe' => 0
     );
 }
 
