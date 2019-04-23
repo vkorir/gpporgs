@@ -2,6 +2,14 @@
 // use datatables library
 $(document).ready(function () {
 
+    // dynamic styles
+    const orgInfoOrgList = $('#organization-info #organizations-list');
+    const orgInfoName = $('#organization-info #name');
+    const orgListWidth = orgInfoName.width();
+    const orgListRight = orgListWidth / 9 + 'px';
+    orgInfoOrgList.css({ 'width': (orgListWidth + 12) + 'px', 'right': orgListRight} );
+
+
     const datatable = $('#organizations-database-records').DataTable({
         processing: true,
         serverSide: true,
@@ -35,6 +43,24 @@ $(document).ready(function () {
             $('#main-search-bar').val($('#sectors-btn-' + num).data('value')).keyup();
         });
     }
+
+    // domestic and international filters
+    $('#area-radio-btn-1').click(function () {
+        if (!$('#area-radio-btn-1').prop('checked')) {
+            $('#main-search-bar').val('').keyup();
+        } else {
+            $('#main-search-bar').val('United States').keyup();
+            $('#area-radio-btn-2').prop('checked', false);
+        }
+    });
+    $('#area-radio-btn-2').click(function () {
+        if (!$('#area-radio-btn-2').prop('checked')) {
+            $('#main-search-bar').val('').keyup();
+        } else {
+            $('#main-search-bar').val($('#area-radio-btn-2').data('value')).keyup();
+            $('#area-radio-btn-2').prop('checked', false);
+        }
+    });
 
     // restrict number entries
     const zipcode_ids = ['#organization-info #zipcode', '#practice-experience-address #zipcode'];
@@ -91,7 +117,6 @@ $(document).ready(function () {
         $('#pe-address-diff-no').prop('checked', true);
     });
 
-
     // add contact field
     $('#add-contact-btn').click(function () {
         if ($('#organization-contact-2').css('display') === 'none') {
@@ -113,7 +138,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/wp-content/themes/gpporgs/data/languages.json',
             success: data => {
-                data.forEach((item, index) => {
+                data.forEach(item => {
                     availableLanguages.push(item['name']);
                 });
             }
@@ -157,6 +182,40 @@ $(document).ready(function () {
                 }
             });
     });
+
+    // handle organizations autocomplete
+    orgInfoName.keyup(function () {
+        orgInfoOrgList.html('');
+        orgInfoOrgList.css({ 'display': 'none' });
+        const prefix = $(this).val();
+        if (prefix.length > 2) {
+            $.ajax({
+                url: '/wp-admin/admin-ajax.php?action=organizations',
+                data: { prefix },
+                success: function (data) {
+                    const result = $.parseJSON(JSON.stringify(data));
+                    populateAutoComplete(orgInfoOrgList, result);
+                }
+            });
+        }
+    });
+
+    function populateAutoComplete(elem, organizations) {
+        let html = '<ul class="list-unstyled m-0 p-0">';
+        if (organizations.length === 0) {
+            html += '<li class="m-0 p-0"><div onclick="addNewOrganization()">Add a new organization?</div></li></ul>';
+        } else {
+            organizations.forEach(function ({id, name}, _) {
+                html += '<li class="m-0 p-0"><div id="' + id + '" ';
+                html += 'onclick="populateOrganizationInfo(' + id + ');">';
+                html += name + '</div></li>';
+            });
+            html += '</ul>';
+        }
+        elem.fadeIn();
+        elem.html(html);
+        elem.css({ 'display': 'block' });
+    }
 
     function initOrganizationPEInfoFields() {
         return {
@@ -333,7 +392,6 @@ $(document).ready(function () {
             '#organization-info #city': 'organizationCity',
             '#organization-info #state': 'organizationState',
             '#organization-info #zipcode': 'organizationZipCode',
-            '#organization-info #country': 'organizationCountry',
             '#organization-info #phone': 'organizationPhone',
             '#organization-info #email': 'organizationEmail',
             '#organization-info #website': 'organizationWebsite',
@@ -387,7 +445,9 @@ $(document).ready(function () {
     function readFormOptionsData() {
         const formElemIds = {
             '#organization-info #region option:selected': 'organizationRegion',
+            '#organization-info #country option:selected': 'organizationCountry',
             '#practice-experience-address #region option:selected': 'physicalExperienceRegion',
+            '#practice-experience-address #country option:selected': 'physicalExperienceCountry',
 
         };
         for (const [elemId, dataId] of Object.entries(formElemIds)) {
@@ -405,7 +465,6 @@ $(document).ready(function () {
             'city': 'physicalExperienceCity',
             'state': 'physicalExperienceState',
             'zipcode': 'physicalExperienceZipCode',
-            'country': 'physicalExperienceCountry'
         };
         for (const [elemId, dataId] of Object.entries(fields)) {
             const targetId = id + ' #' + elemId;
@@ -420,4 +479,7 @@ $(document).ready(function () {
             }
         }
     }
+
+
+
 });

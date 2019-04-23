@@ -102,6 +102,37 @@ function database_records() {
 }
 
 
+// fetch organization names
+add_action('wp_ajax_organizations', 'get_organizations');
+add_action('wp_ajax_nopriv_organizations', 'get_organizations');
+function get_organizations() {
+    global $wpdb;
+    $query = "SELECT id, name FROM gpporgs_organization_info WHERE name LIKE '%" . $_GET['prefix'] . "%'";
+    $result = $wpdb->get_results($query);
+    wp_send_json($result);
+}
+
+
+// fetch organization info
+add_action('wp_ajax_organization_info', 'get_organization_info');
+add_action('wp_ajax_nopriv_organization_info', 'get_organization_info');
+function get_organization_info() {
+    global $wpdb;
+    $info = $wpdb->get_results("SELECT * FROM gpporgs_organization_info WHERE id=" . $_GET['id'], ARRAY_A);
+    $address_id = 0;
+    $contacts_id = 0;
+    foreach ($wpdb->get_results("SELECT address_id FROM gpporgs_organization_info WHERE id=" . $_GET['id']) as $key => $row) {
+        $address_id = $row->address_id;
+    }
+    foreach ($wpdb->get_results("SELECT contacts_id FROM gpporgs_organization_info WHERE id=" . $_GET['id']) as $key => $row) {
+        $contacts_id = $row->contacts_id;
+    }
+    $addr = $wpdb->get_results("SELECT * FROM gppporgs_addresses WHERE id=" . $address_id);
+    $contacts = $wpdb->get_results("SELECT * FROM gpporgs_organization_contacts WHERE id=" . $contacts_id);
+    wp_send_json(array_merge($info, $addr, $contacts));
+}
+
+
 // handle form submission
 add_action('wp_ajax_submission', 'submission');
 add_action('wp_ajax_nopriv_submission', 'submission');

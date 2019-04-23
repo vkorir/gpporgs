@@ -374,3 +374,22 @@ textarea {
 #table-container {
 	height: calc(100% - 70px);
 }
+
+
+/* Autocomplete Dropdown */
+
+#organization-info #organizations-list {
+	position: absolute;
+	border: 1px solid #d4d4d4;
+	border-radius: 4px;
+	z-index: 99;
+	top: 41px;
+	background-color: #fff;
+	display: none;
+}
+#organization-info #organizations-list ul li:hover {
+	cursor: pointer;
+	background-color: #084e83;
+	color: #fff;
+}
+

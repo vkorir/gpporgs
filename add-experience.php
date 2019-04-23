@@ -19,8 +19,12 @@ get_header();
             <?php echo section_subheading('ORGANIZATION INFORMATION'); ?>
             <form id="organization-info" action="">
                 <fieldset>
+                    <div style="position: relative;">
+                        <label for="name" class="col-lg-2 col-md-2 col-sm-1">Name</label>
+                        <input class="col-lg-9 col-md-6 col-sm-8 px-1" type="text" placeholder="Type to start searching organization..." id="name" />
+                        <div class="col-lg-9 col-md-6 col-sm-8 px-1" id="organizations-list"></div>
+                    </div>
                     <?php
-                    echo fieldset_item('name', 'text', 'Name');
                     echo fieldset_item('street', 'text', 'Street');
                     echo fieldset_item('city', 'text', 'City');
                     echo fieldset_item('state', 'text', 'State');
