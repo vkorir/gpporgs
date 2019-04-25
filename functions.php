@@ -1,5 +1,76 @@
 <?php
 
+
+// UI utility functions
+
+function page_title($value) {
+    return '<div class="text-center"><h3 class="display-5">' . $value . '</h3></div>';
+}
+
+function section_heading($value) {
+    return '<h6 class="section-heading">' . $value . '</h6>' . '<hr />';
+}
+
+function section_subheading($value) {
+    return '<h6 class="section-subheading my-3">' . $value . '</h6>';
+}
+
+function subsection_heading($name, $value, $directive) {
+    return '<label class="mt-3" for="' .$name . '">' . $value . '<span class="directive">' . $directive . '</span></label>';
+}
+
+function radio_button_util($id, $value) {
+    return '<label class="label-container w-100">
+                 <input id="' . $id . '" type="checkbox" data-value="'. $value .    '">
+                 <span class="checkmark"></span>
+                    ' . $value . '
+            </label>';
+}
+
+function radio_buttons($array) {
+    $res = '';
+    foreach ($array as $key => $value) {
+        $res .= radio_button_util($key, $value);
+    }
+    return $res;
+}
+
+function slider_js_onchange($source_id, $target_id) {
+    $jquery_val = '$(\'#' . $source_id .'\').val()';
+    return '$(\'#' . $target_id . '\').val(' . $jquery_val . ');';
+}
+
+
+function slider($title, $class, $id, $value, $min, $max, $step) {
+    $source_id = $id . '-slider';
+    $target_id = $id . '-display';
+    $price_display = '<h6 class="section-subheading">' . $title . ': $<input class="slider-value-display" type="number" name="' . $target_id . '" id="' . $target_id . '" value="' . $value . '" disabled /></h6>';
+    $slider = '<input class="price-range-slider ' . $class . '" id="' . $source_id . '" type="range" min="'. $min . '" max="' . $max . '" step="' . $step .'" onchange="'. slider_js_onchange($source_id, $target_id) . '" />';
+    return $price_display . $slider;
+}
+
+function fieldset_item($name, $type, $value) {
+    return '<div>
+              <label class="col-lg-2 col-md-2 col-sm-1" for="' . $name . '">' . $value . ': </label>
+              <input class="col-lg-9 col-md-6 col-sm-8 px-1" type="' . $type . '" name="' . $name . '" id="' . $name . '" />
+            </div>';
+}
+
+function get_regions() {
+    return array('North America', 'Mexico / Central America', 'South America', 'Europe', 'Middle East / North Africa', 'Sub-Saharan Africa', 'India', 'China', 'Other');
+}
+
+// return countries
+function get_countries() {
+    global $wpdb;
+    $options = '';
+    foreach ($wpdb->get_results('SELECT name FROM countries;') as $country) {
+        $options .= '<option>' . $country->name . '</option>';
+    }
+    return $options;
+}
+
+
 // handle sessions
 add_action('init', 'start_session', 1);
 function start_session() {
@@ -48,7 +119,7 @@ function datatable_resources() {
 // load custom js
 add_action('wp_enqueue_scripts', 'load_js');
 function load_js() {
-	wp_register_script('custom_js', get_template_directory_uri() . '/js/scripts.js', '', 1, true);
+	wp_register_script('custom_js', get_template_directory_uri() . '/js/scripts.js', array(), 1, true);
 	wp_enqueue_script('custom_js');
 }
 
@@ -76,7 +147,7 @@ function redirect_login() {
 add_action('wp_ajax_database_records', 'database_records');
 add_action('wp_ajax_nopriv_database_records', 'database_records');
 function database_records() {
-    $table = 'gpporgs_organization_info';
+    $table = 'gpp_organization_info';
     $primaryKey = 'id';
     $columns = array(
         array('db' => 'name', 'dt' => 0),
@@ -107,7 +178,7 @@ add_action('wp_ajax_organizations', 'get_organizations');
 add_action('wp_ajax_nopriv_organizations', 'get_organizations');
 function get_organizations() {
     global $wpdb;
-    $query = "SELECT id, name FROM gpporgs_organization_info WHERE name LIKE '%" . $_GET['prefix'] . "%'";
+    $query = "SELECT id, name FROM gpp_organization_info WHERE name LIKE '%" . $_GET['prefix'] . "%'";
     $result = $wpdb->get_results($query);
     wp_send_json($result);
 }
@@ -118,17 +189,17 @@ add_action('wp_ajax_organization_info', 'get_organization_info');
 add_action('wp_ajax_nopriv_organization_info', 'get_organization_info');
 function get_organization_info() {
     global $wpdb;
-    $info = $wpdb->get_results("SELECT * FROM gpporgs_organization_info WHERE id=" . $_GET['id'], ARRAY_A);
+    $info = $wpdb->get_results("SELECT * FROM gpp_organization_info WHERE id=" . $_GET['id'], ARRAY_A);
     $address_id = 0;
     $contacts_id = 0;
-    foreach ($wpdb->get_results("SELECT address_id FROM gpporgs_organization_info WHERE id=" . $_GET['id']) as $key => $row) {
+    foreach ($wpdb->get_results("SELECT address_id FROM gpp_organization_info WHERE id=" . $_GET['id']) as $key => $row) {
         $address_id = $row->address_id;
     }
-    foreach ($wpdb->get_results("SELECT contacts_id FROM gpporgs_organization_info WHERE id=" . $_GET['id']) as $key => $row) {
+    foreach ($wpdb->get_results("SELECT contacts_id FROM gpp_organization_info WHERE id=" . $_GET['id']) as $key => $row) {
         $contacts_id = $row->contacts_id;
     }
     $addr = $wpdb->get_results("SELECT * FROM gppporgs_addresses WHERE id=" . $address_id);
-    $contacts = $wpdb->get_results("SELECT * FROM gpporgs_organization_contacts WHERE id=" . $contacts_id);
+    $contacts = $wpdb->get_results("SELECT * FROM gpp_organization_contacts WHERE id=" . $contacts_id);
     wp_send_json(array_merge($info, $addr, $contacts));
 }
 
@@ -140,36 +211,57 @@ function submission() {
     global $wpdb;
 
     // store org address
-    $table = 'gppporgs_addresses';
+    $table = 'gpp_addresses';
     $data = get_organization_pe_address_data('organization');
     $format = array('%s', '%s', '%s', '%d', '%s');
-    $wpdb->insert($table, $data, $format);
-    $org_addr_id = $wpdb->insert_id;
+    if (isset($_POST['organizationAddrId'])) {
+        $org_addr_id = $_POST['organizationAddrId'];
+        $data = array_merge(array('id' => $org_addr_id), $data);
+        $format = array_merge(array('%d'), $format);
+        $wpdb->replace($table, $data, $format);
+    } else {
+        $wpdb->insert($table, $data, $format);
+        $org_addr_id = $wpdb->insert_id;
+    }
 
     // store org contact
-    $table = 'gpporgs_organization_contacts';
+    $table = 'gpp_organization_contacts';
     $data = get_organization_contacts_data();
     $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
-    $wpdb->insert($table, $data, $format);
-    $org_contacts_id = $wpdb->insert_id;
+    if (isset($_POST['organizationContactsId'])) {
+        $org_contacts_id = $_POST['organizationContactsId'];
+        $data = array_merge(array('id' => $org_contacts_id), $data);
+        $format = array_merge(array('%d'), $format);
+        $wpdb->replace($table, $data, $format);
+    } else {
+        $wpdb->insert($table, $data, $format);
+        $org_contacts_id = $wpdb->insert_id;
+    }
 
 
     // store org info
-    $table = 'gpporgs_organization_info';
+    $table = 'gpp_organization_info';
     $data = get_organization_info_data($org_addr_id, $org_contacts_id);
     $format = array('%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
-    $wpdb->insert($table, $data, $format);
-    $org_id = $wpdb->insert_id;
+    if (isset($_POST['organizationId'])) {
+        $org_id = $_POST['organizationId'];
+        $data = array_merge(array('id' => $org_id), $data);
+        $format = array_merge(array('%d'), $format);
+        $wpdb->replace($table, $data, $format);
+    } else {
+        $wpdb->insert($table, $data, $format);
+        $org_id = $wpdb->insert_id;
+    }
 
     // store review address
-    $table = 'gpporgs_addresses';
+    $table = 'gpp_addresses';
     $data = get_organization_pe_address_data('physicalExperience');
-    $format = array('%s', '%s', '%s', '%d', '%s', '%s');
+    $format = array('%s', '%s', '%s', '%d', '%s');
     $wpdb->insert($table, $data, $format);
     $pe_addr_id = $wpdb->insert_id;
 
     // store org review
-    $table = 'gpporgs_practice_experience_reviews';
+    $table = 'gpp_practice_experience_reviews';
     $data = get_organization_review_data($org_id, $pe_addr_id);
     $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
     $wpdb->insert($table, $data, $format);

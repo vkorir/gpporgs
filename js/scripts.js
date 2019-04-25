@@ -1,7 +1,4 @@
-
-// use datatables library
 $(document).ready(function () {
-
     // dynamic styles
     const orgInfoOrgList = $('#organization-info #organizations-list');
     const orgInfoName = $('#organization-info #name');
@@ -83,12 +80,10 @@ $(document).ready(function () {
             // show left page, hide right page, change button text
             $('.add-experience-container.left-page').css('display', 'block');
             $('.add-experience-container.right-page').css('display', 'none');
-            $('#add-experience-btn1').text('Save');
+            $('#add-experience-btn1').text('Cancel');
             $('#add-experience-btn2').text('Next >');
         } else {
-            // handle save form data
-            saveFormFields();
-            // window.location.href = document.location.origin;
+            window.location.href = document.location.origin;
         }
     });
     $('#add-experience-btn2').click(function () {
@@ -100,7 +95,7 @@ $(document).ready(function () {
             $('#add-experience-btn2').text('Submit');
         } else {
             // handle submit form data
-            validateFormFields();
+            validateAndSaveFormFields();
         }
     });
 
@@ -186,6 +181,7 @@ $(document).ready(function () {
     // handle organizations autocomplete
     orgInfoName.keyup(function () {
         orgInfoOrgList.html('');
+        clearOrganizationInputFields();
         orgInfoOrgList.css({ 'display': 'none' });
         const prefix = $(this).val();
         if (prefix.length > 2) {
@@ -202,24 +198,122 @@ $(document).ready(function () {
 
     function populateAutoComplete(elem, organizations) {
         let html = '<ul class="list-unstyled m-0 p-0">';
-        if (organizations.length === 0) {
-            html += '<li class="m-0 p-0"><div onclick="addNewOrganization()">Add a new organization?</div></li></ul>';
-        } else {
-            organizations.forEach(function ({id, name}, _) {
-                html += '<li class="m-0 p-0"><div id="' + id + '" ';
-                html += 'onclick="populateOrganizationInfo(' + id + ');">';
+        let targetId, handler;
+        if (organizations.length > 0) {
+            organizations.forEach(function ({ id, name }, _) {
+                html += '<li class="m-0 p-0"><div id="organization-option-' + id + '">';
                 html += name + '</div></li>';
+                targetId = '#organization-option-' + id;
+                handler = function() {
+                    populateOrganizationInfo(id);
+                };
             });
             html += '</ul>';
+            elem.fadeIn();
+            elem.html(html);
+            elem.css({ 'display': 'block' });
+
+            setTimeout(function () {
+                $(targetId).click(function () {
+                    $('#organization-info #organizations-list').css({ 'display': 'none' });
+                    handler();
+                });
+            }, 1000);
         }
-        elem.fadeIn();
-        elem.html(html);
-        elem.css({ 'display': 'block' });
+    }
+
+    function populateOrganizationInfo(id) {
+        $('#organization-info #name').val($('#organizations-list #' + id).text());
+        $.ajax({
+            url: '/wp-admin/admin-ajax.php?action=organization_info',
+            data: { id },
+            success: function (data) {
+                const orgInfoFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
+                const orgInfoAddr = ['street', 'city', 'state', 'zipcode'];
+                const orgInfoSelect = ['region', 'country'];
+
+                const [orgInfo, orgAddr, orgContacts] = JSON.parse(JSON.stringify(data));
+
+                // save organization, addr, contacts ids
+                organizationPEInfoFields['organizationId'] = orgInfo['id'];
+                organizationPEInfoFields['organizationAddrId'] = orgInfo['address_id'];
+                organizationPEInfoFields['organizationContactsId'] = orgInfo['contacts_id'];
+
+                // populate with data from orgInfo
+                orgInfoFields.forEach(elemId => {
+                    $('#organization-info #' + elemId).val(orgInfo[elemId]);
+                });
+                orgInfo['affiliations'].split('\r\n').forEach(affiliation => {
+                    for (let i = 1; i <= 6; i++) {
+                        const elem = $('#affiliation-radio-btn-' + i);
+                        if (elem.data('value') === affiliation && !elem.prop('checked')) {
+                            elem.trigger('click');
+                        }
+                    }
+                });
+                orgInfo['sectors'].split('\r\n').forEach(sector => {
+                    let checked = false;
+                    for (let i = 1; i <= 12; i++) {
+                        const elem = $('#organization-sector-btn-' + i);
+                        if (elem.data('value') === sector && !elem.prop('checked')) {
+                            elem.trigger('click');
+                            checked = true;
+                        } else if (i === 12 && !checked && !elem.prop('checked')) {
+                            elem.trigger('click');
+                            $('#organization-sector-other-input').val(sector);
+                        }
+                    }
+                });
+                let checked = false;
+                for (let i = 1; i <= 7; i++) {
+                    const elem = $('#organization-type-btn-' + i);
+                    if (elem.data('value') === orgInfo['type'] && !elem.prop('checked')) {
+                        elem.trigger('click');
+                        checked = true;
+                    } else if (i === 7 && !checked && !elem.prop('checked')) {
+                        elem.trigger('click');
+                        $('#organization-type-other-input').val(orgInfo['type'])
+                    }
+                }
+                orgInfoSelect.forEach(elemId => {
+                    const elem = $('#organization-info #' + elemId);
+                    let key = elemId === 'country' ? 'location' : elemId;
+                    const selectedIndex = getOptionsArray(elem).indexOf(orgInfo[key]);
+                    elem.prop('selectedIndex', selectedIndex);
+                });
+
+                // populate with data from orgAddr
+                orgInfoAddr.forEach(elemId => {
+                    $('#organization-info #' + elemId).val(orgAddr[elemId]);
+                });
+
+                // populate with data from orgContacts
+                const contactGroups = [
+                    ['contact_1_', '#organization-contact-1'],
+                    ['contact_2_', '#organization-contact-2'],
+                    ['contact_3_', '#organization-contact-3']
+                ];
+                const contactFields = ['name', 'role', 'phone', 'email'];
+                contactGroups.forEach(group => {
+                    contactFields.forEach(field => {
+                        $(group[1] + ' #' + field).val(orgContacts[group[0] + field]);
+                        $(group[1]).removeClass('d-none');
+                    });
+                });
+            }
+        });
+    }
+
+    function getOptionsArray(elem) {
+        const options = [];
+        $(elem).find('option').each(function () {
+            options.push($(this).text());
+        });
+        return options;
     }
 
     function initOrganizationPEInfoFields() {
         return {
-            organizationId: '',
             organizationName: '',
             organizationStreet: '',
             organizationCity: '',
@@ -268,7 +362,7 @@ $(document).ready(function () {
 
     // form fields
     let organizationPEInfoFields = initOrganizationPEInfoFields();
-
+    const selectOneRadioButtons = new Set(['#organization-type-btn-', '#pe-duration-btn-', '#how-safe-radio-', '#how-responsive-radio-']);
     const radioButtonIds = {
         '#affiliation-radio-btn-': [6, 'organizationAffiliations'],
         '#organization-type-btn-': [7, 'organizationType'],
@@ -278,44 +372,48 @@ $(document).ready(function () {
         '#how-safe-radio-': [5, 'safetyScore'],
         '#how-responsive-radio-': [5, 'organizationResponsiveness']
     };
+    const inputFields = {
+        '#organization-type-btn-7': '#organization-type-other-input',
+        '#organization-sector-btn-12': '#organization-sector-other-input',
+        '#physical-experience-sector-radio-btn-12': '#physical-experience-sector-other-input'
+    };
 
-    const selectOneRadioButtons = new Set(['#organization-type-btn-', '#pe-duration-btn-', '#how-safe-radio-', '#how-responsive-radio-']);
-
-    for (const [id, [count, key]] of Object.entries(radioButtonIds)) {
-        for (let num = 1; num <= count; num++) {
-            const targetId = id + num;
+    for (const [id, [num, key]] of Object.entries(radioButtonIds)) {
+        for (let i = 1; i <= num; i++) {
+            const targetId = id + i;
             $(targetId).click(function () {
                 if (selectOneRadioButtons.has(id)) {
-                    // uncheck all the other buttons
-                    for (let nm = 1; nm <= count; nm++) {
-                        const tId = id + nm;
-                        if (nm !== num) {
+                    // uncheck all the other radio buttons and clear their data
+                    for (let j = 1; j <= num; j++) {
+                        const tId = id + j;
+                        if (j !== i && $(tId).prop('checked')) {
                             $(tId).prop('checked', false);
-                            if (tId === '#organization-type-btn-7') {
-                                // clear custom input
-                                $('#organization-type-other-input').val('');
+                            if (j === num) {
+                                clearData(key, $(inputFields[tId]).val());
+                                $(inputFields[tId]).val('');
                             }
                         }
                     }
                 }
-                // handle checked logic. if a button is already checked, uncheck and clear data. otherwise read data
-                let val = $(targetId).attr('data-value');
+                let val = $(targetId).data('value');
                 if (id === '#how-safe-radio-' || id === '#how-responsive-radio-') {
                     val = parseInt(val[0]);
                 }
-                if ($(targetId).attr('checked') === 'checked') {
-                    $(targetId).prop('checked', false);
-                    clearData(key, val);
-                } else {
-                    storeData(key, val);
+                if (!Object.keys(inputFields).includes(targetId)) {
+                    if ($(targetId).prop('checked')) {
+                        storeData(key, val);
+                    } else {
+                        clearData(key, val);
+                    }
+                } else if (!$(targetId).prop('checked')) {
+                    $(inputFields[targetId]).val('');
                 }
             });
         }
     }
 
     function storeData(dataId, dataValue) {
-        const dataType = typeof organizationPEInfoFields[dataId];
-        if (dataType === 'string' || dataType === 'number') {
+        if (['string', 'number'].includes(typeof organizationPEInfoFields[dataId])) {
             organizationPEInfoFields[dataId] = dataValue;
         } else {
             organizationPEInfoFields[dataId].push(dataValue);
@@ -323,36 +421,17 @@ $(document).ready(function () {
     }
 
     function clearData(dataId, dataValue) {
-        const dataType = typeof organizationPEInfoFields[dataId];
-        if (dataType === 'string') {
+        if (typeof organizationPEInfoFields[dataId] === 'string') {
             organizationPEInfoFields[dataId] = '';
-        } else if (dataType === 'number') {
+        } else if (typeof organizationPEInfoFields[dataId] === 'number') {
             organizationPEInfoFields[dataId] = 0;
         } else {
-            const remaining = [];
-            for (const value of organizationPEInfoFields[dataId]) {
-                if (value !== dataValue) {
-                    remaining.push(dataValue);
-                }
-            }
-            organizationPEInfoFields[dataId] = remaining;
+            organizationPEInfoFields[dataId] = organizationPEInfoFields[dataId].filter(data => data !== dataValue);
         }
-    }
-    
-    
-    // highlight all unchecked fields
-    function highlightAllUncheckedFields() {
-        
-    }
-    
-    
-    // save form fields
-    function saveFormFields() {
-        
     }
 
     // on form submit
-    function validateFormFields() {
+    function validateAndSaveFormFields() {
         readOtherFormData();
         readFormOptionsData();
         readPracticeExperienceInfo();
@@ -370,11 +449,10 @@ $(document).ready(function () {
             type: 'post',
             url: '/wp-admin/admin-ajax.php?action=submission',
             data: organizationPEInfoFields,
-            success: function (response) {
+            success: function () {
                 alert('Data submission success!');
                 organizationPEInfoFields = initOrganizationPEInfoFields();
-                window.location.href = '/';
-                console.log(response);
+                window.location.href = document.location.origin;
             },
             error: function () {
                 alert('Failed to post data!');
@@ -480,6 +558,36 @@ $(document).ready(function () {
         }
     }
 
+    // clears out organization information state on page
+    function clearOrganizationInputFields() {
+        delete organizationPEInfoFields['organizationId'];
+        delete organizationPEInfoFields['organizationAddrId'];
+        delete organizationPEInfoFields['organizationContactsId'];
 
-
+        ['street', 'city', 'state', 'zipcode', 'phone', 'email', 'website'].forEach(elemId => {
+            $('#organization-info #' + elemId).val('');
+        });
+        ['#organization-type-other-input', '#organization-sector-other-input'].forEach(elemId => {
+            $(elemId).val('');
+        });
+        ['region', 'country'].forEach(elemId => {
+            $('#organization-info #' + elemId).prop('selectedIndex', 0);
+        });
+        const radios = {'#affiliation-radio-btn-': 6, '#organization-type-btn-': 7, '#organization-sector-btn-': 12 };
+        $.each(radios, (elemId, num) => {
+            for (let i = 1; i <= num; i++) {
+                if ($(elemId + i).prop('checked')) {
+                    $(elemId + i).trigger('click');
+                }
+            }
+        });
+        [1, 2, 3].forEach(num => {
+            [' #name', ' #role', ' #phone', ' #email'].forEach(elemId => {
+                $('#organization-contact-' + num + elemId).val('');
+                if (num > 1) {
+                    $('#organization-contact-' + num).addClass('d-none');
+                }
+            });
+        });
+    }
 });

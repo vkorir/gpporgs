@@ -7,7 +7,6 @@
  * Time: 10:56
  */
 
-require 'utils.php';
 get_header();
 ?>
 
@@ -47,13 +46,7 @@ get_header();
                         <label class="col-lg-2 col-md-2 col-sm-1" for="country">Country</label>
                         <select class="custom-select col-lg-9 col-md-6 col-sm-8 px-1" id="country">
                             <option selected>Select Country</option>
-                            <?php
-                            $value = 1;
-                            foreach (get_countries() as $country) {
-                                echo '<option value="' . $value . '">' . $country . '</option>';
-                                $value++;
-                            }
-                            ?>
+                            <?php var_dump(get_countries()); ?>
                         </select>
                     </div>
                     <?php
@@ -215,13 +208,7 @@ get_header();
                         <label class="col-lg-2 col-md-2 col-sm-1" for="country">Country</label>
                         <select class="custom-select col-lg-9 col-md-6 col-sm-8 px-1" id="country">
                             <option selected>Select Country</option>
-                            <?php
-                            $value = 1;
-                            foreach (get_countries() as $country) {
-                                echo '<option value="' . $value . '">' . $country . '</option>';
-                                $value++;
-                            }
-                            ?>
+                            <?php echo get_countries(); ?>
                         </select>
                     </div>
                 </fieldset>
@@ -331,7 +318,7 @@ get_header();
         </div>
         <hr />
         <div class="text-center">
-            <button class="add-experience-btn" id="add-experience-btn1" >Save</button>
+            <button class="add-experience-btn" id="add-experience-btn1" >Cancel</button>
             <button class="add-experience-btn" id="add-experience-btn2" >Next ></button>
         </div>
     </div>
