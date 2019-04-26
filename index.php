@@ -44,10 +44,6 @@ if (isset($_SESSION['access_token'])) {?>
                     // price range slider
                     echo slider('PRICE RANGE', 'w-100', 'price-range', '8000', '0', '10000', '500');
                     ?>
-                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-1">
-                        <input type="checkbox" id="checkbox-1" class="mdl-checkbox__input" checked>
-                        <span class="mdl-checkbox__label">Domestic</span>
-                    </label>
                 </div>
             </div>
             <div class="col-rounded-container-middle px-0">
