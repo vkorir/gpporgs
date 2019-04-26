@@ -12,7 +12,7 @@ function section_heading($value) {
 }
 
 function section_subheading($value) {
-    return '<h6 class="section-subheading my-3">' . $value . '</h6>';
+    return '<h6 class="section-subheading">' . $value . '</h6>';
 }
 
 function subsection_heading($name, $value, $directive) {
@@ -64,7 +64,7 @@ function get_regions() {
 function get_countries() {
     global $wpdb;
     $options = '';
-    foreach ($wpdb->get_results('SELECT name FROM countries;') as $country) {
+    foreach ($wpdb->get_results('select name from countries;') as $country) {
         $options .= '<option>' . $country->name . '</option>';
     }
     return $options;
@@ -178,7 +178,7 @@ add_action('wp_ajax_organizations', 'get_organizations');
 add_action('wp_ajax_nopriv_organizations', 'get_organizations');
 function get_organizations() {
     global $wpdb;
-    $query = "SELECT id, name FROM gpp_organization_info WHERE name LIKE '%" . $_GET['prefix'] . "%'";
+    $query = 'select id, name from gpp_organization_info where name LIKE \'%' . $_GET['prefix'] . '%\'';
     $result = $wpdb->get_results($query);
     wp_send_json($result);
 }
@@ -189,17 +189,11 @@ add_action('wp_ajax_organization_info', 'get_organization_info');
 add_action('wp_ajax_nopriv_organization_info', 'get_organization_info');
 function get_organization_info() {
     global $wpdb;
-    $info = $wpdb->get_results("SELECT * FROM gpp_organization_info WHERE id=" . $_GET['id'], ARRAY_A);
-    $address_id = 0;
-    $contacts_id = 0;
-    foreach ($wpdb->get_results("SELECT address_id FROM gpp_organization_info WHERE id=" . $_GET['id']) as $key => $row) {
-        $address_id = $row->address_id;
-    }
-    foreach ($wpdb->get_results("SELECT contacts_id FROM gpp_organization_info WHERE id=" . $_GET['id']) as $key => $row) {
-        $contacts_id = $row->contacts_id;
-    }
-    $addr = $wpdb->get_results("SELECT * FROM gppporgs_addresses WHERE id=" . $address_id);
-    $contacts = $wpdb->get_results("SELECT * FROM gpp_organization_contacts WHERE id=" . $contacts_id);
+    $info = $wpdb->get_results('select * from gpp_organization_info where id=' . $_GET['id']);
+    $address_id = $wpdb->get_var('select address_id from gpp_organization_info where id=' . $_GET['id']);
+    $contacts_id = $wpdb->get_var('select contacts_id from gpp_organization_info where id=' . $_GET['id']);
+    $addr = $wpdb->get_results('select * from gpp_addresses where id=' . $address_id);
+    $contacts = $wpdb->get_results('select * from gpp_organization_contacts where id=' . $contacts_id);
     wp_send_json(array_merge($info, $addr, $contacts));
 }
 
@@ -241,10 +235,13 @@ function submission() {
 
     // store org info
     $table = 'gpp_organization_info';
-    $data = get_organization_info_data($org_addr_id, $org_contacts_id);
+    $data = get_organization_info_data($org_addr_id, $org_contacts_id, $_POST['costOfPhysicalExperience']);
     $format = array('%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
     if (isset($_POST['organizationId'])) {
         $org_id = $_POST['organizationId'];
+        $avg_cost = $wpdb->get_var('select avg_cost_of_pe from gpp_organization_info where id=' . $org_id);
+        $reviews = $wpdb->get_var('select count(*) from gpp_gpp_practice_experience_reviews where organization_id=' . $org_id);
+        $data['avg_cost_of_pe'] = ($data['avg_cost_of_pe'] + $avg_cost * $reviews) / ($reviews + 1);
         $data = array_merge(array('id' => $org_id), $data);
         $format = array_merge(array('%d'), $format);
         $wpdb->replace($table, $data, $format);
@@ -296,7 +293,7 @@ function get_organization_contacts_data() {
     );
 }
 
-function get_organization_info_data($addr_id, $contacts_id) {
+function get_organization_info_data($addr_id, $contacts_id, $avg_cost_of_pe) {
     return array(
         'name' => $_POST['organizationName'],
         'address_id' => $addr_id,
@@ -310,7 +307,7 @@ function get_organization_info_data($addr_id, $contacts_id) {
         'sectors' => $_POST['organizationSectors'],
         'contacts_id' => $contacts_id,
         'approved_status' => 0,
-        'avg_cost_of_pe' => 0
+        'avg_cost_of_pe' => $avg_cost_of_pe
     );
 }
 

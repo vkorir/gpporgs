@@ -21,22 +21,22 @@ if (isset($_SESSION['access_token'])) {?>
 
                     // area subsection
                     $areas = array(
-                        'area-radio-btn-1' => 'domestic',
-                        'area-radio-btn-2' => 'international'
+                        'area-radio-btn-1' => 'Domestic',
+                        'area-radio-btn-2' => 'International'
                     );
                     echo section_subheading('AREA');
                     echo radio_buttons($areas);
 
                     // sectors subsection
                     $sectors = array(
-                        'sectors-btn-1' => 'information technology',
-                        'sectors-btn-2' => 'education',
-                        'sectors-btn-3' => 'environment / sustainability',
-                        'sectors-btn-4' => 'business',
-                        'sectors-btn-5' => 'healthcare',
-                        'sectors-btn-6' => 'basic rights',
-                        'sectors-btn-7' => 'relief mobilization',
-                        'sectors-btn-8' => 'gender empowerment'
+                        'sectors-btn-1' => 'Information Technology',
+                        'sectors-btn-2' => 'Education',
+                        'sectors-btn-3' => 'Environment / Sustainability',
+                        'sectors-btn-4' => 'Business',
+                        'sectors-btn-5' => 'Healthcare',
+                        'sectors-btn-6' => 'Basic Rights',
+                        'sectors-btn-7' => 'Relief Mobilization',
+                        'sectors-btn-8' => 'Gender Empowerment'
                     );
                     echo section_subheading('SECTOR');
                     echo radio_buttons($sectors);
@@ -74,12 +74,11 @@ if (isset($_SESSION['access_token'])) {?>
                 </div>
                 <div class="rounded-container sort-by">
                     <?php
-                    // render sort by
                     $sort_options = array(
-                        'sort-by-btn-1' => 'closest to UC Berkeley',
-                        'sort-by-btn-2' => 'number of projects',
-                        'sort-by-btn-4' => 'responsiveness of org',
-                        'sort-by-btn-5' => 'most recent projects'
+                        'sort-by-btn-1' => 'Closest to UC Berkeley',
+                        'sort-by-btn-2' => 'Number of projects',
+                        'sort-by-btn-4' => 'Responsiveness of org',
+                        'sort-by-btn-5' => 'Most recent projects'
                     );
                     echo section_heading('SORT BY');
                     echo radio_buttons($sort_options);
