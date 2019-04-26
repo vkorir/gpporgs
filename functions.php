@@ -115,6 +115,17 @@ function datatable_resources() {
     wp_enqueue_script('datatable_js');
 }
 
+// material design lite resources
+add_action('wp_enqueue_scripts', 'mdl_resources');
+function mdl_resources() {
+    wp_register_style('mdl_css', get_template_directory_uri() . '/mdl/material.min.css', array(), false, 'all');
+    wp_enqueue_style('mdl_css');
+
+    wp_register_script('mdl_js', get_template_directory_uri() . '/mdl/material.min.js', '', 1, true);
+    wp_enqueue_script('mdl_js');
+
+    wp_enqueue_style('wpb-google-fonts', 'https://fonts.googleapis.com/icon?family=Material+Icons', false);
+}
 
 // load custom js
 add_action('wp_enqueue_scripts', 'load_js');
