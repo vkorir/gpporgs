@@ -115,18 +115,6 @@ function datatable_resources() {
     wp_enqueue_script('datatable_js');
 }
 
-// material design lite resources
-add_action('wp_enqueue_scripts', 'mdl_resources');
-function mdl_resources() {
-    wp_register_style('mdl_css', get_template_directory_uri() . '/mdl/material.min.css', array(), false, 'all');
-    wp_enqueue_style('mdl_css');
-
-    wp_register_script('mdl_js', get_template_directory_uri() . '/mdl/material.min.js', '', 1, true);
-    wp_enqueue_script('mdl_js');
-
-    wp_enqueue_style('wpb-google-fonts', 'https://fonts.googleapis.com/icon?family=Material+Icons', false);
-}
-
 // load custom js
 add_action('wp_enqueue_scripts', 'load_js');
 function load_js() {
@@ -158,38 +146,36 @@ function redirect_login() {
 add_action('wp_ajax_database_records', 'database_records');
 add_action('wp_ajax_nopriv_database_records', 'database_records');
 function database_records() {
-    $table = 'gpp_organization_info';
-    $primaryKey = 'id';
-    $columns = array(
-        array('db' => 'name', 'dt' => 0),
-        array('db' => 'type', 'dt' => 1),
-        array('db' => 'location', 'dt' => 2),
-        array('db' => 'sectors', 'dt' => 3),
-	    array('db' => 'region', 'dt' => 4),
-        array('db' => 'avg_cost_of_pe', 'dt' => 5)
+    global $wpdb;
+    if (isset($_POST['area'])) {
+        $_SESSION['dataTableState']['area'] = $_POST['area'];
+    }
+    if (isset($_POST['sector'])) {
+        $_SESSION['dataTableState']['sector'] = $_POST['sector'];
+    }
+    if (isset($_POST['price'])) {
+        $_SESSION['dataTableState']['price'] = $_POST['price'];
+    }
+    $area_options = array(
+        'all' => ' where location like "%"',
+        'domestic' => ' where location="united states"',
+        'international' => ' where location != "united states"'
     );
-    $sql_details = array(
-        'user' => DB_USER,
-        'pass' => DB_PASSWORD,
-        'db' => DB_NAME,
-        'host' => DB_HOST
-    );
-
-    require('ssp.class.php');
-
-    echo json_encode(
-        SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns )
-    );
-    wp_die();
+    $query = 'select name, type, location, sectors, region, avg_cost_of_pe from gpp_organization_info';
+    $query .= $area_options[$_SESSION['dataTableState']['area']];
+    if ($_SESSION['dataTableState']['sector'] != 'all') {
+        $query .= ' and sectors like "%' . $_SESSION['dataTableState']['sector'] . '%"';
+    }
+    $query .= ' and avg_cost_of_pe <= ' . $_SESSION['dataTableState']['price'];
+    wp_send_json($wpdb->get_results($query));
 }
-
 
 // fetch organization names
 add_action('wp_ajax_organizations', 'get_organizations');
 add_action('wp_ajax_nopriv_organizations', 'get_organizations');
 function get_organizations() {
     global $wpdb;
-    $query = 'select id, name from gpp_organization_info where name LIKE \'%' . $_GET['prefix'] . '%\'';
+    $query = 'select id, name from gpp_organization_info where name like \'%' . $_GET['prefix'] . '%\'';
     $result = $wpdb->get_results($query);
     wp_send_json($result);
 }

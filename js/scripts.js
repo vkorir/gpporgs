@@ -6,58 +6,96 @@ $(document).ready(function () {
     const orgListRight = orgListWidth / 9 + 'px';
     orgInfoOrgList.css({ 'width': (orgListWidth + 12) + 'px', 'right': orgListRight} );
 
+    // initialize datatable
+    dataTableAjax({}, dataTablesUtil);
 
-    const datatable = $('#organizations-database-records').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '/wp-admin/admin-ajax.php?action=database_records',
-        pagingType: 'numbers',
-        scrollY: $('#table-container').height(),
-        scrollCollapse: true,
-        dom: 'rt<"bottom"lp>',
-        columnDefs: [
-            {
-                targets: [4, 5],
-                visible: false,
-                searchable: true
-            }
-        ]
-    }).on('click', 'tbody tr', function () {
-        console.log('clicked!');
-    });
-    $('#main-search-bar').keyup(function () {   // hook main search bar with datatable
-        datatable.search(this.value).draw();
-    });
-    
-    // enable sectors on table filter
-    for (let num = 1; num <= 8; num++) {
-        $('#sectors-btn-' + num).click(function () {
-            for (let nm = 1; nm <= 8; nm++) {
-                if (num !== nm) {
-                    $('#sectors-btn-' + nm).prop('checked', false);
+    function dataTableAjax(state, handler) {
+        $.ajax({
+            type: 'post',
+            url: '/wp-admin/admin-ajax.php?action=database_records',
+            data: state ,
+            success: data => {
+                const newRows = [];
+                for (const organization of JSON.parse(JSON.stringify(data))) {
+                    newRows.push(Object.values(organization));
                 }
+                handler(newRows);
             }
-            $('#main-search-bar').val($('#sectors-btn-' + num).data('value')).keyup();
         });
     }
 
-    // domestic and international filters
-    $('#area-radio-btn-1').click(function () {
-        if (!$('#area-radio-btn-1').prop('checked')) {
-            $('#main-search-bar').val('').keyup();
-        } else {
-            $('#main-search-bar').val('United States').keyup();
-            $('#area-radio-btn-2').prop('checked', false);
+    function dataTablesUtil(organizationRows) {
+        const datatable = $('#organizations-database-records').DataTable( {
+            data: organizationRows,
+            columns: [
+                { title: 'Name' },
+                { title: 'Type' },
+                { title: 'Location' },
+                { title: 'Sectors' },
+                { title: 'Region'},
+                { title: 'Average Cost' }
+            ],
+            columnDefs: [
+                {
+                    targets: [4, 5],
+                    visible: false,
+                    searchable: true
+                }
+            ],
+            pagingType: 'numbers',
+            scrollY: $('#table-container').height(),
+            scrollCollapse: true,
+            dom: 'rt<"bottom"lp>'
+        } );
+
+        // search bar
+        $('#main-search-bar').keyup(function () {
+            datatable.search(this.value).draw();
+        });
+
+        // domestic and international filters
+        const handler = newRows => datatable.clear().rows.add(newRows).draw();
+        const areaDomestic = $('#area-radio-btn-1'), areaInternational = $('#area-radio-btn-2');
+        areaDomestic.click(function () {
+            if (areaDomestic.prop('checked')) {
+                areaInternational.prop('checked', false);
+                dataTableAjax({ area: 'domestic' }, handler);
+            } else {
+                dataTableAjax({ area: 'all' }, handler);
+            }
+        });
+        areaInternational.click(function () {
+            if (areaInternational.prop('checked')) {
+                areaDomestic.prop('checked', false);
+                dataTableAjax({ area: 'international' }, handler);
+            } else {
+                dataTableAjax({ area: 'all' }, handler);
+            }
+        });
+
+        // enable filter by sectors on datatable
+        for (let num = 1; num <= 8; num++) {
+            const elem = $('#sectors-btn-' + num);
+            elem.click(function () {
+                if (elem.prop('checked')) {
+                    for (let nm = 1; nm <= 8; nm++) {
+                        if (num !== nm) {
+                            $('#sectors-btn-' + nm).prop('checked', false);
+                        }
+                    }
+                    dataTableAjax({ sector: elem.data('value') }, handler);
+                } else {
+                    dataTableAjax({ sector: 'all' }, handler);
+                }
+            });
         }
-    });
-    $('#area-radio-btn-2').click(function () {
-        if (!$('#area-radio-btn-2').prop('checked')) {
-            $('#main-search-bar').val('').keyup();
-        } else {
-            $('#main-search-bar').val($('#area-radio-btn-2').data('value')).keyup();
-            $('#area-radio-btn-2').prop('checked', false);
-        }
-    });
+
+        const priceRangeSlider = $('#price-range-slider');
+        priceRangeSlider.change(() => {
+            $('#price-range-display').val(priceRangeSlider.val());
+            dataTableAjax({ price: priceRangeSlider.val() }, handler);
+        });
+    }
 
     // restrict number entries
     const zipcode_ids = ['#organization-info #zipcode', '#practice-experience-address #zipcode'];

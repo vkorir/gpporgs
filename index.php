@@ -9,6 +9,8 @@
 start_session();
 get_header();
 
+$_SESSION['dataTableState'] = array('area' => 'all', 'sector' => 'all', 'price' => 8000);
+
 if (isset($_SESSION['access_token'])) {?>
     <!--  logged in status  -->
     <div class="container">
@@ -52,14 +54,7 @@ if (isset($_SESSION['access_token'])) {?>
                     <br />
                     <div id="table-container" class="m-0 p-0">
                         <table id="organizations-database-records" class="table table-striped table-bordered table-sm mt-3" style="width: 100%">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Location</th>
-                                <th>Sectors</th>
-                            </tr>
-                            </thead>
+                            <!--           Load Database Info                 -->
                         </table>
                     </div>
                 </div>
