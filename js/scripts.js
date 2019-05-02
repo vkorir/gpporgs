@@ -28,6 +28,7 @@ $(document).ready(function () {
         const datatable = $('#organizations-database-records').DataTable( {
             data: organizationRows,
             columns: [
+                { title: 'id' },
                 { title: 'Name' },
                 { title: 'Type' },
                 { title: 'Location' },
@@ -37,7 +38,7 @@ $(document).ready(function () {
             ],
             columnDefs: [
                 {
-                    targets: [4, 5],
+                    targets: [0, 5, 6],
                     visible: false,
                     searchable: true
                 }
@@ -46,7 +47,10 @@ $(document).ready(function () {
             scrollY: $('#table-container').height(),
             scrollCollapse: true,
             dom: 'rt<"bottom"lp>'
-        } );
+        }).on('click', 'tr', function () {
+            sessionStorage.setItem('targetOrgId', datatable.row($(this)).data()[0]);
+            window.location.href = '/organization-details';
+        });
 
         // search bar
         $('#main-search-bar').keyup(function () {
@@ -394,7 +398,8 @@ $(document).ready(function () {
             organizationStrengthsAndWeaknesses: '',
             otherComments: '',
             safetyScore: 3,
-            organizationResponsiveness: 3
+            organizationResponsiveness: 3,
+            timeStamp: Date.now()
         }
     }
 

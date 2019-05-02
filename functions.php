@@ -161,7 +161,7 @@ function database_records() {
         'domestic' => ' where location="united states"',
         'international' => ' where location != "united states"'
     );
-    $query = 'select name, type, location, sectors, region, avg_cost_of_pe from gpp_organization_info';
+    $query = 'select id, name, type, location, sectors, region, avg_cost_of_pe from gpp_organization_info';
     $query .= $area_options[$_SESSION['dataTableState']['area']];
     if ($_SESSION['dataTableState']['sector'] != 'all') {
         $query .= ' and sectors like "%' . $_SESSION['dataTableState']['sector'] . '%"';
@@ -325,5 +325,8 @@ function get_organization_review_data($organization_id, $address_id) {
         'other_comments' => $_POST['otherComments'],
         'safety_score' => $_POST['safetyScore'],
         'organization_responsiveness' => $_POST['organizationResponsiveness'],
+        'reviewer_name' => $_SESSION['givenName'] . ' ' . $_SESSION['familyName'],
+        'reviewer_email' => $_SESSION['email'],
+        'timestamp' => $_POST['timeStamp']
     );
 }
