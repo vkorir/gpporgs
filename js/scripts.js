@@ -48,8 +48,8 @@ $(document).ready(function () {
             scrollCollapse: true,
             dom: 'rt<"bottom"lp>'
         }).on('click', 'tr', function () {
-            sessionStorage.setItem('targetOrgId', datatable.row($(this)).data()[0]);
             window.location.href = '/organization-details';
+            sessionStorage.setItem('targetOrgId', datatable.row($(this)).data()[0]);
         });
 
         // search bar
@@ -247,7 +247,7 @@ $(document).ready(function () {
                 html += name + '</div></li>';
                 targetId = '#organization-option-' + id;
                 handler = function() {
-                    populateOrganizationInfo(id);
+                    populateOrganizationInfo(id, '#add-experience-page ');
                 };
             });
             html += '</ul>';
@@ -264,8 +264,16 @@ $(document).ready(function () {
         }
     }
 
-    function populateOrganizationInfo(id) {
-        $('#organization-info #name').val($('#organizations-list #' + id).text());
+    // when organization details page loads
+    $('#organization-details-page').ready(() => {
+        populateOrganizationInfo(sessionStorage.getItem('targetOrgId'), '#organization-details-page ', true);
+    });
+    $('#add-experience-page').ready(() => clearOrganizationInputFields());
+
+    function populateOrganizationInfo(id, pageId, disableInputs=false) {
+        if (!disableInputs) {
+            $('#organization-info #name').val($('#organizations-list #' + id).text());
+        }
         $.ajax({
             url: '/wp-admin/admin-ajax.php?action=organization_info',
             data: { id },
@@ -281,52 +289,63 @@ $(document).ready(function () {
                 organizationPEInfoFields['organizationAddrId'] = orgInfo['address_id'];
                 organizationPEInfoFields['organizationContactsId'] = orgInfo['contacts_id'];
 
+                let elem;
                 // populate with data from orgInfo
                 orgInfoFields.forEach(elemId => {
-                    $('#organization-info #' + elemId).val(orgInfo[elemId]);
+                    elem = $(pageId + '#organization-info #' + elemId);
+                    elem.val(orgInfo[elemId]);
+                    disableInput(elem, disableInputs);
                 });
                 orgInfo['affiliations'].split('\r\n').forEach(affiliation => {
                     for (let i = 1; i <= 6; i++) {
-                        const elem = $('#affiliation-radio-btn-' + i);
+                        elem = $(pageId + '#affiliation-radio-btn-' + i);
                         if (elem.data('value') === affiliation && !elem.prop('checked')) {
                             elem.trigger('click');
                         }
+                        disableInput(elem, disableInputs);
                     }
                 });
                 orgInfo['sectors'].split('\r\n').forEach(sector => {
                     let checked = false;
                     for (let i = 1; i <= 12; i++) {
-                        const elem = $('#organization-sector-btn-' + i);
+                        elem = $(pageId + '#organization-sector-btn-' + i);
                         if (elem.data('value') === sector && !elem.prop('checked')) {
                             elem.trigger('click');
                             checked = true;
                         } else if (i === 12 && !checked && !elem.prop('checked')) {
                             elem.trigger('click');
-                            $('#organization-sector-other-input').val(sector);
+                            $(pageId + '#organization-sector-other-input').val(sector);
                         }
+                        disableInput(elem, disableInputs);
+                        disableInput($(pageId + '#organization-sector-other-input'), disableInputs);
                     }
                 });
                 let checked = false;
                 for (let i = 1; i <= 7; i++) {
-                    const elem = $('#organization-type-btn-' + i);
+                    elem = $(pageId + '#organization-type-btn-' + i);
                     if (elem.data('value') === orgInfo['type'] && !elem.prop('checked')) {
                         elem.trigger('click');
                         checked = true;
                     } else if (i === 7 && !checked && !elem.prop('checked')) {
                         elem.trigger('click');
-                        $('#organization-type-other-input').val(orgInfo['type'])
+                        $(pageId + '#organization-type-other-input').val(orgInfo['type'])
                     }
+                    disableInput(elem, disableInputs);
+                    disableInput($(pageId + '#organization-type-other-input'), disableInputs);
                 }
                 orgInfoSelect.forEach(elemId => {
-                    const elem = $('#organization-info #' + elemId);
+                    elem = $(pageId + '#organization-info #' + elemId);
                     let key = elemId === 'country' ? 'location' : elemId;
                     const selectedIndex = getOptionsArray(elem).indexOf(orgInfo[key]);
                     elem.prop('selectedIndex', selectedIndex);
+                    disableInput(elem, disableInputs);
                 });
 
                 // populate with data from orgAddr
                 orgInfoAddr.forEach(elemId => {
-                    $('#organization-info #' + elemId).val(orgAddr[elemId]);
+                    elem = $(pageId + '#organization-info #' + elemId);
+                    elem.val(orgAddr[elemId]);
+                    disableInput(elem, disableInputs);
                 });
 
                 // populate with data from orgContacts
@@ -338,12 +357,20 @@ $(document).ready(function () {
                 const contactFields = ['name', 'role', 'phone', 'email'];
                 contactGroups.forEach(group => {
                     contactFields.forEach(field => {
-                        $(group[1] + ' #' + field).val(orgContacts[group[0] + field]);
-                        $(group[1]).removeClass('d-none');
+                        elem = $(pageId + group[1] + ' #' + field);
+                        elem.val(orgContacts[group[0] + field]);
+                        $(pageId + group[1]).removeClass('d-none');
+                        disableInput(elem, disableInputs);
                     });
                 });
             }
         });
+    }
+
+    function disableInput(elem, check) {
+        if (check) {
+            elem.prop('disabled', true);
+        }
     }
 
     function getOptionsArray(elem) {
@@ -603,6 +630,7 @@ $(document).ready(function () {
 
     // clears out organization information state on page
     function clearOrganizationInputFields() {
+        organizationPEInfoFields = initOrganizationPEInfoFields();
         delete organizationPEInfoFields['organizationId'];
         delete organizationPEInfoFields['organizationAddrId'];
         delete organizationPEInfoFields['organizationContactsId'];
@@ -633,4 +661,24 @@ $(document).ready(function () {
             });
         });
     }
+
+
+    /* ORGANIZATION DETAILS */
+
+    const organizationDetailsSwitchBtn = $('#organization-details-btn');
+    const organizationDetailsSwitchBtnText = 'Organization Reviews';
+    $('#organization-details-page .add-contact-btn-container').addClass('d-none');
+    organizationDetailsSwitchBtn.click(() => {
+        if (organizationDetailsSwitchBtn.text() === organizationDetailsSwitchBtnText) {
+            $('#organization-details-page .add-experience-container.right-page').css({ display: 'block' });
+            $('#organization-details-page .add-experience-container.left-page').css({ display: 'none' });
+            $('#organization-details-page .text-center .display-5').text('Organization Reviews');
+            organizationDetailsSwitchBtn.text('Organization Details');
+        } else {
+            $('#organization-details-page .add-experience-container.left-page').css({ display: 'block' });
+            $('#organization-details-page .add-experience-container.right-page').css({ display: 'none' });
+            $('#organization-details-page .text-center .display-5').text('Organization Details');
+            organizationDetailsSwitchBtn.text(organizationDetailsSwitchBtnText);
+        }
+    });
 });

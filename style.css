@@ -396,3 +396,8 @@ textarea {
 	color: #fff;
 }
 
+/* Organization Details */
+
+#organization-details-btn {
+	width: 200px;
+}
