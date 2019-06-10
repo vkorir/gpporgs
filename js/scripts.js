@@ -335,17 +335,23 @@ $(document).ready(function () {
                     }
                 });
                 let checked = false;
-                for (let i = 1; i <= 7; i++) {
-                    elem = $(pageId + '#organization-type-btn-' + i);
-                    if (elem.data('value') === orgInfo['type'] && !elem.prop('checked')) {
-                        elem.trigger('click');
-                        checked = true;
-                    } else if (i === 7 && !checked && !elem.prop('checked')) {
-                        elem.trigger('click');
-                        $(pageId + '#organization-type-other-input').val(orgInfo['type'])
+                orgDetailsRadioIndex = 1;
+                if (isOrgDetailsPage) {
+                    elem = $(pageId + '#organization-type-btn-' + orgDetailsRadioIndex);
+                    elem.parent().html(radioBtn('#organization-sector-btn-' + orgDetailsRadioIndex, orgInfo['type']));
+                } else {
+                    for (let i = 1; i <= 7; i++) {
+                        elem = $(pageId + '#organization-type-btn-' + i);
+                        if (elem.data('value') === orgInfo['type'] && !elem.prop('checked')) {
+                            elem.trigger('click');
+                            checked = true;
+                        } else if (i === 7 && !checked && !elem.prop('checked')) {
+                            elem.trigger('click');
+                            $(pageId + '#organization-type-other-input').val(orgInfo['type'])
+                        }
+                        disableInput(elem, isOrgDetailsPage);
+                        disableInput($(pageId + '#organization-type-other-input'), isOrgDetailsPage);
                     }
-                    disableInput(elem, isOrgDetailsPage);
-                    disableInput($(pageId + '#organization-type-other-input'), isOrgDetailsPage);
                 }
                 if (isOrgDetailsPage) {
                     const radios = [['#affiliation-radio-btn-', 6], ['#organization-sector-btn-', 12], ['#organization-type-btn-', 7]];

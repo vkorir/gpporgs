@@ -409,3 +409,6 @@ textarea {
 #organization-details-page .directive {
 	display: none;
 }
+#organization-details-page fieldset div {
+	padding: 0;
+}
