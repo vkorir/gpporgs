@@ -270,8 +270,8 @@ $(document).ready(function () {
     });
     $('#add-experience-page').ready(() => clearOrganizationInputFields());
 
-    function populateOrganizationInfo(id, pageId, disableInputs=false) {
-        if (!disableInputs) {
+    function populateOrganizationInfo(id, pageId, isOrgDetailsPage=false) {
+        if (!isOrgDetailsPage) {
             $('#organization-info #name').val($('#organizations-list #' + id).text());
         }
         $.ajax({
@@ -294,30 +294,44 @@ $(document).ready(function () {
                 orgInfoFields.forEach(elemId => {
                     elem = $(pageId + '#organization-info #' + elemId);
                     elem.val(orgInfo[elemId]);
-                    disableInput(elem, disableInputs);
+                    disableInput(elem, isOrgDetailsPage);
                 });
+                let orgDetailsRadioIndex = 1;
                 orgInfo['affiliations'].split('\r\n').forEach(affiliation => {
-                    for (let i = 1; i <= 6; i++) {
-                        elem = $(pageId + '#affiliation-radio-btn-' + i);
-                        if (elem.data('value') === affiliation && !elem.prop('checked')) {
-                            elem.trigger('click');
+                    if (isOrgDetailsPage) {
+                        elem = $(pageId + '#affiliation-radio-btn-' + orgDetailsRadioIndex);
+                        elem.parent().html(radioBtn('#affiliation-radio-btn-' + orgDetailsRadioIndex, affiliation));
+                        orgDetailsRadioIndex++;
+                    } else {
+                        for (let i = 1; i <= 6; i++) {
+                            elem = $(pageId + '#affiliation-radio-btn-' + i);
+                            if (elem.data('value') === affiliation && !elem.prop('checked')) {
+                                elem.trigger('click');
+                            }
+                            disableInput(elem, isOrgDetailsPage);
                         }
-                        disableInput(elem, disableInputs);
                     }
                 });
+                orgDetailsRadioIndex = 1;
                 orgInfo['sectors'].split('\r\n').forEach(sector => {
-                    let checked = false;
-                    for (let i = 1; i <= 12; i++) {
-                        elem = $(pageId + '#organization-sector-btn-' + i);
-                        if (elem.data('value') === sector && !elem.prop('checked')) {
-                            elem.trigger('click');
-                            checked = true;
-                        } else if (i === 12 && !checked && !elem.prop('checked')) {
-                            elem.trigger('click');
-                            $(pageId + '#organization-sector-other-input').val(sector);
+                    if (isOrgDetailsPage) {
+                        elem = $(pageId + '#organization-sector-btn-' + orgDetailsRadioIndex);
+                        elem.parent().html(radioBtn('#organization-sector-btn-' + orgDetailsRadioIndex, sector));
+                        orgDetailsRadioIndex++;
+                    } else {
+                        let checked = false;
+                        for (let i = 1; i <= 12; i++) {
+                            elem = $(pageId + '#organization-sector-btn-' + i);
+                            if (elem.data('value') === sector && !elem.prop('checked')) {
+                                elem.trigger('click');
+                                checked = true;
+                            } else if (i === 12 && !checked && !elem.prop('checked')) {
+                                elem.trigger('click');
+                                $(pageId + '#organization-sector-other-input').val(sector);
+                            }
+                            disableInput(elem, isOrgDetailsPage);
+                            disableInput($(pageId + '#organization-sector-other-input'), isOrgDetailsPage);
                         }
-                        disableInput(elem, disableInputs);
-                        disableInput($(pageId + '#organization-sector-other-input'), disableInputs);
                     }
                 });
                 let checked = false;
@@ -330,22 +344,33 @@ $(document).ready(function () {
                         elem.trigger('click');
                         $(pageId + '#organization-type-other-input').val(orgInfo['type'])
                     }
-                    disableInput(elem, disableInputs);
-                    disableInput($(pageId + '#organization-type-other-input'), disableInputs);
+                    disableInput(elem, isOrgDetailsPage);
+                    disableInput($(pageId + '#organization-type-other-input'), isOrgDetailsPage);
+                }
+                if (isOrgDetailsPage) {
+                    const radios = [['#affiliation-radio-btn-', 6], ['#organization-sector-btn-', 12], ['#organization-type-btn-', 7]];
+                    for (const [id, num] of radios) {
+                        for (let i = 1; i <= num; i++) {
+                            elem = $(id + i);
+                            if (!elem.prop('checked')) {
+                                elem.parent().addClass('d-none');
+                            }
+                        }
+                    }
                 }
                 orgInfoSelect.forEach(elemId => {
                     elem = $(pageId + '#organization-info #' + elemId);
                     let key = elemId === 'country' ? 'location' : elemId;
                     const selectedIndex = getOptionsArray(elem).indexOf(orgInfo[key]);
                     elem.prop('selectedIndex', selectedIndex);
-                    disableInput(elem, disableInputs);
+                    disableInput(elem, isOrgDetailsPage);
                 });
 
                 // populate with data from orgAddr
                 orgInfoAddr.forEach(elemId => {
                     elem = $(pageId + '#organization-info #' + elemId);
                     elem.val(orgAddr[elemId]);
-                    disableInput(elem, disableInputs);
+                    disableInput(elem, isOrgDetailsPage);
                 });
 
                 // populate with data from orgContacts
@@ -359,12 +384,18 @@ $(document).ready(function () {
                     contactFields.forEach(field => {
                         elem = $(pageId + group[1] + ' #' + field);
                         elem.val(orgContacts[group[0] + field]);
-                        $(pageId + group[1]).removeClass('d-none');
-                        disableInput(elem, disableInputs);
+                        if (orgContacts[group[0] + field] !== '') {
+                            $(pageId + group[1]).removeClass('d-none');
+                        }
+                        disableInput(elem, isOrgDetailsPage);
                     });
                 });
             }
         });
+    }
+
+    function radioBtn(id, value) {
+        return `<input id="${id}" type="checkbox" data-value="${value}" checked disabled><span class="checkmark"></span>${value}`;
     }
 
     function disableInput(elem, check) {

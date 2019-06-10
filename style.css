@@ -42,7 +42,7 @@ input[type='search']::placeholder {
 .navbar-nav .nav-item:nth-child(2) .nav-link,
 .navbar-nav .nav-item:nth-child(3) .nav-link,
 .navbar-nav .nav-item:nth-child(4) .nav-link,
-.done-with-experience .btn.practice-btn,
+.btn.practice-btn,
 .jumbotron .btn.jumbotron-login {
 	border-radius: 4px;
 	color: #ffffff;
@@ -101,7 +101,7 @@ hr {
 	text-align: center;
 }
 .rounded-container.middle-section {
-	margin: 10px;
+	margin: 10px 0 10px 10px;
 }
 .rounded-container.done-with-experience {
 	height: 200px;
@@ -110,12 +110,12 @@ hr {
 	width: 22%;
 }
 .col-rounded-container-middle {
-	width: 56%;
+	width: 78%;
 }
-.done-with-experience .btn.practice-btn {
+.btn.practice-btn {
 	font-size: 14px;
 }
-.done-with-experience .btn.practice-btn {
+.btn.practice-btn {
 	padding: 10px 20px;
 }
 .rounded-container.sort-by {
@@ -400,4 +400,12 @@ textarea {
 
 #organization-details-btn {
 	width: 200px;
+}
+#organization-details-page input,
+#organization-details-page select {
+	border: none;
+	background: transparent;
+}
+#organization-details-page .directive {
+	display: none;
 }

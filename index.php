@@ -17,6 +17,12 @@ if (isset($_SESSION['access_token'])) {?>
         <div class="row mx-0">
             <div class="col-rounded-container-side px-0">
                 <div class="rounded-container max-height">
+                    <h3>Hi <?php echo $_SESSION['givenName']; ?>,</h3>
+                    <p>done with your practice?</p>
+                    <div class="text-center">
+                        <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">+ Add Experience</a>
+                    </div>
+                    <br />
                     <?php
                     // filter by section heading
                     echo section_heading('FILTER BY');
@@ -52,6 +58,7 @@ if (isset($_SESSION['access_token'])) {?>
                 <div class="rounded-container max-height middle-section" id="middle-section-container">
                     <?php echo page_title('GPP Practice Experience Database'); ?>
                     <br />
+                    <br />
                     <div id="table-container" class="m-0 p-0">
                         <table id="organizations-database-records" class="table table-striped table-bordered table-sm mt-3" style="width: 100%">
                             <!--           Load Database Info                 -->
@@ -59,7 +66,7 @@ if (isset($_SESSION['access_token'])) {?>
                     </div>
                 </div>
             </div>
-            <div class="col-rounded-container-side px-0">
+            <div class="col-rounded-container-side px-0 d-none">
                 <div class="rounded-container done-with-experience pt-4">
                     <h4>Hi <?php echo $_SESSION['givenName']; ?>,</h4>
                     <p class="lead">done with your practice?</p>
@@ -67,18 +74,18 @@ if (isset($_SESSION['access_token'])) {?>
                         <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">+ Add Experience</a>
                     </div>
                 </div>
-                <div class="rounded-container sort-by">
-                    <?php
-                    $sort_options = array(
-                        'sort-by-btn-1' => 'Closest to UC Berkeley',
-                        'sort-by-btn-2' => 'Number of projects',
-                        'sort-by-btn-4' => 'Responsiveness of org',
-                        'sort-by-btn-5' => 'Most recent projects'
-                    );
-                    echo section_heading('SORT BY');
-                    echo radio_buttons($sort_options);
-                    ?>
-                </div>
+<!--                <div class="rounded-container sort-by">-->
+<!--                    --><?php
+//                    $sort_options = array(
+//                        'sort-by-btn-1' => 'Closest to UC Berkeley',
+//                        'sort-by-btn-2' => 'Number of projects',
+//                        'sort-by-btn-4' => 'Responsiveness of org',
+//                        'sort-by-btn-5' => 'Most recent projects'
+//                    );
+//                    echo section_heading('SORT BY');
+//                    echo radio_buttons($sort_options);
+//                    ?>
+<!--                </div>-->
             </div>
         </div>
     </div>

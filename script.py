@@ -2,11 +2,11 @@ import json
 import mysql.connector
 
 db = mysql.connector.connect(
-	host='192.168.94.100',
+	host='192.168.93.100',
 	user='root',
 	passwd='root',
 	database='local',
-	port='4002'
+	port='4006'
 	)
 cursor = db.cursor()
 

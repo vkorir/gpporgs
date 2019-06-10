@@ -1,5 +1,78 @@
 <?php
 
+require_once 'google-api/vendor/autoload.php';
+
+// OAuth Configuration
+
+// Set config params to access Google API
+$client_id = '1035290053103-56crsjin0a9bcbdphqqqd3mhtjh3rtdv.apps.googleusercontent.com';
+$client_secret = 'x93ezf9bhuybKEh1R_UeoVWV';
+$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/callback';
+
+// Create and Request to Google API
+$client = new Google_Client();
+$client->setApplicationName('GPPORGS Database');
+$client->setClientId($client_id);
+$client->setClientSecret($client_secret);
+$client->setRedirectUri($redirect_uri);
+
+// Add scope to access user info
+$client->addScope("https://www.googleapis.com/auth/userinfo.profile");
+$client->addScope("https://www.googleapis.com/auth/userinfo.email");
+
+// save login url
+$_SESSION['login_url'] = $client->createAuthUrl();
+
+add_action('rest_api_init', 'google_callback_api');
+function google_callback_api() {
+    register_rest_route('mmw/v1', '/callback/code=(?P<code>[a-zA-Z0-9-]+)',
+        array('methods' => 'GET', 'callback' => 'callback'));
+}
+function callback() {
+    global $client;
+    if (isset($_SESSION['access_token'])) { // check for access_token is set
+        $client->setAccessToken($_SESSION['access_token']);
+    } else if (isset($_GET['code'])) {  // check for auth code from Google API
+        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+        $_SESSION['access_token'] = $token;
+    } else {    // otherwise redirect to login
+        wp_redirect(home_url('/login'));
+        exit();
+    }
+
+// fetch user attributes from Google API
+    $obj_res = new Google_Service_Oauth2($client);
+    $user_data = $obj_res->userinfo_v2_me->get();
+    $email = $user_data['email'];
+    $name = ucwords(strtolower($user_data['givenName']));
+    $username = substr($email, 0, strpos($email, '@'));
+
+// check if existing user
+    $user = get_user_by('email', $email);
+
+    if ($user == false) { // register a new user
+        $random_password = wp_generate_password(16, false);
+        $id = wp_create_user($username, $random_password, $email);
+        $userdata = array(
+            'ID' => $id,
+            'display_name' => $name,
+            'role' => 'subscriber',
+            'google_id' => $user_data['id']
+        );
+        wp_insert_user($userdata);
+    }
+
+// register session variables
+    $_SESSION['email'] = $email;
+    $_SESSION['givenName'] = $name;
+    $_SESSION['familyName'] = $user_data['familyName'];
+
+
+// redirect user to front-page
+    wp_redirect(home_url());
+    exit();
+}
+
 
 // UI utility functions
 
@@ -64,7 +137,7 @@ function get_regions() {
 function get_countries() {
     global $wpdb;
     $options = '';
-    foreach ($wpdb->get_results('select name from countries;') as $country) {
+    foreach ($wpdb->get_results('select name from gpp_countries;') as $country) {
         $options .= '<option>' . $country->name . '</option>';
     }
     return $options;
