@@ -12,7 +12,7 @@ $(document).ready(function () {
     function dataTableAjax(state, handler) {
         $.ajax({
             type: 'post',
-            url: '/wp-admin/admin-ajax.php?action=database_records',
+            url: '/gpporgs/wp-admin/admin-ajax.php?action=database_records',
             data: state ,
             success: data => {
                 const newRows = [];
@@ -356,7 +356,7 @@ $(document).ready(function () {
         // make a post request to php back-end
         $.ajax({
             type: 'post',
-            url: '/wp-admin/admin-ajax.php?action=submission',
+            url: '/gpporgs/wp-admin/admin-ajax.php?action=submission',
             data: organizationPEInfoFields,
             success: function () {
                 alert('Data submission success!');
@@ -478,7 +478,7 @@ $(document).ready(function () {
             const prefix = addExperienceOrgInfoName.val();
             if (prefix.length > 2) {
                 $.ajax({
-                    url: '/wp-admin/admin-ajax.php?action=organizations',
+                    url: '/gpporgs/wp-admin/admin-ajax.php?action=organizations',
                     data: { prefix },
                     success: data => {
                         const result = $.parseJSON(JSON.stringify(data));
@@ -550,7 +550,7 @@ $(document).ready(function () {
         // populate organization input fields
         function addExperiencePopulateOrganizationInfo(id) {
             $.ajax({
-                url: '/wp-admin/admin-ajax.php?action=organization_info',
+                url: '/gpporgs/wp-admin/admin-ajax.php?action=organization_info',
                 data: { id },
                 success: data => {
                     const [orgInfo, orgAddr, orgContacts] = JSON.parse(JSON.stringify(data));
@@ -646,7 +646,7 @@ $(document).ready(function () {
     $('#organization-details-page').ready(() => {
         const id = sessionStorage.getItem('targetOrgId');
         $.ajax({
-            url: '/wp-admin/admin-ajax.php?action=organization_info',
+            url: '/gpporgs/wp-admin/admin-ajax.php?action=organization_info',
             data: { id },
             success: data => {
                 const [orgInfo, orgAddr, orgContacts] = JSON.parse(JSON.stringify(data));
