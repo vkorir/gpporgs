@@ -1,10 +1,10 @@
 $(document).ready(function () {
     // dynamic styles
-    const orgInfoOrgList = $('#organization-info #organizations-list');
-    const orgInfoName = $('#organization-info #name');
-    const orgListWidth = orgInfoName.width();
+    const addExperienceOrgList = $('#add-experience-page #organization-info #organizations-list');
+    const addExperienceOrgInfoName = $('#add-experience-page #organization-info #name');
+    const orgListWidth = addExperienceOrgInfoName.width();
     const orgListRight = orgListWidth / 9 + 'px';
-    orgInfoOrgList.css({ 'width': (orgListWidth + 12) + 'px', 'right': orgListRight} );
+    addExperienceOrgList.css({ 'width': (orgListWidth + 12) + 'px', 'right': orgListRight} );
 
     // initialize datatable
     dataTableAjax({}, dataTablesUtil);
@@ -219,204 +219,6 @@ $(document).ready(function () {
                 }
             });
     });
-
-    // handle organizations autocomplete
-    orgInfoName.keyup(function () {
-        orgInfoOrgList.html('');
-        clearOrganizationInputFields();
-        orgInfoOrgList.css({ 'display': 'none' });
-        const prefix = $(this).val();
-        if (prefix.length > 2) {
-            $.ajax({
-                url: '/wp-admin/admin-ajax.php?action=organizations',
-                data: { prefix },
-                success: function (data) {
-                    const result = $.parseJSON(JSON.stringify(data));
-                    populateAutoComplete(orgInfoOrgList, result);
-                }
-            });
-        }
-    });
-
-    function populateAutoComplete(elem, organizations) {
-        let html = '<ul class="list-unstyled m-0 p-0">';
-        let targetId, handler;
-        if (organizations.length > 0) {
-            organizations.forEach(function ({ id, name }, _) {
-                html += '<li class="m-0 p-0"><div id="organization-option-' + id + '">';
-                html += name + '</div></li>';
-                targetId = '#organization-option-' + id;
-                handler = function() {
-                    populateOrganizationInfo(id, '#add-experience-page ');
-                };
-            });
-            html += '</ul>';
-            elem.fadeIn();
-            elem.html(html);
-            elem.css({ 'display': 'block' });
-
-            setTimeout(function () {
-                $(targetId).click(function () {
-                    $('#organization-info #organizations-list').css({ 'display': 'none' });
-                    handler();
-                });
-            }, 1000);
-        }
-    }
-
-    // when organization details page loads
-    $('#organization-details-page').ready(() => {
-        populateOrganizationInfo(sessionStorage.getItem('targetOrgId'), '#organization-details-page ', true);
-    });
-    $('#add-experience-page').ready(() => clearOrganizationInputFields());
-
-    function populateOrganizationInfo(id, pageId, isOrgDetailsPage=false) {
-        if (!isOrgDetailsPage) {
-            $('#organization-info #name').val($('#organizations-list #' + id).text());
-        }
-        $.ajax({
-            url: '/wp-admin/admin-ajax.php?action=organization_info',
-            data: { id },
-            success: function (data) {
-                const orgInfoFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
-                const orgInfoAddr = ['street', 'city', 'state', 'zipcode'];
-                const orgInfoSelect = ['region', 'country'];
-
-                const [orgInfo, orgAddr, orgContacts] = JSON.parse(JSON.stringify(data));
-
-                // save organization, addr, contacts ids
-                organizationPEInfoFields['organizationId'] = orgInfo['id'];
-                organizationPEInfoFields['organizationAddrId'] = orgInfo['address_id'];
-                organizationPEInfoFields['organizationContactsId'] = orgInfo['contacts_id'];
-
-                let elem;
-                // populate with data from orgInfo
-                orgInfoFields.forEach(elemId => {
-                    elem = $(pageId + '#organization-info #' + elemId);
-                    elem.val(orgInfo[elemId]);
-                    disableInput(elem, isOrgDetailsPage);
-                });
-                let orgDetailsRadioIndex = 1;
-                orgInfo['affiliations'].split('\r\n').forEach(affiliation => {
-                    if (isOrgDetailsPage) {
-                        elem = $(pageId + '#affiliation-radio-btn-' + orgDetailsRadioIndex);
-                        elem.parent().html(radioBtn('#affiliation-radio-btn-' + orgDetailsRadioIndex, affiliation));
-                        orgDetailsRadioIndex++;
-                    } else {
-                        for (let i = 1; i <= 6; i++) {
-                            elem = $(pageId + '#affiliation-radio-btn-' + i);
-                            if (elem.data('value') === affiliation && !elem.prop('checked')) {
-                                elem.trigger('click');
-                            }
-                            disableInput(elem, isOrgDetailsPage);
-                        }
-                    }
-                });
-                orgDetailsRadioIndex = 1;
-                orgInfo['sectors'].split('\r\n').forEach(sector => {
-                    if (isOrgDetailsPage) {
-                        elem = $(pageId + '#organization-sector-btn-' + orgDetailsRadioIndex);
-                        elem.parent().html(radioBtn('#organization-sector-btn-' + orgDetailsRadioIndex, sector));
-                        orgDetailsRadioIndex++;
-                    } else {
-                        let checked = false;
-                        for (let i = 1; i <= 12; i++) {
-                            elem = $(pageId + '#organization-sector-btn-' + i);
-                            if (elem.data('value') === sector && !elem.prop('checked')) {
-                                elem.trigger('click');
-                                checked = true;
-                            } else if (i === 12 && !checked && !elem.prop('checked')) {
-                                elem.trigger('click');
-                                $(pageId + '#organization-sector-other-input').val(sector);
-                            }
-                            disableInput(elem, isOrgDetailsPage);
-                            disableInput($(pageId + '#organization-sector-other-input'), isOrgDetailsPage);
-                        }
-                    }
-                });
-                let checked = false;
-                orgDetailsRadioIndex = 1;
-                if (isOrgDetailsPage) {
-                    elem = $(pageId + '#organization-type-btn-' + orgDetailsRadioIndex);
-                    elem.parent().html(radioBtn('#organization-sector-btn-' + orgDetailsRadioIndex, orgInfo['type']));
-                } else {
-                    for (let i = 1; i <= 7; i++) {
-                        elem = $(pageId + '#organization-type-btn-' + i);
-                        if (elem.data('value') === orgInfo['type'] && !elem.prop('checked')) {
-                            elem.trigger('click');
-                            checked = true;
-                        } else if (i === 7 && !checked && !elem.prop('checked')) {
-                            elem.trigger('click');
-                            $(pageId + '#organization-type-other-input').val(orgInfo['type'])
-                        }
-                        disableInput(elem, isOrgDetailsPage);
-                        disableInput($(pageId + '#organization-type-other-input'), isOrgDetailsPage);
-                    }
-                }
-                if (isOrgDetailsPage) {
-                    const radios = [['#affiliation-radio-btn-', 6], ['#organization-sector-btn-', 12], ['#organization-type-btn-', 7]];
-                    for (const [id, num] of radios) {
-                        for (let i = 1; i <= num; i++) {
-                            elem = $(id + i);
-                            if (!elem.prop('checked')) {
-                                elem.parent().addClass('d-none');
-                            }
-                        }
-                    }
-                }
-                orgInfoSelect.forEach(elemId => {
-                    elem = $(pageId + '#organization-info #' + elemId);
-                    let key = elemId === 'country' ? 'location' : elemId;
-                    const selectedIndex = getOptionsArray(elem).indexOf(orgInfo[key]);
-                    elem.prop('selectedIndex', selectedIndex);
-                    disableInput(elem, isOrgDetailsPage);
-                });
-
-                // populate with data from orgAddr
-                orgInfoAddr.forEach(elemId => {
-                    elem = $(pageId + '#organization-info #' + elemId);
-                    elem.val(orgAddr[elemId]);
-                    disableInput(elem, isOrgDetailsPage);
-                });
-
-                // populate with data from orgContacts
-                const contactGroups = [
-                    ['contact_1_', '#organization-contact-1'],
-                    ['contact_2_', '#organization-contact-2'],
-                    ['contact_3_', '#organization-contact-3']
-                ];
-                const contactFields = ['name', 'role', 'phone', 'email'];
-                contactGroups.forEach(group => {
-                    contactFields.forEach(field => {
-                        elem = $(pageId + group[1] + ' #' + field);
-                        elem.val(orgContacts[group[0] + field]);
-                        if (orgContacts[group[0] + field] !== '') {
-                            $(pageId + group[1]).removeClass('d-none');
-                        }
-                        disableInput(elem, isOrgDetailsPage);
-                    });
-                });
-            }
-        });
-    }
-
-    function radioBtn(id, value) {
-        return `<input id="${id}" type="checkbox" data-value="${value}" checked disabled><span class="checkmark"></span>${value}`;
-    }
-
-    function disableInput(elem, check) {
-        if (check) {
-            elem.prop('disabled', true);
-        }
-    }
-
-    function getOptionsArray(elem) {
-        const options = [];
-        $(elem).find('option').each(function () {
-            options.push($(this).text());
-        });
-        return options;
-    }
 
     function initOrganizationPEInfoFields() {
         return {
@@ -665,57 +467,283 @@ $(document).ready(function () {
         }
     }
 
-    // clears out organization information state on page
-    function clearOrganizationInputFields() {
-        organizationPEInfoFields = initOrganizationPEInfoFields();
-        delete organizationPEInfoFields['organizationId'];
-        delete organizationPEInfoFields['organizationAddrId'];
-        delete organizationPEInfoFields['organizationContactsId'];
+    /* ADD EXPERIENCE PAGE (populate organization data) */
 
-        ['street', 'city', 'state', 'zipcode', 'phone', 'email', 'website'].forEach(elemId => {
-            $('#organization-info #' + elemId).val('');
+    $('#add-experience-page').ready(() => {
+        // handle organizations autocomplete
+        addExperienceOrgInfoName.keyup(() => {
+            addExperienceOrgList.html('');
+            addExperienceOrgList.css({ 'display': 'none' });
+            clearOrganizationInputFields();
+            const prefix = addExperienceOrgInfoName.val();
+            if (prefix.length > 2) {
+                $.ajax({
+                    url: '/wp-admin/admin-ajax.php?action=organizations',
+                    data: { prefix },
+                    success: data => {
+                        const result = $.parseJSON(JSON.stringify(data));
+                        organizationAutocompleteName(addExperienceOrgList, result);
+                    }
+                });
+            }
         });
-        ['#organization-type-other-input', '#organization-sector-other-input'].forEach(elemId => {
-            $(elemId).val('');
-        });
-        ['region', 'country'].forEach(elemId => {
-            $('#organization-info #' + elemId).prop('selectedIndex', 0);
-        });
-        const radios = {'#affiliation-radio-btn-': 6, '#organization-type-btn-': 7, '#organization-sector-btn-': 12 };
-        $.each(radios, (elemId, num) => {
-            for (let i = 1; i <= num; i++) {
-                if ($(elemId + i).prop('checked')) {
-                    $(elemId + i).trigger('click');
+
+        // clears out organization information state on page
+        function clearOrganizationInputFields() {
+            organizationPEInfoFields = initOrganizationPEInfoFields();
+            delete organizationPEInfoFields['organizationId'];
+            delete organizationPEInfoFields['organizationAddrId'];
+            delete organizationPEInfoFields['organizationContactsId'];
+
+            ['street', 'city', 'state', 'zipcode', 'phone', 'email', 'website'].forEach(elemId => {
+                $('#organization-info #' + elemId).val('');
+            });
+            ['#organization-type-other-input', '#organization-sector-other-input'].forEach(elemId => {
+                $(elemId).val('');
+            });
+            ['region', 'country'].forEach(elemId => {
+                $('#organization-info #' + elemId).prop('selectedIndex', 0);
+            });
+            const radios = {'#affiliation-radio-btn-': 6, '#organization-type-btn-': 7, '#organization-sector-btn-': 12 };
+            $.each(radios, (elemId, num) => {
+                for (let i = 1; i <= num; i++) {
+                    if ($(elemId + i).prop('checked')) {
+                        $(elemId + i).trigger('click');
+                    }
+                }
+            });
+            [1, 2, 3].forEach(num => {
+                [' #name', ' #role', ' #phone', ' #email'].forEach(elemId => {
+                    $('#organization-contact-' + num + elemId).val('');
+                    if (num > 1) {
+                        $('#organization-contact-' + num).addClass('d-none');
+                    }
+                });
+            });
+        }
+
+        // output matching organization names
+        function organizationAutocompleteName(elem, organizations) {
+            let html = '<ul class="list-unstyled m-0 p-0">';
+            let targetId, handler;
+            if (organizations.length > 0) {
+                organizations.forEach(function ({ id, name }, _) {
+                    html += '<li class="m-0 p-0"><div id="organization-option-' + id + '">';
+                    html += name + '</div></li>';
+                    targetId = '#organization-option-' + id;
+                    handler = () => addExperiencePopulateOrganizationInfo(id);
+                });
+                html += '</ul>';
+                elem.fadeIn();
+                elem.html(html);
+                elem.css({ 'display': 'block' });
+
+                setTimeout(() => {
+                    $(targetId).click(() => {
+                        $('#organization-info #organizations-list').css({ 'display': 'none' });
+                        handler();
+                    });
+                }, 100);
+            }
+        }
+
+        // populate organization input fields
+        function addExperiencePopulateOrganizationInfo(id) {
+            $.ajax({
+                url: '/wp-admin/admin-ajax.php?action=organization_info',
+                data: { id },
+                success: data => {
+                    const [orgInfo, orgAddr, orgContacts] = JSON.parse(JSON.stringify(data));
+                    const orgInfoFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
+                    const orgInfoAddr = ['street', 'city', 'state', 'zipcode'];
+                    const orgInfoSelect = ['region', 'country'];
+                    const contactFields = ['name', 'role', 'phone', 'email'];
+                    const contactGroups = [
+                        ['contact_1_', '#organization-contact-1'],
+                        ['contact_2_', '#organization-contact-2'],
+                        ['contact_3_', '#organization-contact-3']
+                    ];
+                    const pageId = '#add-experience-page ';
+                    let elem;
+                    // populate organization info
+                    orgInfoFields.forEach(elemId => {
+                        elem = $(pageId + '#organization-info #' + elemId);
+                        elem.val(orgInfo[elemId]);
+                    });
+                    // populate organization affiliations
+                    orgInfo['affiliations'].split('\r\n').forEach(affiliation => {
+                        for (let i = 1; i <= 6; i++) {
+                            elem = $(pageId + '#affiliation-radio-btn-' + i);
+                            if (elem.data('value') === affiliation && !elem.prop('checked')) {
+                                elem.trigger('click');
+                            }
+                        }
+                    });
+                    let checked;
+                    // populate organization type
+                    for (let i = 1; i <= 7; i++) {
+                        elem = $(pageId + '#organization-type-btn-' + i);
+                        if (elem.data('value') === orgInfo['type'] && !elem.prop('checked')) {
+                            elem.trigger('click');
+                            checked = true;
+                        } else if (i === 7 && !checked && !elem.prop('checked')) {
+                            elem.trigger('click');
+                            $(pageId + '#organization-type-other-input').val(orgInfo['type'])
+                        }
+                    }
+                    // populate organization sectors
+                    orgInfo['sectors'].split('\r\n').forEach(sector => {
+                        checked = false;
+                        for (let i = 1; i <= 12; i++) {
+                            elem = $(pageId + '#organization-sector-btn-' + i);
+                            if (elem.data('value') === sector && !elem.prop('checked')) {
+                                elem.trigger('click');
+                                checked = true;
+                            } else if (i === 12 && !checked && !elem.prop('checked')) {
+                                elem.trigger('click');
+                                $(pageId + '#organization-sector-other-input').val(sector);
+                            }
+                        }
+                    });
+                    // populate organization info select options
+                    orgInfoSelect.forEach(elemId => {
+                        elem = $(pageId + '#organization-info #' + elemId);
+                        let key = elemId === 'country' ? 'location' : elemId;
+                        const selectedIndex = getOptionsArray(elem).indexOf(orgInfo[key]);
+                        elem.prop('selectedIndex', selectedIndex);
+                    });
+                    // populate organization address
+                    orgInfoAddr.forEach(elemId => {
+                        elem = $(pageId + '#organization-info #' + elemId);
+                        elem.val(orgAddr[elemId]);
+                    });
+                    // populate contact details
+                    contactGroups.forEach(group => {
+                        contactFields.forEach(field => {
+                            elem = $(pageId + group[1] + ' #' + field);
+                            elem.val(orgContacts[group[0] + field]);
+                            if (orgContacts[group[0] + field] !== '') {
+                                $(pageId + group[1]).removeClass('d-none');
+                            }
+                        });
+                    });
+                }
+            });
+
+            function getOptionsArray(elem) {
+                const options = [];
+                $(elem).find('option').each(function () {
+                    options.push($(this).text());
+                });
+                return options;
+            }
+        }
+    });
+
+
+    /* ORGANIZATION DETAILS (populate organization data display and reviews) */
+
+    $('#organization-details-page').ready(() => {
+        const id = sessionStorage.getItem('targetOrgId');
+        $.ajax({
+            url: '/wp-admin/admin-ajax.php?action=organization_info',
+            data: { id },
+            success: data => {
+                const [orgInfo, orgAddr, orgContacts] = JSON.parse(JSON.stringify(data));
+                const orgInfoFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
+                const orgInfoAddr = ['street', 'city', 'state', 'zipcode'];
+                const orgInfoSelect = ['region', 'country'];
+                const contactFields = ['name', 'role', 'phone', 'email'];
+                const contactGroups = [
+                    ['contact_1_', '#organization-contact-1'],
+                    ['contact_2_', '#organization-contact-2'],
+                    ['contact_3_', '#organization-contact-3']
+                ];
+                const pageId = '#organization-details-page ';
+                let elem;
+                // populate organization info
+                orgInfoFields.forEach(elemId => {
+                    elem = $(pageId + '#organization-info #' + elemId);
+                    updateField(elem, orgInfo[elemId]);
+                });
+                // populate organization affiliations
+                let affiliations = '';
+                orgInfo['affiliations'].split('\r\n').forEach(affiliation => {
+                    affiliations += radioUtil(affiliation);
+                });
+                $(pageId + ' #affiliations').html(affiliations);
+                // populate type of of organization
+                let type = radioUtil(orgInfo['type']);
+                $(pageId + '#type').html(type);
+                // populate organization sectors
+                let sectors = '';
+                orgInfo['sectors'].split('\r\n').forEach(sector => {
+                    sectors += radioUtil(sector);
+                });
+                $(pageId + ' #sectors').html(sectors);
+                // populate organization address
+                orgInfoAddr.forEach(elemId => {
+                    elem = $(pageId + '#organization-info #' + elemId);
+                    elem.val(orgAddr[elemId]);
+                    elem.prop('disabled', true);
+                });
+                // populate organization info select option
+                orgInfoSelect.forEach(elemId => {
+                    elem = $(pageId + '#organization-info #' + elemId);
+                    const key = elemId === 'country' ? 'location' : elemId;
+                    updateField(elem, orgInfo[key]);
+                });
+                // populate organization contacts
+                let noContact = true;
+                contactGroups.forEach(group => {
+                    contactFields.forEach(field => {
+                        elem = $(pageId + group[1] + ' #' + field);
+                        if (orgContacts[group[0] + field] !== '') {
+                            elem.val(orgContacts[group[0] + field]);
+                            $(pageId + group[1]).removeClass('d-none');
+                            noContact = false;
+                        } else {
+                            elem.val('-');
+                        }
+                        elem.prop('disabled', true);
+                    });
+                });
+                if (noContact) {
+                    $(pageId + '#no-contact-info').removeClass('d-none');
                 }
             }
         });
-        [1, 2, 3].forEach(num => {
-            [' #name', ' #role', ' #phone', ' #email'].forEach(elemId => {
-                $('#organization-contact-' + num + elemId).val('');
-                if (num > 1) {
-                    $('#organization-contact-' + num).addClass('d-none');
-                }
-            });
-        });
-    }
 
-
-    /* ORGANIZATION DETAILS */
-
-    const organizationDetailsSwitchBtn = $('#organization-details-btn');
-    const organizationDetailsSwitchBtnText = 'Organization Reviews';
-    $('#organization-details-page .add-contact-btn-container').addClass('d-none');
-    organizationDetailsSwitchBtn.click(() => {
-        if (organizationDetailsSwitchBtn.text() === organizationDetailsSwitchBtnText) {
-            $('#organization-details-page .add-experience-container.right-page').css({ display: 'block' });
-            $('#organization-details-page .add-experience-container.left-page').css({ display: 'none' });
-            $('#organization-details-page .text-center .display-5').text('Organization Reviews');
-            organizationDetailsSwitchBtn.text('Organization Details');
-        } else {
-            $('#organization-details-page .add-experience-container.left-page').css({ display: 'block' });
-            $('#organization-details-page .add-experience-container.right-page').css({ display: 'none' });
-            $('#organization-details-page .text-center .display-5').text('Organization Details');
-            organizationDetailsSwitchBtn.text(organizationDetailsSwitchBtnText);
+        function updateField(elem, val) {
+            if (val === '') {
+                elem.val('-');
+            } else {
+                elem.val(val);
+            }
+            elem.prop('disabled', true);
         }
+
+        function radioUtil(value) {
+            return `<label class="label-container w-100"><input type="checkbox" data-value="${value}" checked disabled><span class="checkmark"></span>${value}</label>`;
+        }
+
+        const organizationDetailsSwitchBtn = $('#organization-details-btn');
+        const organizationDetailsSwitchBtnText = 'Organization Reviews';
+        $('#organization-details-page .add-contact-btn-container').addClass('d-none');
+        organizationDetailsSwitchBtn.click(() => {
+            if (organizationDetailsSwitchBtn.text() === organizationDetailsSwitchBtnText) {
+                $('#organization-details-page .add-experience-container.right-page').css({ display: 'block' });
+                $('#organization-details-page .add-experience-container.left-page').css({ display: 'none' });
+                $('#organization-details-page .text-center .display-5').text('Organization Reviews');
+                organizationDetailsSwitchBtn.text('Organization Details');
+                $('#org-details-page-header div h3').text('Organization Reviews');
+            } else {
+                $('#organization-details-page .add-experience-container.left-page').css({ display: 'block' });
+                $('#organization-details-page .add-experience-container.right-page').css({ display: 'none' });
+                $('#organization-details-page .text-center .display-5').text('Organization Details');
+                organizationDetailsSwitchBtn.text(organizationDetailsSwitchBtnText);
+                $('#org-details-page-header div h3').text('Organization Details');
+            }
+        });
     });
 });

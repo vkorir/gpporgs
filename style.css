@@ -411,4 +411,5 @@ textarea {
 }
 #organization-details-page fieldset div {
 	padding: 0;
+	margin: 0 !important;
 }

@@ -74,18 +74,6 @@ if (isset($_SESSION['access_token'])) {?>
                         <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">+ Add Experience</a>
                     </div>
                 </div>
-<!--                <div class="rounded-container sort-by">-->
-<!--                    --><?php
-//                    $sort_options = array(
-//                        'sort-by-btn-1' => 'Closest to UC Berkeley',
-//                        'sort-by-btn-2' => 'Number of projects',
-//                        'sort-by-btn-4' => 'Responsiveness of org',
-//                        'sort-by-btn-5' => 'Most recent projects'
-//                    );
-//                    echo section_heading('SORT BY');
-//                    echo radio_buttons($sort_options);
-//                    ?>
-<!--                </div>-->
             </div>
         </div>
     </div>
