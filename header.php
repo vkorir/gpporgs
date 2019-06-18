@@ -36,10 +36,7 @@ require_once 'google-api/config.php';
                     <a href="<?php echo home_url(); ?>" class="nav-link <?php if (site_url() == home_url() and isset($_SESSION['access_token'])) echo 'nav-selected'; ?>">DATABASE</a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">GPP STUDENTS</a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">MY PROFILE</a>
+                    <a href="<?php echo home_url('/add-experience') ?>" class="nav-link">ADD EXPERIENCE</a>
                 </li>
                 <?php if (isset($_SESSION['access_token'])) { ?>
                 <!--        render logout button        -->

@@ -84,12 +84,16 @@ get_header();
                     </fieldset>
                     <fieldset id="no-contact-info" class="d-none">
                         <p>No contact information provided.</p>
+                        <hr class="w-100" />
                     </fieldset>
+                    <p id="approval-status" class="d-none"></p>
                 </form>
             </div>
         </div>
         <div class="add-experience-container right-page">
-            <!--    populate organization reviews        -->
+            <div id="organization-reviews-container">
+                <!--    populate organization reviews        -->
+            </div>
         </div>
         <hr />
         <div class="text-center">
