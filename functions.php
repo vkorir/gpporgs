@@ -89,7 +89,7 @@ function section_subheading($value) {
 }
 
 function subsection_heading($name, $value, $directive) {
-    return '<label class="mt-3" for="' .$name . '">' . $value . '<span class="directive">' . $directive . '</span></label>';
+    return '<label class="mt-2 mb-0" for="' .$name . '">' . $value . '<span class="directive">' . $directive . '</span></label>';
 }
 
 function radio_button_util($id, $value) {
@@ -124,8 +124,8 @@ function slider($title, $class, $id, $value, $min, $max, $step) {
 
 function fieldset_item($name, $type, $value) {
     return '<div>
-              <label class="col-lg-2 col-md-2 col-sm-1" for="' . $name . '">' . $value . ': </label>
-              <input class="col-lg-9 col-md-6 col-sm-8 px-1" type="' . $type . '" name="' . $name . '" id="' . $name . '" />
+              <label class="col-lg-2 col-md-2 col-sm-1 m-0" for="' . $name . '">' . $value . ': </label>
+              <input class="col-lg-9 col-md-6 col-sm-8 px-1 m-0" type="' . $type . '" name="' . $name . '" id="' . $name . '" />
             </div>';
 }
 
@@ -261,9 +261,9 @@ function get_organization_info() {
     $info = $wpdb->get_results('select * from gpp_organization_info where id=' . $_GET['id']);
     $address_id = $wpdb->get_var('select address_id from gpp_organization_info where id=' . $_GET['id']);
     $contacts_id = $wpdb->get_var('select contacts_id from gpp_organization_info where id=' . $_GET['id']);
-    $addr = $wpdb->get_results('select * from gpp_addresses where id=' . $address_id);
+    $address = $wpdb->get_results('select * from gpp_addresses where id=' . $address_id);
     $contacts = $wpdb->get_results('select * from gpp_organization_contacts where id=' . $contacts_id);
-    wp_send_json(array_merge($info, $addr, $contacts));
+    wp_send_json(array_merge($info, $address, $contacts));
 }
 
 // fetch organization reviews
@@ -271,7 +271,7 @@ add_action('wp_ajax_organization_reviews', 'get_organization_reviews');
 add_action('wp_ajax_nopriv_organization_reviews', 'get_organization_reviews');
 function get_organization_reviews() {
     global $wpdb;
-    $query = 'select * from gpp_practice_experience_reviews where organization_id=' . $_GET['id'];
+    $query = 'select * from gpp_reviews where organization_id=' . $_GET['id'] . ' order by timestamp desc';
     $reviews = $wpdb->get_results($query);
     foreach ($reviews as $key => $value) {
         $query = 'select * from gpp_addresses where id=' . $value->address_id;
@@ -322,7 +322,7 @@ function submission() {
     if (isset($_POST['organizationId'])) {
         $org_id = $_POST['organizationId'];
         $avg_cost = $wpdb->get_var('select avg_cost_of_pe from gpp_organization_info where id=' . $org_id);
-        $reviews = $wpdb->get_var('select count(*) from gpp_gpp_practice_experience_reviews where organization_id=' . $org_id);
+        $reviews = $wpdb->get_var('select count(*) from gpp_gpp_reviews where organization_id=' . $org_id);
         $data['avg_cost_of_pe'] = ($data['avg_cost_of_pe'] + $avg_cost * $reviews) / ($reviews + 1);
         $data = array_merge(array('id' => $org_id), $data);
         $format = array_merge(array('%d'), $format);
@@ -340,9 +340,9 @@ function submission() {
     $pe_addr_id = $wpdb->insert_id;
 
     // store org review
-    $table = 'gpp_practice_experience_reviews';
+    $table = 'gpp_reviews';
     $data = get_organization_review_data($org_id, $pe_addr_id);
-    $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
+    $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%s');
     $wpdb->insert($table, $data, $format);
 
 	wp_die();

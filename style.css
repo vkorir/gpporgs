@@ -344,8 +344,8 @@ textarea {
 	position: absolute;
 	top: 4px;
 	left: 0;
-	height: 14px;
-	width: 14px;
+	height: 12px;
+	width: 12px;
 	background-color: #fff;
 	border: 1px solid #d9d9d9;
 }
@@ -398,7 +398,8 @@ textarea {
 
 /* Organization Details */
 
-#organization-details-btn {
+#organization-details-btn,
+#organization-details-add-review-btn {
 	width: 200px;
 }
 #organization-details-page input,
@@ -415,4 +416,23 @@ textarea {
 }
 #organization-reviews-container p {
 	margin: 8px 0 0 0;
+}
+#organization-reviews-container .review-header {
+	margin-bottom: 10px;
+}
+#organization-details-page p,
+#organization-details-page a {
+	font-size: 14px;
+}
+#organization-details-page a#website {
+	text-decoration: none;
+	color: #545454;
+	font-weight: 300;
+}
+#organization-details-page .section-subheading {
+	color: #000;
+}
+#organization-details-page fieldset label,
+#organization-reviews-container .review-description {
+	color: #4885af;
 }

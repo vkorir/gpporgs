@@ -30,8 +30,11 @@ get_header();
                     echo fieldset_item('country', 'text', 'Country');
                     echo fieldset_item('phone', 'tel', 'Phone');
                     echo fieldset_item('email', 'email', 'Email');
-                    echo fieldset_item('website', 'url', 'Website');
                     ?>
+                    <div>
+                        <label class="col-lg-2 col-md-2 col-sm-1 m-0">Website: </label>
+                        <a class="col-lg-9 col-md-6 col-sm-8 px-1 m-0" href="" id="website" target="_blank"></a>
+                    </div>
                 </fieldset>
             </form>
             <?php echo subsection_heading('affiliation', 'Affiliation', ''); ?>
@@ -52,6 +55,7 @@ get_header();
                     <!--       populate with organization sectors       -->
                 </div>
             </div>
+            <br />
             <?php echo section_subheading('CONTACT INFORMATION'); ?>
             <div id="organization-contacts">
                 <form id="organization-contacts" action="">
@@ -93,10 +97,12 @@ get_header();
         <div class="add-experience-container right-page">
             <div id="organization-reviews-container">
                 <!--    populate organization reviews        -->
+
             </div>
         </div>
         <hr />
         <div class="text-center">
+<!--            <button class="add-experience-btn" id="organization-details-add-review-btn">Add Review</button>-->
             <button class="add-experience-btn" id="organization-details-btn" >Organization Reviews</button>
         </div>
     </div>

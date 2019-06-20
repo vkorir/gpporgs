@@ -9,7 +9,7 @@
 start_session();
 get_header();
 
-$_SESSION['dataTableState'] = array('area' => 'all', 'sector' => 'all', 'price' => 8000);
+$_SESSION['dataTableState'] = array('area' => 'all', 'sector' => 'all', 'price' => 5000);
 
 if (isset($_SESSION['access_token'])) {?>
     <!--  logged in status  -->
@@ -20,7 +20,7 @@ if (isset($_SESSION['access_token'])) {?>
                     <h3>Hi <?php echo $_SESSION['givenName']; ?>,</h3>
                     <p>done with your practice?</p>
                     <div class="text-center">
-                        <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">+ Add Experience</a>
+                        <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">+ Add Review</a>
                     </div>
                     <br />
                     <?php
@@ -50,7 +50,7 @@ if (isset($_SESSION['access_token'])) {?>
                     echo radio_buttons($sectors);
 
                     // price range slider
-                    echo slider('PRICE RANGE', 'w-100', 'price-range', '8000', '0', '10000', '500');
+                    echo slider('PRICE RANGE', 'w-100', 'price-range', '5000', '0', '10000', '500');
                     ?>
                 </div>
             </div>

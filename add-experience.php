@@ -274,7 +274,7 @@ get_header();
             echo subsection_heading('org-strength-weakness', 'What were your organization\'s strengths and weaknesses?', ': 2 paragraphs');
             echo '<textarea name="" id="organization-strength-and-weakness" class="col-lg-11 px-1"></textarea>';
 
-            echo subsection_heading('org-other-comments', 'Other comments you want to add?', '');
+            echo subsection_heading('org-other-comments', 'Is there anything else you would like to share with other students who may work with this organization?', '');
             echo '<textarea name="" id="organization-other-comments" class="col-lg-11 px-1"></textarea>';
 
             echo subsection_heading('how-responsive', 'How safe did you feel?', '');
@@ -314,6 +314,8 @@ get_header();
                     <?php echo radio_button_util('how-responsive-radio-5', '5 (right away)'); ?>
                 </div>
             </div>
+            <hr />
+            <p>Post as Anonymous: <input id="anonymous-review-check" type="checkbox" checked /></p>
         </div>
         <hr />
         <div class="text-center">

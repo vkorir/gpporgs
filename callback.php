@@ -28,6 +28,7 @@ $username = substr($email, 0, strpos($email, '@'));
 
 // check if existing user
 $user = get_user_by('email', $email);
+$role = 'subscriber';
 
 if ($user == false) { // register a new user
     $random_password = wp_generate_password(16, false);
@@ -39,13 +40,14 @@ if ($user == false) { // register a new user
         'google_id' => $user_data['id']
     );
     wp_insert_user($userdata);
+} else {
+    $role = $user->roles;
 }
 
 // register session variables
 $_SESSION['email'] = $email;
 $_SESSION['givenName'] = $name;
 $_SESSION['familyName'] = $user_data['familyName'];
-
 
 // redirect user to front-page
 wp_redirect(home_url());

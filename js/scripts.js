@@ -696,25 +696,27 @@ $(document).ready(function () {
                 });
                 // populate organization contacts
                 let noContact = true;
-                contactGroups.forEach(group => {
-                    contactFields.forEach(field => {
-                        elem = $(pageId + group[1] + ' #' + field);
-                        if (orgContacts[group[0] + field] !== '') {
-                            elem.val(orgContacts[group[0] + field]);
-                            $(pageId + group[1]).removeClass('d-none');
-                            noContact = false;
-                        } else {
-                            elem.val('-');
-                        }
-                        elem.prop('disabled', true);
+                if (orgContacts != null) {
+                    contactGroups.forEach(group => {
+                        contactFields.forEach(field => {
+                            elem = $(pageId + group[1] + ' #' + field);
+                            if (orgContacts[group[0] + field] !== '') {
+                                elem.val(orgContacts[group[0] + field]);
+                                $(pageId + group[1]).removeClass('d-none');
+                                noContact = false;
+                            } else {
+                                elem.val('-');
+                            }
+                            elem.prop('disabled', true);
+                        });
                     });
-                });
+                }
                 if (noContact) {
                     $(pageId + '#no-contact-info').removeClass('d-none');
                 }
                 // approved status
                 elem = $('#approval-status');
-                elem.html(`Approved: ${orgInfo['approved_status'] == 1 ? 'Yes' : 'No'}`);
+                elem.html(`<strong style="color: #4885af;">Approved:</strong> ${orgInfo['approved_status'] == 1 ? 'Yes' : 'No'}`);
                 elem.removeClass('d-none');
             }
         });
@@ -725,28 +727,26 @@ $(document).ready(function () {
             data: { id },
             success: data => {
                 const orgReviews = JSON.parse(JSON.stringify(data));
+                let addressInfo;
                 const reviews = [];
                 let html, count = 1;
                 orgReviews.forEach(review => {
+                    addressInfo = review['address'];
                     html = '<div class="row"><div class="col">';
-                    html += `<h6>Review #${count} <sub><i>${new Date(parseInt(review['timestamp']))} by <strong>${review['reviewer_name']} (${review['reviewer_email']})</strong></i></sub></h6>`;
-                    html += `<p>Physical address: </p>${createAddress(review['address'])}`;
-                    html += `<p><strong>Cost: </strong> $${review['cost_of_pe']}</p>`;
-                    html += `<p><strong>Stipend paid by organization:</strong> $${review['stipend_by_organization']}</p>`;
-                    html += `<p><strong>Duration: </strong>${review['pe_duration']}</p>`;
-                    html += `<p><strong>Safety score: </strong>${review['safety_score']}/5</p>`;
-                    html += `<p><strong>Languages Spoken: </strong>${review['languages_spoken']}</p>`;
-                    html += `<p><strong>Did you experience any language difficulties?</strong><br />${review['language_difficulties']}</p>`;
-                    let sectors = '';
-                    review['sectors'].split('\r\n').forEach(sector => {
-                        sectors += radioUtil(sector);
-                    });
-                    html += `<p><strong>Sectors</strong><br />${sectors}</p>`;
-                    html += `<p class="mt-3"><strong>Organization responsiveness: </strong>${review['organization_responsiveness']}/5</p>`;
-                    html += `<p><strong>Describe the work you did</strong><br />${review['what_you_did']}</p>`;
-                    html += `<p><strong>What was a typical day like while on your PE?</strong><br />${review['typical_day']}</p>`;
-                    html += `<p><strong>What were your organization's strengths and weaknesses?</strong><br />${review['strength_and_weaknesses']}</p>`;
-                    html += `<p><strong>Other comments</strong><br />${review['other_comments']}</p>`;
+                    html += `<h6 class="review-header">Review #${count} <span>${getTimeDisplay(review['timestamp'], review)}</span></h6>`;
+                    html += `<p><strong class="review-description">Country: </strong>${addressInfo['country']}</p>`;
+                    html += `<p><strong class="review-description">Region: </strong>${review['region']}</p>`;
+                    html += `<p><strong class="review-description">City/Town Name: </strong>${addressInfo['city']}</p>`;
+                    html += `<p><strong class="review-description">Please list the languages spoken at your PE location: </strong><br />${review['languages_spoken'].split(',').join('<br />')}</p>`;
+                    html += `<p><strong class="review-description">Did you experience any language difficulties? Please describe</strong><br />${review['language_difficulties']}</p>`;
+                    html += `<p><strong class="review-description">Sectors: </strong><br />\n${review['sectors'].split('\r\n').join('<br />')}</p>`;
+                    html += `<p><strong class="review-description">What was the cost of your PE? </strong>$${review['cost_of_pe']}</p>`;
+                    html += `<p><strong class="review-description">How much stipend were you paid by the organization: </strong>$${review['stipend_by_organization']}</p>`;
+                    html += `<p><strong class="review-description">What was the duration of your PE? </strong>${review['pe_duration']}</p>`;
+                    html += `<p><strong class="review-description">Please describe the work you did with your organization:</strong><br />${review['what_you_did']}</p>`;
+                    html += `<p><strong class="review-description">What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)</strong><br />${review['typical_day']}</p>`;
+                    html += `<p><strong class="review-description">What were your organization's strengths and weaknesses?</strong><br />${review['strength_and_weaknesses']}</p>`;
+                    html += `<p><strong class="review-description">Is there anything else you would like to share with other students who may work with this organization?</strong><br />${review['other_comments']}</p>`;
                     html += '</div></div>';
                     count++;
                     reviews.push(html);
@@ -758,6 +758,9 @@ $(document).ready(function () {
         function updateField(elem, val) {
             if (val === '') {
                 elem.val('-');
+            } else if (val.includes('http') || val.includes('www')) {
+                elem.prop('href', val);
+                elem.text(val);
             } else {
                 elem.val(val);
             }
@@ -768,15 +771,19 @@ $(document).ready(function () {
             return `<label class="label-container w-100"><input type="checkbox" data-value="${value}" checked disabled><span class="checkmark"></span>${value}</label>`;
         }
 
-        function createAddress(addressInfo) {
-            const addressFields = [];
-            let label, value;
-            orgInfoAddr.forEach(fieldName => {
-                label = `<label class="col-lg-2 col-md-2 col-sm-1 m-0" for="${fieldName}">${fieldName}</label>`;
-                value = `<input class="col-lg-9 col-md-6 col-sm-8 mt-0" value="${addressInfo[fieldName]}" disabled />`;
-                addressFields.push(`<div>${label}${value}</div>`);
-            });
-            return `<form><fieldset>${addressFields.join('')}</fieldset></form>`
+        function getTimeDisplay(timestamp, review) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const date = new Date(parseFloat(timestamp));
+            const dd = date.getDay();
+            const mm = date.getMonth();
+            const d = date.getDate();
+            const yy = date.getFullYear();
+            const h = date.getHours();
+            const m = date.getMinutes();
+            const s = date.getSeconds();
+            return `<i><span class="admin-only">by <strong>${review['reviewer_name']} (${review['reviewer_email']})`
+                    + `</strong></span> on ${days[dd]}, ${months[mm]} ${d}, ${yy} ${h}:${m}:${s}</i>`;
         }
 
         const organizationDetailsSwitchBtn = $('#organization-details-btn');
