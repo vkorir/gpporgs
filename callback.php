@@ -27,27 +27,25 @@ $name = ucwords(strtolower($user_data['givenName']));
 $username = substr($email, 0, strpos($email, '@'));
 
 // check if existing user
-$user = get_user_by('email', $email);
-$role = 'subscriber';
+$user = get_user_by('login', $username);
+$user_id = $user->ID;
 
 if ($user == false) { // register a new user
     $random_password = wp_generate_password(16, false);
-    $id = wp_create_user($username, $random_password, $email);
-    $userdata = array(
+    $user_id = wp_create_user($username, $random_password, $email);
+    $user_data = array(
         'ID' => $id,
         'display_name' => $name,
-        'role' => 'subscriber',
-        'google_id' => $user_data['id']
+        'role' => 'subscriber'
     );
-    wp_insert_user($userdata);
-} else {
-    $role = $user->roles;
+    wp_insert_user($user_data);
 }
 
 // register session variables
 $_SESSION['email'] = $email;
 $_SESSION['givenName'] = $name;
 $_SESSION['familyName'] = $user_data['familyName'];
+$_SESSION['roles'] = get_userdata($user_id)->roles;
 
 // redirect user to front-page
 wp_redirect(home_url());

@@ -27,7 +27,7 @@ get_header();
                     echo fieldset_item('street', 'text', 'Street');
                     echo fieldset_item('city', 'text', 'City');
                     echo fieldset_item('state', 'text', 'State');
-                    echo fieldset_item('zipcode', 'number', 'Zip Code');
+                    echo fieldset_item('zipCode', 'number', 'Zip Code');
                     ?>
                     <div>
                         <label class="col-lg-2 col-md-2 col-sm-1" for="region">Region</label>
@@ -188,7 +188,7 @@ get_header();
                     echo fieldset_item('street', 'text', 'Street');
                     echo fieldset_item('city', 'text', 'City');
                     echo fieldset_item('state', 'text', 'State');
-                    echo fieldset_item('zipcode', 'number', 'Zip Code');
+                    echo fieldset_item('zipCode', 'number', 'Zip Code');
                     ?>
                     <div>
                         <label class="col-lg-2 col-md-2 col-sm-1" for="region">Region</label>
@@ -315,7 +315,7 @@ get_header();
                 </div>
             </div>
             <hr />
-            <p>Post as Anonymous: <input id="anonymous-review-check" type="checkbox" checked /></p>
+            <p>Post as Anonymous: <input id="anonymous-review" type="checkbox" checked /></p>
         </div>
         <hr />
         <div class="text-center">

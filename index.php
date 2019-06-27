@@ -80,7 +80,11 @@ if (isset($_SESSION['access_token'])) {?>
 <?php } else { ?>
     <!--  logged out status  -->
     <?php if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
-        $_SESSION['access_token'] = 'test'; $_SESSION['givenName'] = 'Victor'; $_SESSION['familyName'] = 'Korir';
+        $_SESSION['access_token'] = 'test';
+        $_SESSION['givenName'] = 'Victor';
+        $_SESSION['familyName'] = 'Korir';
+        $_SESSION['email'] = 'dummy@email.com';
+        $_SESSION['roles'] = array('subscriber');
     } ?>
     <div class="container">
         <div class="jumbotron w-100 mx-0 my-5">

@@ -1,79 +1,5 @@
 <?php
 
-//require_once 'google-api/vendor/autoload.php';
-//
-//// OAuth Configuration
-//
-//// Set config params to access Google API
-//$client_id = '1035290053103-56crsjin0a9bcbdphqqqd3mhtjh3rtdv.apps.googleusercontent.com';
-//$client_secret = 'x93ezf9bhuybKEh1R_UeoVWV';
-//$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/callback';
-//
-//// Create and Request to Google API
-//$client = new Google_Client();
-//$client->setApplicationName('GPPORGS Database');
-//$client->setClientId($client_id);
-//$client->setClientSecret($client_secret);
-//$client->setRedirectUri($redirect_uri);
-//
-//// Add scope to access user info
-//$client->addScope("https://www.googleapis.com/auth/userinfo.profile");
-//$client->addScope("https://www.googleapis.com/auth/userinfo.email");
-//
-//// save login url
-//$_SESSION['login_url'] = $client->createAuthUrl();
-//
-//add_action('rest_api_init', 'google_callback_api');
-//function google_callback_api() {
-//    register_rest_route('mmw/v1', '/callback/code=(?P<code>[a-zA-Z0-9-]+)',
-//        array('methods' => 'GET', 'callback' => 'callback'));
-//}
-//function callback() {
-//    global $client;
-//    if (isset($_SESSION['access_token'])) { // check for access_token is set
-//        $client->setAccessToken($_SESSION['access_token']);
-//    } else if (isset($_GET['code'])) {  // check for auth code from Google API
-//        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-//        $_SESSION['access_token'] = $token;
-//    } else {    // otherwise redirect to login
-//        wp_redirect(home_url('/login'));
-//        exit();
-//    }
-//
-//// fetch user attributes from Google API
-//    $obj_res = new Google_Service_Oauth2($client);
-//    $user_data = $obj_res->userinfo_v2_me->get();
-//    $email = $user_data['email'];
-//    $name = ucwords(strtolower($user_data['givenName']));
-//    $username = substr($email, 0, strpos($email, '@'));
-//
-//// check if existing user
-//    $user = get_user_by('email', $email);
-//
-//    if ($user == false) { // register a new user
-//        $random_password = wp_generate_password(16, false);
-//        $id = wp_create_user($username, $random_password, $email);
-//        $userdata = array(
-//            'ID' => $id,
-//            'display_name' => $name,
-//            'role' => 'subscriber',
-//            'google_id' => $user_data['id']
-//        );
-//        wp_insert_user($userdata);
-//    }
-//
-//// register session variables
-//    $_SESSION['email'] = $email;
-//    $_SESSION['givenName'] = $name;
-//    $_SESSION['familyName'] = $user_data['familyName'];
-//
-//
-//// redirect user to front-page
-//    wp_redirect(home_url());
-//    exit();
-//}
-
-
 // UI utility functions
 
 function page_title($value) {
@@ -214,6 +140,101 @@ function redirect_login() {
 	}
 }
 
+// get user role
+add_action('wp_ajax_session_state', 'get_session_state');
+add_action('wp_ajax_nopriv_session_state', 'get_session_state');
+function get_session_state() {
+    $session_state = array(
+        'user' => array(
+            'name' => $_SESSION['givenName'] . ' ' . $_SESSION['familyName'],
+            'email' => $_SESSION['email'],
+            'roles' => $_SESSION['roles']
+        ),
+        'dataTableFilters' => array(
+            'area' => 'all',
+            'sector' => 'all',
+            'price' => 5000
+        ),
+        'organization' => array(
+            'id' => '',
+            'name' => '',
+            'street' => '',
+            'city' => '',
+            'state' => '',
+            'zipCode' => '',
+            'region' => '',
+            'country' => '',
+            'phone' => '',
+            'email' => '',
+            'website' => '',
+            'affiliations' => array(),
+            'type' => '',
+            'sectors' => array(),
+            'contacts' => array(
+                array(
+                    'name' => '',
+                    'role' => '',
+                    'phone' => '',
+                    'email' => ''
+                ),
+                array(
+                    'name' => '',
+                    'role' => '',
+                    'phone' => '',
+                    'email' => ''
+                ),
+                array(
+                    'name' => '',
+                    'role' => '',
+                    'phone' => '',
+                    'email' => ''
+                )
+            )
+        ),
+        'review' => array(
+            'street' => '',
+            'city' => '',
+            'state' => '',
+            'zipCode' => '',
+            'region' => '',
+            'country' => '',
+            'languages' => '',
+            'languageDifficulties' => '',
+            'sectors' => array(),
+            'stipend' => '5000',
+            'cost' => '5000',
+            'duration' => '',
+            'whatYouDid' => '',
+            'typicalDay' => '',
+            'strengthsAndWeaknesses' => '',
+            'otherComments' => '',
+            'safety' => '',
+            'responsiveness' => '',
+            'anonymousReview' => ''
+        )
+    );
+    wp_send_json($session_state);
+}
+
+// fetch datatable data
+add_action('wp_ajax_datatable_data', 'get_datatable_data');
+add_action('wp_ajax_nopriv_datatable_data', 'get_datatable_data');
+function get_datatable_data() {
+    global $wpdb;
+    $area_options = array(
+        'all' => ' where location like "%"',
+        'domestic' => ' where location = "united states"',
+        'international' => ' where location != "united states"'
+    );
+
+    $query = 'select id, name, type, location, sectors, region, avg_cost_of_pe from gpp_details';
+    $query .= $area_options[$_GET['area']];
+    if ($_GET['sector'] != 'all') {
+        $query .= ' and sectors like "%' . $_GET['sector'] . '%"';
+    }
+    $query .= ' and avg_cost_of_pe <= ' . $_GET['price'];
+    wp_send_json($wpdb->get_results($query));
+}
 
 // fetch database records
 add_action('wp_ajax_database_records', 'database_records');
@@ -234,7 +255,7 @@ function database_records() {
         'domestic' => ' where location="united states"',
         'international' => ' where location != "united states"'
     );
-    $query = 'select id, name, type, location, sectors, region, avg_cost_of_pe from gpp_organization_info';
+    $query = 'select id, name, type, location, sectors, region, avg_cost_of_pe from gpp_details';
     $query .= $area_options[$_SESSION['dataTableState']['area']];
     if ($_SESSION['dataTableState']['sector'] != 'all') {
         $query .= ' and sectors like "%' . $_SESSION['dataTableState']['sector'] . '%"';
@@ -244,26 +265,28 @@ function database_records() {
 }
 
 // fetch organization names
-add_action('wp_ajax_organizations', 'get_organizations');
-add_action('wp_ajax_nopriv_organizations', 'get_organizations');
-function get_organizations() {
+add_action('wp_ajax_organization_autocomplete', 'organization_name_autocomplete');
+add_action('wp_ajax_nopriv_organization_autocomplete', 'organization_name_autocomplete');
+function organization_name_autocomplete() {
     global $wpdb;
-    $query = 'select id, name from gpp_organization_info where name like \'%' . $_GET['prefix'] . '%\'';
+    $query = 'select id, name from gpp_details where name like \'%' . $_GET['prefix'] . '%\'';
     wp_send_json($wpdb->get_results($query));
 }
 
 
 // fetch organization info
-add_action('wp_ajax_organization_info', 'get_organization_info');
-add_action('wp_ajax_nopriv_organization_info', 'get_organization_info');
-function get_organization_info() {
+add_action('wp_ajax_organization_details', 'get_organization_details');
+add_action('wp_ajax_nopriv_organization_details', 'get_organization_details');
+function get_organization_details() {
     global $wpdb;
-    $info = $wpdb->get_results('select * from gpp_organization_info where id=' . $_GET['id']);
-    $address_id = $wpdb->get_var('select address_id from gpp_organization_info where id=' . $_GET['id']);
-    $contacts_id = $wpdb->get_var('select contacts_id from gpp_organization_info where id=' . $_GET['id']);
-    $address = $wpdb->get_results('select * from gpp_addresses where id=' . $address_id);
-    $contacts = $wpdb->get_results('select * from gpp_organization_contacts where id=' . $contacts_id);
-    wp_send_json(array_merge($info, $address, $contacts));
+    $details = $wpdb->get_results('select * from gpp_details where id=' . $_GET['organizationId']);
+    $address = $wpdb->get_results('select * from gpp_addresses where id=' . $details->address_id);
+    $contacts = array();
+    foreach (explode('^', $details->contact_ids) as $id) {
+        $query = 'select * from gpp_contacts where id=' . intval($id);
+        array_push($contacts, $wpdb->get_results($query));
+    }
+    wp_send_json(array_merge($details, $address, $contacts));
 }
 
 // fetch organization reviews
@@ -271,7 +294,7 @@ add_action('wp_ajax_organization_reviews', 'get_organization_reviews');
 add_action('wp_ajax_nopriv_organization_reviews', 'get_organization_reviews');
 function get_organization_reviews() {
     global $wpdb;
-    $query = 'select * from gpp_reviews where organization_id=' . $_GET['id'] . ' order by timestamp desc';
+    $query = 'select * from gpp_reviews where organization_id=' . $_GET['organizationId'] . ' order by timestamp desc';
     $reviews = $wpdb->get_results($query);
     foreach ($reviews as $key => $value) {
         $query = 'select * from gpp_addresses where id=' . $value->address_id;
@@ -286,132 +309,137 @@ add_action('wp_ajax_nopriv_submission', 'submission');
 function submission() {
     global $wpdb;
 
-    // store org address
-    $table = 'gpp_addresses';
-    $data = get_organization_pe_address_data('organization');
-    $format = array('%s', '%s', '%s', '%d', '%s');
-    if (isset($_POST['organizationAddrId'])) {
-        $org_addr_id = $_POST['organizationAddrId'];
-        $data = array_merge(array('id' => $org_addr_id), $data);
+    // store organization address
+    $tableName = 'gpp_addresses';
+    $address = address_util($_POST['organization']);
+    $format = array('%s', '%s', '%s', '%s', '%s');
+    if (isset($_POST['organization']['id'])) {
+        $address_id = $_POST['organization']['addressId'];
+        $address = array_merge(array('id' => $address_id), $address);
         $format = array_merge(array('%d'), $format);
-        $wpdb->replace($table, $data, $format);
+        $wpdb->replace($tableName, $address, $format);
     } else {
-        $wpdb->insert($table, $data, $format);
-        $org_addr_id = $wpdb->insert_id;
+        $wpdb->insert($tableName, $address, $format);
+        $address_id = $wpdb->insert_id;
     }
 
     // store org contact
-    $table = 'gpp_organization_contacts';
-    $data = get_organization_contacts_data();
-    $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
-    if (isset($_POST['organizationContactsId'])) {
-        $org_contacts_id = $_POST['organizationContactsId'];
-        $data = array_merge(array('id' => $org_contacts_id), $data);
+    $tableName = 'gpp_contacts';
+    $format = array('%s', '%s', '%s', '%s');
+    if (isset($_POST['organization']['id'])) {
+        $contact_ids = $_POST['organization']['contactsId'];
+        $ids = explode('^', $contact_ids);
         $format = array_merge(array('%d'), $format);
-        $wpdb->replace($table, $data, $format);
+        for ($i = 0; $i < 3; $i++) {
+            $contact = contacts_util($_POST['organization']['contacts'][$i]);
+            $contact = array_merge(array('id' => $ids[$i]), $contact);
+            $wpdb->replace($tableName, $contact, $format);
+        }
     } else {
-        $wpdb->insert($table, $data, $format);
-        $org_contacts_id = $wpdb->insert_id;
+        $ids = array();
+        for ($i = 0; $i < 3; $i++) {
+            $contact = contacts_util($_POST['organization']['contacts'][$i]);
+            $wpdb->insert($tableName, $contact, $format);
+            array_push($ids, $wpdb->insert_id);
+        }
+        $contact_ids = join('^', $ids);
     }
 
 
-    // store org info
-    $table = 'gpp_organization_info';
-    $data = get_organization_info_data($org_addr_id, $org_contacts_id, $_POST['costOfPhysicalExperience']);
-    $format = array('%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d');
-    if (isset($_POST['organizationId'])) {
-        $org_id = $_POST['organizationId'];
-        $avg_cost = $wpdb->get_var('select avg_cost_of_pe from gpp_organization_info where id=' . $org_id);
-        $reviews = $wpdb->get_var('select count(*) from gpp_gpp_reviews where organization_id=' . $org_id);
-        $data['avg_cost_of_pe'] = ($data['avg_cost_of_pe'] + $avg_cost * $reviews) / ($reviews + 1);
-        $data = array_merge(array('id' => $org_id), $data);
+    // store organization details
+    $tableName = 'gpp_details';
+    $details = details_util($_POST['organization'], $address_id, $contact_ids);
+    $format = array('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d');
+    if (isset($_POST['organization']['id'])) {
+        $organization_id = $_POST['organization']['id'];
+        $data = $wpdb->get_results('select avg_cost_of_pe, num_reviews from gpp_details where id=' . $organization_id);
+        $average_cost = (intval($_POST['review']['cost']) + $data->avg_cost_of_pe * $data->num_reviews) / ($data->num_reviews + 1);
+        $details['average_cost'] = $average_cost;
+        $details['num_reviews'] = $data->num_reviews + 1;
+        $details = array_merge(array('id' => $organization_id), $details);
         $format = array_merge(array('%d'), $format);
-        $wpdb->replace($table, $data, $format);
+        $wpdb->replace($tableName, $details, $format);
     } else {
-        $wpdb->insert($table, $data, $format);
-        $org_id = $wpdb->insert_id;
+        $details['average_cost'] = $_POST['review']['cost'];
+        $wpdb->insert($tableName, $details, $format);
+        $organization_id = $wpdb->insert_id;
     }
 
     // store review address
-    $table = 'gpp_addresses';
-    $data = get_organization_pe_address_data('physicalExperience');
-    $format = array('%s', '%s', '%s', '%d', '%s');
-    $wpdb->insert($table, $data, $format);
-    $pe_addr_id = $wpdb->insert_id;
+    $tableName = 'gpp_addresses';
+    $address = address_util($_POST['review']);
+    $format = array('%s', '%s', '%s', '%s', '%s');
+    $wpdb->insert($tableName, $address, $format);
+    $address_id = $wpdb->insert_id;
 
-    // store org review
-    $table = 'gpp_reviews';
-    $data = get_organization_review_data($org_id, $pe_addr_id);
-    $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%s');
-    $wpdb->insert($table, $data, $format);
+    // store review
+    $tableName = 'gpp_reviews';
+    $review = reviews_util($_POST['review'], $organization_id, $address_id, $_POST['user']);
+    $review = array_merge($review, array('reviewer_name' => $_POST['user']['name'], 'reviewer_email' => $_POST['user']['email'],));
+    $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+    $wpdb->insert($tableName, $review, $format);
 
 	wp_die();
 }
 
-function get_organization_pe_address_data($prefix) {
+function address_util($state) {
     return array(
-        'street' => $_POST[$prefix . 'Street'],
-        'city' => $_POST[$prefix . 'City'],
-        'state' => $_POST[$prefix . 'State'],
-        'zipcode' => $_POST[$prefix . 'ZipCode'],
-        'country' => $_POST[$prefix . 'Country']
+        'street' => $state['street'],
+        'city' => $state['city'],
+        'state' => $state['state'],
+        'zipCode' => $state['zipCode'],
+        'country' => $state['country']
     );
 }
 
-function get_organization_contacts_data() {
+function contacts_util($state) {
     return array(
-        'contact_1_name' => $_POST['organizationContact1Name'],
-        'contact_1_role' => $_POST['organizationContact1Role'],
-        'contact_1_phone' => $_POST['organizationContact1Phone'],
-        'contact_1_email' => $_POST['organizationContact1Email'],
-        'contact_2_name' => $_POST['organizationContact2Name'],
-        'contact_2_role' => $_POST['organizationContact2Role'],
-        'contact_2_phone' => $_POST['organizationContact2Phone'],
-        'contact_2_email' => $_POST['organizationContact2Email'],
-        'contact_3_name' => $_POST['organizationContact3Name'],
-        'contact_3_role' => $_POST['organizationContact3Role'],
-        'contact_3_phone' => $_POST['organizationContact3Phone'],
-        'contact_3_email' => $_POST['organizationContact3Email']
+        'name' => $state['name'],
+        'role' => $state['role'],
+        'phone' => $state['phone'],
+        'email' => $state['email']
     );
 }
 
-function get_organization_info_data($addr_id, $contacts_id, $avg_cost_of_pe) {
+function details_util($state, $address_id, $contact_ids) {
     return array(
-        'name' => $_POST['organizationName'],
-        'address_id' => $addr_id,
-        'phone' => $_POST['organizationPhone'],
-        'email' => $_POST['organizationEmail'],
-        'website' => $_POST['organizationWebsite'],
-        'affiliations' => $_POST['organizationAffiliations'],
-        'type' => $_POST['organizationType'],
-        'location' => $_POST['organizationCountry'],
-        'region' => $_POST['organizationRegion'],
-        'sectors' => $_POST['organizationSectors'],
-        'contacts_id' => $contacts_id,
+        'address_id' => $address_id,
+        'contact_ids' => $contact_ids,
+        'name' => $state['name'],
+        'phone' => $state['phone'],
+        'email' => $state['email'],
+        'website' => $state['website'],
+        'affiliations' => $state['affiliations'],
+        'type' => $state['type'],
+        'country' => $state['country'],
+        'region' => $state['region'],
+        'sectors' => $state['sectors'],
         'approved_status' => 0,
-        'avg_cost_of_pe' => $avg_cost_of_pe
+        'average_cost' => 0,
+        'num_reviews' => 1
     );
 }
 
-function get_organization_review_data($organization_id, $address_id) {
+function reviews_util($state, $organization_id, $address_id, $user) {
     return array(
         'address_id' => $address_id,
         'organization_id' => $organization_id,
-        'region' => $_POST['physicalExperienceRegion'],
-        'languages_spoken' => $_POST['languagesSpoken'],
-        'language_difficulties' => $_POST['languageDifficulties'],
-        'sectors' => $_POST['physicalExperienceSectors'],
-        'stipend_by_organization' => $_POST['stipendPaidByOrganization'],
-        'cost_of_pe' => $_POST['costOfPhysicalExperience'],
-        'pe_duration' => $_POST['physicalExperienceDuration'],
-        'what_you_did' => $_POST['workWithOrganization'],
-        'typical_day' => $_POST['physicalExperienceTypicalDay'],
-        'strength_and_weaknesses' => $_POST['organizationStrengthsAndWeaknesses'],
-        'other_comments' => $_POST['otherComments'],
-        'safety_score' => $_POST['safetyScore'],
-        'organization_responsiveness' => $_POST['organizationResponsiveness'],
-        'reviewer_name' => $_SESSION['givenName'] . ' ' . $_SESSION['familyName'],
-        'reviewer_email' => $_SESSION['email'],
-        'timestamp' => $_POST['timeStamp']
+        'region' => $state['region'],
+        'languages_spoken' => $state['languages'],
+        'language_difficulties' => $state['languageDifficulties'],
+        'sectors' => $state['sectors'],
+        'stipend_by_organization' => $state['stipend'],
+        'cost_of_pe' => $state['cost'],
+        'pe_duration' => $state['duration'],
+        'what_you_did' => $state['whatYouDid'],
+        'typical_day' => $state['typicalDay'],
+        'strength_and_weaknesses' => $state['strengthsAndWeaknesses'],
+        'other_comments' => $state['otherComments'],
+        'safety_score' => $state['safety'],
+        'organization_responsiveness' => $state['responsiveness'],
+        'reviewer_name' => $user['name'],
+        'reviewer_email' => $user['email'],
+        'timestamp' => $state['timeStamp'],
+        'anonymous_review' => $state['anonymousReview']
     );
 }

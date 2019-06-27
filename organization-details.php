@@ -25,7 +25,7 @@ get_header();
                     echo fieldset_item('street', 'text', 'Street');
                     echo fieldset_item('city', 'text', 'City');
                     echo fieldset_item('state', 'text', 'State');
-                    echo fieldset_item('zipcode', 'number', 'Zip Code');
+                    echo fieldset_item('zipCode', 'number', 'Zip Code');
                     echo fieldset_item('region', 'text', 'Region');
                     echo fieldset_item('country', 'text', 'Country');
                     echo fieldset_item('phone', 'tel', 'Phone');
