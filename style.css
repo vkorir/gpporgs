@@ -109,7 +109,7 @@ hr {
 .col-rounded-container-side {
 	width: 22%;
 }
-.col-rounded-container-middle {
+.col-rounded-container-page-table {
 	width: 78%;
 }
 .btn.practice-btn {
@@ -175,7 +175,7 @@ input[type=range]::-moz-range-thumb {
 	border-radius: 40px;
 }
 
-/* Table */
+/* Data Table */
 
 .table-container {
 	overflow-y: auto;
@@ -202,6 +202,23 @@ table {
 .page-item.active .page-link:active {
 	border: none;
 	outline: none;
+}
+
+#organizations-database-records tbody tr {
+	cursor: pointer;
+}
+.dataTables_filter,
+.dataTables_info {
+	display: none;
+}
+#organizations-database-records_length,
+#organizations-database-records_paginate {
+	width: 50%;
+	margin-top: 10px;
+	display: inline-block;
+}
+#table-container {
+	height: calc(100% - 70px);
 }
 
 /* Add Experience Page */
@@ -356,26 +373,6 @@ textarea {
 .label-container input:checked ~ .checkmark {
 	background-color: #084e83;
 	border: 2px solid #084e83;
-}
-
-
-/* Data Tables */
-
-#organizations-database-records tbody tr {
-	cursor: pointer;
-}
-.dataTables_filter,
-.dataTables_info {
-	display: none;
-}
-#organizations-database-records_length,
-#organizations-database-records_paginate {
-	width: 50%;
-	margin-top: 10px;
-	display: inline-block;
-}
-#table-container {
-	height: calc(100% - 70px);
 }
 
 

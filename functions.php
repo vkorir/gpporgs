@@ -156,7 +156,6 @@ function get_session_state() {
             'price' => 5000
         ),
         'organization' => array(
-            'id' => '',
             'name' => '',
             'street' => '',
             'city' => '',
@@ -210,7 +209,8 @@ function get_session_state() {
             'otherComments' => '',
             'safety' => '',
             'responsiveness' => '',
-            'anonymousReview' => ''
+            'anonymousReview' => '',
+            'timeStamp' => ''
         )
     );
     wp_send_json($session_state);
@@ -222,45 +222,17 @@ add_action('wp_ajax_nopriv_datatable_data', 'get_datatable_data');
 function get_datatable_data() {
     global $wpdb;
     $area_options = array(
-        'all' => ' where location like "%"',
-        'domestic' => ' where location = "united states"',
-        'international' => ' where location != "united states"'
+        'all' => ' where country like "%"',
+        'domestic' => ' where country = "united states"',
+        'international' => ' where country != "united states"'
     );
 
-    $query = 'select id, name, type, location, sectors, region, avg_cost_of_pe from gpp_details';
+    $query = 'select id, name, type, country, sectors, region, average_cost from gpp_details';
     $query .= $area_options[$_GET['area']];
     if ($_GET['sector'] != 'all') {
         $query .= ' and sectors like "%' . $_GET['sector'] . '%"';
     }
-    $query .= ' and avg_cost_of_pe <= ' . $_GET['price'];
-    wp_send_json($wpdb->get_results($query));
-}
-
-// fetch database records
-add_action('wp_ajax_database_records', 'database_records');
-add_action('wp_ajax_nopriv_database_records', 'database_records');
-function database_records() {
-    global $wpdb;
-    if (isset($_POST['area'])) {
-        $_SESSION['dataTableState']['area'] = $_POST['area'];
-    }
-    if (isset($_POST['sector'])) {
-        $_SESSION['dataTableState']['sector'] = $_POST['sector'];
-    }
-    if (isset($_POST['price'])) {
-        $_SESSION['dataTableState']['price'] = $_POST['price'];
-    }
-    $area_options = array(
-        'all' => ' where location like "%"',
-        'domestic' => ' where location="united states"',
-        'international' => ' where location != "united states"'
-    );
-    $query = 'select id, name, type, location, sectors, region, avg_cost_of_pe from gpp_details';
-    $query .= $area_options[$_SESSION['dataTableState']['area']];
-    if ($_SESSION['dataTableState']['sector'] != 'all') {
-        $query .= ' and sectors like "%' . $_SESSION['dataTableState']['sector'] . '%"';
-    }
-    $query .= ' and avg_cost_of_pe <= ' . $_SESSION['dataTableState']['price'];
+    $query .= ' and average_cost <= ' . intval($_GET['price']);
     wp_send_json($wpdb->get_results($query));
 }
 
@@ -279,14 +251,14 @@ add_action('wp_ajax_organization_details', 'get_organization_details');
 add_action('wp_ajax_nopriv_organization_details', 'get_organization_details');
 function get_organization_details() {
     global $wpdb;
-    $details = $wpdb->get_results('select * from gpp_details where id=' . $_GET['organizationId']);
-    $address = $wpdb->get_results('select * from gpp_addresses where id=' . $details->address_id);
+    $details = $wpdb->get_row('select * from gpp_details where id=' . $_GET['organizationId']);
+    $address = $wpdb->get_row('select * from gpp_addresses where id=' . $details->address_id);
     $contacts = array();
     foreach (explode('^', $details->contact_ids) as $id) {
-        $query = 'select * from gpp_contacts where id=' . intval($id);
-        array_push($contacts, $wpdb->get_results($query));
+        $query = 'select * from gpp_contacts where id=' . $id;
+        array_push($contacts, $wpdb->get_row($query));
     }
-    wp_send_json(array_merge($details, $address, $contacts));
+    wp_send_json(array($details, $address, $contacts));
 }
 
 // fetch organization reviews
@@ -311,10 +283,10 @@ function submission() {
 
     // store organization address
     $tableName = 'gpp_addresses';
+    $address_id = $_POST['organization']['addressId'];
     $address = address_util($_POST['organization']);
     $format = array('%s', '%s', '%s', '%s', '%s');
     if (isset($_POST['organization']['id'])) {
-        $address_id = $_POST['organization']['addressId'];
         $address = array_merge(array('id' => $address_id), $address);
         $format = array_merge(array('%d'), $format);
         $wpdb->replace($tableName, $address, $format);
@@ -325,9 +297,9 @@ function submission() {
 
     // store org contact
     $tableName = 'gpp_contacts';
+    $contact_ids = $_POST['organization']['contactsId'];
     $format = array('%s', '%s', '%s', '%s');
     if (isset($_POST['organization']['id'])) {
-        $contact_ids = $_POST['organization']['contactsId'];
         $ids = explode('^', $contact_ids);
         $format = array_merge(array('%d'), $format);
         for ($i = 0; $i < 3; $i++) {
@@ -348,12 +320,12 @@ function submission() {
 
     // store organization details
     $tableName = 'gpp_details';
+    $organization_id = $_POST['organization']['id'];
     $details = details_util($_POST['organization'], $address_id, $contact_ids);
     $format = array('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d');
     if (isset($_POST['organization']['id'])) {
-        $organization_id = $_POST['organization']['id'];
-        $data = $wpdb->get_results('select avg_cost_of_pe, num_reviews from gpp_details where id=' . $organization_id);
-        $average_cost = (intval($_POST['review']['cost']) + $data->avg_cost_of_pe * $data->num_reviews) / ($data->num_reviews + 1);
+        $data = $wpdb->get_results('select average_cost, num_reviews from gpp_details where id=' . $organization_id);
+        $average_cost = (intval($_POST['review']['cost']) + $data->average_cost * $data->num_reviews) / ($data->num_reviews + 1);
         $details['average_cost'] = $average_cost;
         $details['num_reviews'] = $data->num_reviews + 1;
         $details = array_merge(array('id' => $organization_id), $details);
@@ -374,10 +346,10 @@ function submission() {
 
     // store review
     $tableName = 'gpp_reviews';
-    $review = reviews_util($_POST['review'], $organization_id, $address_id, $_POST['user']);
-    $review = array_merge($review, array('reviewer_name' => $_POST['user']['name'], 'reviewer_email' => $_POST['user']['email'],));
-    $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+    $review = reviews_util($_POST['review'], $address_id, $organization_id, $_POST['user']);
+    $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s');
     $wpdb->insert($tableName, $review, $format);
+    $wpdb->print_error();
 
 	wp_die();
 }
@@ -420,26 +392,26 @@ function details_util($state, $address_id, $contact_ids) {
     );
 }
 
-function reviews_util($state, $organization_id, $address_id, $user) {
+function reviews_util($state, $address_id, $organization_id, $user) {
     return array(
         'address_id' => $address_id,
         'organization_id' => $organization_id,
         'region' => $state['region'],
-        'languages_spoken' => $state['languages'],
-        'language_difficulties' => $state['languageDifficulties'],
+        'languages' => $state['languages'],
+        'difficulties' => $state['languageDifficulties'],
         'sectors' => $state['sectors'],
-        'stipend_by_organization' => $state['stipend'],
-        'cost_of_pe' => $state['cost'],
-        'pe_duration' => $state['duration'],
+        'stipend' => $state['stipend'],
+        'cost' => $state['cost'],
+        'duration' => $state['duration'],
         'what_you_did' => $state['whatYouDid'],
         'typical_day' => $state['typicalDay'],
         'strength_and_weaknesses' => $state['strengthsAndWeaknesses'],
         'other_comments' => $state['otherComments'],
         'safety_score' => $state['safety'],
-        'organization_responsiveness' => $state['responsiveness'],
+        'responsiveness' => $state['responsiveness'],
         'reviewer_name' => $user['name'],
         'reviewer_email' => $user['email'],
-        'timestamp' => $state['timeStamp'],
-        'anonymous_review' => $state['anonymousReview']
+        'anonymous_review' => $state['anonymousReview'],
+        'timestamp' => $state['timeStamp']
     );
 }

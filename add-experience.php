@@ -213,7 +213,7 @@ get_header();
                 </fieldset>
             </form>
 
-            <?php echo subsection_heading('languages-spoken', 'Languages spoken:', ' Start typing and select language'); ?>
+            <?php echo subsection_heading('languages-spoken', 'Please list the languages spoken at your PE location:', ' Start typing and select language'); ?>
             <div class="ui-widget">
                 <input id="languages-spoken-input" class="col-6 px-1" aria-label="Languages spoken">
             </div>
@@ -265,7 +265,7 @@ get_header();
             </div>
 
             <?php
-            echo subsection_heading('org-description', 'Describe the work you did with your organization', ': 2 paragraphs');
+            echo subsection_heading('org-description', 'Please describe the work that you did with your organization: ', ': 2 paragraphs');
             echo '<textarea name="" id="organization-description" class="col-lg-11 px-1"></textarea>';
 
             echo subsection_heading('org-typical-day', 'What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)', ': 2 paragraphs');

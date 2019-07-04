@@ -54,7 +54,7 @@ if (isset($_SESSION['access_token'])) {?>
                     ?>
                 </div>
             </div>
-            <div class="col-rounded-container-middle px-0">
+            <div class="col-rounded-container-page-table px-0">
                 <div class="rounded-container max-height middle-section" id="middle-section-container">
                     <?php echo page_title('GPP Practice Experience Database'); ?>
                     <br />

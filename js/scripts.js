@@ -101,6 +101,7 @@ $(document).ready(() => {
                     success: response => {
                         const dataTableRows = [];
                         for (const organization of $.parseJSON(JSON.stringify(response))) {
+                            organization['sectors'] = organization.sectors.split('^').join('\r\r');
                             dataTableRows.push(Object.values(organization));
                         }
                         handler(dataTableRows);
@@ -126,6 +127,14 @@ $(document).ready(() => {
                             targets: [0, 5, 6],
                             visible: false,
                             searchable: true
+                        },
+                        {
+                            targets: [1, 3],
+                            width: '15%'
+                        },
+                        {
+                            targets: [2, 4],
+                            width: '35%'
                         }
                     ],
                     pagingType: 'numbers',
@@ -282,11 +291,12 @@ $(document).ready(() => {
                 $.ajax({
                     url: '/wp-admin/admin-ajax.php?action=organization_reviews',
                     data: { organizationId },
-                    success: data => {
-                        const orgReviews = JSON.parse(JSON.stringify(data));
+                    success: response => {
+                        const orgReviews = JSON.parse(JSON.stringify(response));
                         let addressInfo;
                         const reviews = [];
-                        let html, count = 1;
+                        let html = '<div class="row text-center"><div class="col"><p>This organization does not have any reviews yet.</p></div></div>';
+                        let count = 1;
                         orgReviews.forEach(review => {
                             addressInfo = review['address'];
                             html = '<div class="row"><div class="col">';
@@ -294,12 +304,12 @@ $(document).ready(() => {
                             html += `<p><strong class="review-description">Country: </strong>${addressInfo['country']}</p>`;
                             html += `<p><strong class="review-description">Region: </strong>${review['region']}</p>`;
                             html += `<p><strong class="review-description">City/Town Name: </strong>${addressInfo['city']}</p>`;
-                            html += `<p><strong class="review-description">Please list the languages spoken at your PE location: </strong><br />${review['languages_spoken'].split(',').join('<br />')}</p>`;
-                            html += `<p><strong class="review-description">Did you experience any language difficulties? Please describe</strong><br />${review['language_difficulties']}</p>`;
+                            html += `<p><strong class="review-description">Please list the languages spoken at your PE location: </strong><br />${review['languages'].split('^').join('<br />')}</p>`;
+                            html += `<p><strong class="review-description">Did you experience any language difficulties? Please describe</strong><br />${review['difficulties']}</p>`;
                             html += `<p><strong class="review-description">Sectors: </strong><br />\n${review['sectors'].split('^').join('<br />')}</p>`;
-                            html += `<p><strong class="review-description">What was the cost of your PE? </strong>$${review['cost_of_pe']}</p>`;
-                            html += `<p><strong class="review-description">How much stipend were you paid by the organization: </strong>$${review['stipend_by_organization']}</p>`;
-                            html += `<p><strong class="review-description">What was the duration of your PE? </strong>${review['pe_duration']}</p>`;
+                            html += `<p><strong class="review-description">What was the cost of your PE? </strong>$${review['cost']}</p>`;
+                            html += `<p><strong class="review-description">How much stipend were you paid by the organization: </strong>$${review['stipend']}</p>`;
+                            html += `<p><strong class="review-description">What was the duration of your PE? </strong>${review['duration']}</p>`;
                             html += `<p><strong class="review-description">Please describe the work you did with your organization:</strong><br />${review['what_you_did']}</p>`;
                             html += `<p><strong class="review-description">What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)</strong><br />${review['typical_day']}</p>`;
                             html += `<p><strong class="review-description">What were your organization's strengths and weaknesses?</strong><br />${review['strength_and_weaknesses']}</p>`;
@@ -308,7 +318,7 @@ $(document).ready(() => {
                             count++;
                             reviews.push(html);
                         });
-                        $('#organization-reviews-container').html(reviews.join('<hr class="w-100" />'));
+                        $('#organization-reviews-container').html(orgReviews.length === 0 ? html : reviews.join('<hr class="w-100" />'));
                     }
                 });
 
@@ -391,12 +401,7 @@ $(document).ready(() => {
 
                 // clears out organization information state on page
                 function clearOrganizationInputFields() {
-                    sessionState['organization'] = {
-                        affiliations: [],
-                        sectors: [],
-                        contacts: [{}, {}, {}],
-                    };
-
+                    delete sessionState['organization']['id'];
                     ['street', 'city', 'state', 'zipcode', 'phone', 'email', 'website'].forEach(elemId => {
                         $('#organization-info #' + elemId).val('');
                     });
@@ -450,36 +455,33 @@ $(document).ready(() => {
                 }
 
                 // populate organization input fields
-                function addExperiencePopulateOrganizationInfo(id) {
+                function addExperiencePopulateOrganizationInfo(organizationId) {
+                    clearOrganizationInputFields();
                     const pageId = '#add-experience-page';
                     $.ajax({
-                        url: '/wp-admin/admin-ajax.php?action=organization_info',
-                        data: { id },
+                        url: '/wp-admin/admin-ajax.php?action=organization_details',
+                        data: { organizationId },
                         success: data => {
-                            const [orgInfo, orgAddr, orgContacts] = JSON.parse(JSON.stringify(data));
-                            sessionState['organization']['id'] = id;
-                            sessionState['organization']['addressId'] = orgInfo['address_id'];
-                            sessionState['organization']['contactIds'] = orgInfo['contact_ids'];
-                            const orgInfoFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
-                            const orgInfoAddr = ['street', 'city', 'state', 'zipcode'];
-                            const orgInfoSelect = ['region', 'country'];
-                            const contactFields = ['name', 'role', 'phone', 'email'];
-                            const contactGroups = [
-                                ['contact_1_', '#organization-contact-1'],
-                                ['contact_2_', '#organization-contact-2'],
-                                ['contact_3_', '#organization-contact-3']
-                            ];
+                            const [details, address, contacts] = JSON.parse(JSON.stringify(data));
+                            sessionState['organization']['id'] = organizationId;
+                            sessionState['organization']['addressId'] = details['address_id'];
+                            sessionState['organization']['contactIds'] = details['contact_ids'];
+                            const detailInputFields = ['name', 'phone', 'email', 'website'];
+                            const addressInputFields = ['street', 'city', 'state', 'zipCode'];
+                            const selectInputFields = ['region', 'country'];
+                            const contactInputFields = ['name', 'role', 'phone', 'email'];
                             let elem;
                             // populate organization info
-                            orgInfoFields.forEach(elemId => {
-                                elem = $(pageId + '#organization-info #' + elemId);
-                                elem.val(orgInfo[elemId]);
+                            console.log(details, address, contacts);
+                            detailInputFields.forEach(elemId => {
+                                console.log(elemId);
+                                $(`${pageId} #organization-info #${elemId}`).val(details[elemId]);
                             });
                             // populate organization affiliations
-                            orgInfo['affiliations'].split('^').forEach(affiliation => {
+                            details['affiliations'].split('^').forEach(affiliation => {
                                 for (let i = 1; i <= 6; i++) {
-                                    elem = $(pageId + '#affiliation-radio-btn-' + i);
-                                    if (elem.data('value') === affiliation && !elem.prop('checked')) {
+                                    elem = $(`${pageId} #affiliation-radio-btn-${i}`);
+                                    if (!elem.prop('checked') && elem.data('value') === affiliation) {
                                         elem.trigger('click');
                                     }
                                 }
@@ -487,51 +489,46 @@ $(document).ready(() => {
                             let checked;
                             // populate organization type
                             for (let i = 1; i <= 7; i++) {
-                                elem = $(pageId + '#organization-type-btn-' + i);
-                                if (elem.data('value') === orgInfo['type'] && !elem.prop('checked')) {
+                                elem = $(`${pageId} #organization-type-btn-${i}`);
+                                if (!elem.prop('checked') && elem.data('value') === details['type']) {
                                     elem.trigger('click');
                                     checked = true;
                                 } else if (i === 7 && !checked && !elem.prop('checked')) {
                                     elem.trigger('click');
-                                    $(pageId + '#organization-type-other-input').val(orgInfo['type'])
+                                    $(`${pageId} #organization-type-other-input`).val(details['type']);
                                 }
                             }
                             // populate organization sectors
-                            orgInfo['sectors'].split('^').forEach(sector => {
+                            details['sectors'].split('^').forEach(sector => {
                                 checked = false;
                                 for (let i = 1; i <= 12; i++) {
-                                    elem = $(pageId + '#organization-sector-btn-' + i);
-                                    if (elem.data('value') === sector && !elem.prop('checked')) {
+                                    elem = $(`${pageId} #organization-sector-btn-${i}`);
+                                    if (!elem.prop('checked') && elem.data('value') === sector) {
                                         elem.trigger('click');
                                         checked = true;
                                     } else if (i === 12 && !checked && !elem.prop('checked')) {
                                         elem.trigger('click');
-                                        $(pageId + '#organization-sector-other-input').val(sector);
+                                        $(`${pageId} #organization-sector-other-input`).val(sector);
                                     }
                                 }
                             });
                             // populate organization info select options
-                            orgInfoSelect.forEach(elemId => {
-                                elem = $(pageId + '#organization-info #' + elemId);
-                                let key = elemId === 'country' ? 'location' : elemId;
-                                const selectedIndex = getOptionsArray(elem).indexOf(orgInfo[key]);
+                            selectInputFields.forEach(elemId => {
+                                elem = $(`${pageId} #organization-info #${elemId}`);
+                                const selectedIndex = getOptionsArray(elem).indexOf(details[elemId]);
                                 elem.prop('selectedIndex', selectedIndex);
                             });
                             // populate organization address
-                            orgInfoAddr.forEach(elemId => {
-                                elem = $(pageId + '#organization-info #' + elemId);
-                                elem.val(orgAddr[elemId]);
+                            addressInputFields.forEach(elemId => {
+                                $(`${pageId} #organization-info #${elemId}`).val(address[elemId]);
                             });
                             // populate contact details
-                            contactGroups.forEach(group => {
-                                contactFields.forEach(field => {
-                                    elem = $(pageId + group[1] + ' #' + field);
-                                    elem.val(orgContacts[group[0] + field]);
-                                    if (orgContacts[group[0] + field] !== '') {
-                                        $(pageId + group[1]).removeClass('d-none');
-                                    }
+                            for (let i = 0; i < 3; i++) {
+                                contactInputFields.forEach(elemId => {
+                                    $(`#organization-contact-${i+1}`).removeClass('d-none');
+                                    $(`#organization-contact-${i+1} #${elemId}`).val(contacts[i][elemId]);
                                 });
-                            });
+                            }
                         }
                     });
 
@@ -549,23 +546,20 @@ $(document).ready(() => {
 
                 // radio button event handlers
                 let elem;
-                const affiliations = sessionState['organization']['affiliations'];
                 for (let i = 1; i <= 6; i++) {
                     $(`#affiliation-radio-btn-${i}`).click(function () {
-                        radioUpdateSessionUtil(affiliations, $(this));
+                        radioUpdateSessionUtil(sessionState['organization']['affiliations'], $(this));
                     });
                 }
                 radioUpdateSessionUtilUnselect(7, '#organization-type-btn-', sessionState['organization'], 'type');
-                const orgSectors = sessionState['organization']['sectors'];
                 for (let i = 1; i <= 12; i++) {
                     $(`#organization-sector-btn-${i}`).click(function () {
-                        radioUpdateSessionUtil(orgSectors, $(this));
+                        radioUpdateSessionUtil(sessionState['organization']['sectors'], $(this));
                     });
                 }
-                const reviewSectors = sessionState['review']['sectors'];
                 for (let i = 1; i <= 12; i++) {
                     $(`#physical-experience-sector-radio-btn-${i}`).click(function () {
-                        radioUpdateSessionUtil(reviewSectors, $(this))
+                        radioUpdateSessionUtil(sessionState['review']['sectors'], $(this))
                     });
                 }
                 radioUpdateSessionUtilUnselect(5, '#pe-duration-btn-', sessionState['review'], 'duration');
@@ -595,6 +589,28 @@ $(document).ready(() => {
                             }
                         });
                     }
+                }
+
+                // handle other radio select inputs
+                const otherInputRadios = [
+                    ['#organization-type-other-input', '#organization-type-btn-7'],
+                    ['#organization-sector-other-input', '#organization-sector-btn-12'],
+                    ['#physical-experience-sector-other-input', '#physical-experience-sector-radio-btn-12']
+                ];
+                for (const [inputId, radioId] of otherInputRadios) {
+                    $(inputId).focus(function () {
+                        if (!$(radioId).prop('checked')) {
+                            $(radioId).trigger('click');
+                        }
+                    });
+                    $(radioId).click(function () {
+                        elem = $(this);
+                        if (elem.prop('checked')) {
+                            $(inputId).focus();
+                        } else {
+                            $(inputId).focusout();
+                        }
+                    });
                 }
 
                 // slider event handlers
@@ -730,12 +746,10 @@ $(document).ready(() => {
                     sessionState['review']['sectors'] = sessionState['review']['sectors'].filter(sector => {
                         return !sector.includes('Other');
                     });
-                    console.log(sessionState);
                     sessionState['organization']['affiliations'] = sessionState['organization']['affiliations'].join('^');
                     sessionState['organization']['sectors'] = sessionState['organization']['sectors'].join('^');
                     sessionState['review']['sectors'] = sessionState['review']['sectors'].join('^');
                     sessionState['review']['timeStamp'] = Date.now().toString();
-                    console.log(sessionState);
 
                     // submit review
                     $.ajax({
@@ -744,8 +758,8 @@ $(document).ready(() => {
                         data: sessionState,
                         success: () => {
                             alert('Data submission success!');
-                            // resetSessionState();
-                            // window.location.href = document.location.origin;
+                            resetSessionState();
+                            window.location.href = document.location.origin;
                         },
                         error: () => {
                             alert('Failed to post data!');
