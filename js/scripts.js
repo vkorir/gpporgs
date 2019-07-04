@@ -222,11 +222,6 @@ $(document).ready(() => {
                         const detailInputFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
                         const detailSelectFields = ['region', 'country'];
                         const contactInputFields = ['name', 'role', 'phone', 'email'];
-                        const contactGroups = [
-                            ['contact_1_', '#organization-contact-1'],
-                            ['contact_2_', '#organization-contact-2'],
-                            ['contact_3_', '#organization-contact-3']
-                        ];
                         let elem;
                         // populate organization info
                         detailInputFields.forEach(elemId => {
@@ -257,24 +252,21 @@ $(document).ready(() => {
                         // populate organization info select option
                         detailSelectFields.forEach(elemId => {
                             elem = $(`${pageId} #organization-info #${elemId}`);
-                            const key = elemId === 'country' ? 'location' : elemId;
-                            updateField(elem, details[key]);
+                            updateField(elem, details[elemId]);
                         });
                         // populate organization contacts
                         let noContact = true;
-                        if (contacts != null) {
-                            contactGroups.forEach(group => {
-                                contactInputFields.forEach(field => {
-                                    elem = $(`${pageId} ${group[1]} #${field}`);
-                                    if (contacts[group[0] + field] !== '') {
-                                        elem.val(contacts[group[0] + field]);
-                                        $(pageId + group[1]).removeClass('d-none');
-                                        noContact = false;
-                                    } else {
-                                        elem.val('-');
-                                    }
-                                    elem.prop('disabled', true);
-                                });
+                        for (let i = 0; i < 3; i++) {
+                            contactInputFields.forEach(elemId => {
+                                elem = $(`${pageId} #organization-contact-${i+1} #${elemId}`);
+                                if (contacts[i][elemId] !== '') {
+                                    elem.val(contacts[i][elemId]);
+                                    $(`${pageId} #organization-contact-${i+1}`).removeClass('d-none');
+                                    noContact = false;
+                                } else {
+                                    elem.val('-');
+                                }
+                                elem.prop('disabled', true);
                             });
                         }
                         if (noContact) {
@@ -343,14 +335,14 @@ $(document).ready(() => {
                     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                     const date = new Date(parseFloat(timestamp));
                     const dd = date.getDay();
-                    const mm = date.getMonth();
+                    const mm = date.getMonth() - 1;
                     const d = date.getDate();
                     const yy = date.getFullYear();
                     const h = date.getHours();
                     const m = date.getMinutes();
                     const s = date.getSeconds();
                     let reviewerDetails = '';
-                    if (sessionState['user']['roles'].includes('admin') || review['anonymous_review'] === '0') {
+                    if (sessionState['user']['roles'].includes('admin') || review['anonymous_review'] == '0') {
                         reviewerDetails = `by <strong>${review['reviewer_name']} (${review['reviewer_email']}) </strong>`;
                     }
                     return `<i style="font-size: 14px;">${reviewerDetails} on ${days[dd]}, ${months[mm]} ${d}, ${yy} ${h}:${m}:${s}</i>`;
@@ -461,20 +453,21 @@ $(document).ready(() => {
                     $.ajax({
                         url: '/wp-admin/admin-ajax.php?action=organization_details',
                         data: { organizationId },
-                        success: data => {
-                            const [details, address, contacts] = JSON.parse(JSON.stringify(data));
+                        success: response => {
+                            const [details, address, contacts] = JSON.parse(JSON.stringify(response));
                             sessionState['organization']['id'] = organizationId;
                             sessionState['organization']['addressId'] = details['address_id'];
                             sessionState['organization']['contactIds'] = details['contact_ids'];
+                            sessionState['organization']['averageCost'] = details['average_cost'];
+                            sessionState['organization']['numReviews'] = details['num_reviews'];
+
                             const detailInputFields = ['name', 'phone', 'email', 'website'];
                             const addressInputFields = ['street', 'city', 'state', 'zipCode'];
                             const selectInputFields = ['region', 'country'];
                             const contactInputFields = ['name', 'role', 'phone', 'email'];
                             let elem;
                             // populate organization info
-                            console.log(details, address, contacts);
                             detailInputFields.forEach(elemId => {
-                                console.log(elemId);
                                 $(`${pageId} #organization-info #${elemId}`).val(details[elemId]);
                             });
                             // populate organization affiliations
@@ -761,7 +754,8 @@ $(document).ready(() => {
                             resetSessionState();
                             window.location.href = document.location.origin;
                         },
-                        error: () => {
+                        error: error => {
+                            console.log(error);
                             alert('Failed to post data!');
                         }
                     });

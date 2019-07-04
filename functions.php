@@ -281,14 +281,18 @@ add_action('wp_ajax_nopriv_submission', 'submission');
 function submission() {
     global $wpdb;
 
+    $user = $_POST['user'];
+    $organization = $_POST['organization'];
+    $review = $_POST['review'];
+
     // store organization address
     $tableName = 'gpp_addresses';
-    $address_id = $_POST['organization']['addressId'];
-    $address = address_util($_POST['organization']);
+    $address_id = $organization['addressId'];
+    $address = address_util($organization);
     $format = array('%s', '%s', '%s', '%s', '%s');
-    if (isset($_POST['organization']['id'])) {
-        $address = array_merge(array('id' => $address_id), $address);
-        $format = array_merge(array('%d'), $format);
+    if (isset($organization['id'])) {
+        array_push($address, array('id' => $address_id));
+        array_push($format, '%d');
         $wpdb->replace($tableName, $address, $format);
     } else {
         $wpdb->insert($tableName, $address, $format);
@@ -297,20 +301,20 @@ function submission() {
 
     // store org contact
     $tableName = 'gpp_contacts';
-    $contact_ids = $_POST['organization']['contactsId'];
+    $contact_ids = $organization['contactsId'];
     $format = array('%s', '%s', '%s', '%s');
-    if (isset($_POST['organization']['id'])) {
+    if (isset($organization['id'])) {
         $ids = explode('^', $contact_ids);
-        $format = array_merge(array('%d'), $format);
+        array_push($format, '%d');
         for ($i = 0; $i < 3; $i++) {
-            $contact = contacts_util($_POST['organization']['contacts'][$i]);
-            $contact = array_merge(array('id' => $ids[$i]), $contact);
+            $contact = contacts_util($organization['contacts'][$i]);
+            array_push($contact, $ids[$i]);
             $wpdb->replace($tableName, $contact, $format);
         }
     } else {
         $ids = array();
         for ($i = 0; $i < 3; $i++) {
-            $contact = contacts_util($_POST['organization']['contacts'][$i]);
+            $contact = contacts_util($organization['contacts'][$i]);
             $wpdb->insert($tableName, $contact, $format);
             array_push($ids, $wpdb->insert_id);
         }
@@ -320,38 +324,38 @@ function submission() {
 
     // store organization details
     $tableName = 'gpp_details';
-    $organization_id = $_POST['organization']['id'];
-    $details = details_util($_POST['organization'], $address_id, $contact_ids);
+    $organization_id = $organization['id'];
+    $details = details_util($organization, $address_id, $contact_ids);
     $format = array('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d');
-    if (isset($_POST['organization']['id'])) {
-        $data = $wpdb->get_results('select average_cost, num_reviews from gpp_details where id=' . $organization_id);
-        $average_cost = (intval($_POST['review']['cost']) + $data->average_cost * $data->num_reviews) / ($data->num_reviews + 1);
-        $details['average_cost'] = $average_cost;
-        $details['num_reviews'] = $data->num_reviews + 1;
-        $details = array_merge(array('id' => $organization_id), $details);
-        $format = array_merge(array('%d'), $format);
+    if (isset($organization['id'])) {
+        $review_cost = intval($review['cost']);
+        $average_cost = $organization['averageCost'];
+        $num_reviews = $organization['numReviews'];
+        $details['average_cost'] = ($review_cost + $average_cost * $num_reviews) / ($num_reviews + 1);
+        $details['num_reviews'] = $num_reviews + 1;
+        array_push($details, array('id' => $organization_id));
+        array_push($format, '%d');
         $wpdb->replace($tableName, $details, $format);
     } else {
-        $details['average_cost'] = $_POST['review']['cost'];
+        $details['average_cost'] = $review['cost'];
         $wpdb->insert($tableName, $details, $format);
         $organization_id = $wpdb->insert_id;
     }
 
     // store review address
     $tableName = 'gpp_addresses';
-    $address = address_util($_POST['review']);
+    $address = address_util($review);
     $format = array('%s', '%s', '%s', '%s', '%s');
     $wpdb->insert($tableName, $address, $format);
     $address_id = $wpdb->insert_id;
 
     // store review
     $tableName = 'gpp_reviews';
-    $review = reviews_util($_POST['review'], $address_id, $organization_id, $_POST['user']);
+    $review = reviews_util($review, $address_id, $organization_id, $user);
     $format = array('%d', '%d', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s');
     $wpdb->insert($tableName, $review, $format);
-    $wpdb->print_error();
 
-	wp_die();
+    wp_die();
 }
 
 function address_util($state) {
