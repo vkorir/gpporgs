@@ -21,7 +21,6 @@ $(document).ready(() => {
         }
         return $(id).val().length < maxNumEntries;
     }
-
     // language selector jquery library
     $( function() {
         let availableLanguages = [];
