@@ -291,8 +291,8 @@ function submission() {
     $address = address_util($organization);
     $format = array('%s', '%s', '%s', '%s', '%s');
     if (isset($organization['id'])) {
-        array_push($address, array('id' => $address_id));
-        array_push($format, '%d');
+        $address = array_merge(array('id' => $address_id), $address);
+        $format = array_merge(array('%d'), $format);
         $wpdb->replace($tableName, $address, $format);
     } else {
         $wpdb->insert($tableName, $address, $format);
@@ -301,25 +301,23 @@ function submission() {
 
     // store org contact
     $tableName = 'gpp_contacts';
-    $contact_ids = $organization['contactsId'];
     $format = array('%s', '%s', '%s', '%s');
+    $ids = array();
     if (isset($organization['id'])) {
-        $ids = explode('^', $contact_ids);
-        array_push($format, '%d');
-        for ($i = 0; $i < 3; $i++) {
-            $contact = contacts_util($organization['contacts'][$i]);
-            array_push($contact, $ids[$i]);
+        $format = array_merge(array('%d'), $format);
+        $ids = explode('^', $organization['contactIds']);
+    }
+    for ($i = 0; $i < 3; $i++) {
+        $contact = contacts_util($organization['contacts'][$i]);
+        if (isset($organization['id'])) {
+            $contact = array_merge(array('id' => $ids[$i]), $contact);
             $wpdb->replace($tableName, $contact, $format);
-        }
-    } else {
-        $ids = array();
-        for ($i = 0; $i < 3; $i++) {
-            $contact = contacts_util($organization['contacts'][$i]);
+        } else {
             $wpdb->insert($tableName, $contact, $format);
             array_push($ids, $wpdb->insert_id);
         }
-        $contact_ids = join('^', $ids);
     }
+    $contact_ids = join('^', $ids);
 
 
     // store organization details
@@ -329,12 +327,12 @@ function submission() {
     $format = array('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d');
     if (isset($organization['id'])) {
         $review_cost = intval($review['cost']);
-        $average_cost = $organization['averageCost'];
-        $num_reviews = $organization['numReviews'];
+        $average_cost = intval($organization['averageCost']);
+        $num_reviews = intval($organization['numReviews']);
         $details['average_cost'] = ($review_cost + $average_cost * $num_reviews) / ($num_reviews + 1);
         $details['num_reviews'] = $num_reviews + 1;
-        array_push($details, array('id' => $organization_id));
-        array_push($format, '%d');
+        $details = array_merge(array('id' => $organization_id), $details);
+        $format = array_merge(array('%d'), $format);
         $wpdb->replace($tableName, $details, $format);
     } else {
         $details['average_cost'] = $review['cost'];

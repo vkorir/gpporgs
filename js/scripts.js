@@ -10,8 +10,8 @@ $(document).ready(() => {
 
     // restrict zip code entry to numbers and length 5
     ['#organization-info', '#practice-experience-address'].forEach(prefixId => {
-        $(`${prefixId} #zipcode`).keypress(() => {
-            return isNumberKey(event, `${prefixId} #zipcode`, 5);
+        $(`${prefixId} #zipCode`).keypress(() => {
+            return isNumberKey(event, `${prefixId} #zipCode`, 5);
         });
     });
     function isNumberKey(event, id, maxNumEntries) {
@@ -218,7 +218,7 @@ $(document).ready(() => {
                     data: { organizationId },
                     success: response => {
                         const [details, address, contacts] = JSON.parse(JSON.stringify(response));
-                        const addressInputFields = ['street', 'city', 'state', 'zipcode'];
+                        const addressInputFields = ['street', 'city', 'state', 'zipCode'];
                         const detailInputFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
                         const detailSelectFields = ['region', 'country'];
                         const contactInputFields = ['name', 'role', 'phone', 'email'];
@@ -394,7 +394,7 @@ $(document).ready(() => {
                 // clears out organization information state on page
                 function clearOrganizationInputFields() {
                     delete sessionState['organization']['id'];
-                    ['street', 'city', 'state', 'zipcode', 'phone', 'email', 'website'].forEach(elemId => {
+                    ['street', 'city', 'state', 'zipCode', 'phone', 'email', 'website'].forEach(elemId => {
                         $('#organization-info #' + elemId).val('');
                     });
                     ['#organization-type-other-input', '#organization-sector-other-input'].forEach(elemId => {
@@ -686,7 +686,7 @@ $(document).ready(() => {
                     for (let i = 1; i <= 3; i++) {
                         contactInputFields.forEach(fieldName => {
                             elem = $(`#organization-contact-${i} #${fieldName}`);
-                            sessionState['organization']['contacts'][i - 1][fieldName] = elem.val();
+                            sessionState['organization']['contacts'][i-1][fieldName] = elem.val();
                         });
                     }
                     elem = $(`#organization-type-btn-7`);
