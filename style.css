@@ -204,13 +204,9 @@ table {
 .page-item.active .page-link {
 	background-color: #084e83;
 	color: #ffffff;
-}
-
-.page-item.active .page-link:active {
 	border: none;
 	outline: none;
 }
-
 #organizations-database-records tbody tr {
 	cursor: pointer;
 }
@@ -226,6 +222,9 @@ table {
 }
 #table-container {
 	height: calc(100% - 70px);
+}
+#organizations-database-records_length, #organizations-database-records_paginate {
+	margin-top: 0;
 }
 
 /* Add Experience Page */
