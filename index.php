@@ -9,8 +9,6 @@
 start_session();
 get_header();
 
-$_SESSION['dataTableState'] = array('area' => 'all', 'sector' => 'all', 'price' => 5000);
-
 if (isset($_SESSION['access_token'])) {?>
     <!--  logged in status  -->
     <div class="container">
@@ -84,7 +82,7 @@ if (isset($_SESSION['access_token'])) {?>
         $_SESSION['givenName'] = 'Victor';
         $_SESSION['familyName'] = 'Korir';
         $_SESSION['email'] = 'dummy@email.com';
-        $_SESSION['roles'] = array('subscriber');
+        $_SESSION['roles'] = array('admin', 'subscriber');
     } ?>
     <div class="container">
         <div class="jumbotron w-100 mx-0 my-5">

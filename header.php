@@ -33,7 +33,7 @@ require_once 'google-api/config.php';
             </button>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="<?php echo home_url(); ?>" class="nav-link <?php if (site_url() == home_url() and isset($_SESSION['access_token'])) echo 'nav-selected'; ?>">DATABASE</a>
+                    <a href="<?php echo home_url(); ?>" class="nav-link">DATABASE</a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo home_url('/add-experience') ?>" class="nav-link">ADD REVIEW</a>

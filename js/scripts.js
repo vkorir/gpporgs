@@ -79,7 +79,6 @@ $(document).ready(() => {
         url: '/wp-admin/admin-ajax.php?action=session_state',
         success: response => {
             const sessionState = $.parseJSON(JSON.stringify(response));
-
             function resetSessionState() {
                 sessionState['organization'] = {
                     affiliations: [],

@@ -177,8 +177,15 @@ input[type=range]::-moz-range-thumb {
 
 /* Data Table */
 
-.table-container {
-	overflow-y: auto;
+#middle-section-container {
+	overflow-y: hidden;
+}
+#organizations-database-records_wrapper .bottom {
+	z-index: 100;
+	position: fixed;
+	bottom: 47px;
+	background-color: #eaecee;
+	width: 57%;
 }
 
 table {
@@ -271,6 +278,10 @@ table {
 }
 #practice-experience-address {
 	display: none;
+}
+
+table .bottom {
+	display: none !important;
 }
 
 /* Form Style */
