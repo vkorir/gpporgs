@@ -15,7 +15,7 @@ if (isset($_SESSION['access_token'])) {?>
         <div class="row mx-0">
             <div class="col-rounded-container-side px-0">
                 <div class="rounded-container max-height">
-                    <h3>Hi <?php echo $_SESSION['givenName']; ?>,</h3>
+                    <h3>Hi <?php echo $_SESSION['givenName'] . ' ' . $_SESSION['roles']; ?>,</h3>
                     <p>done with your practice?</p>
                     <div class="text-center">
                         <a href="<?php echo home_url('/add-experience') ?>" class="btn practice-btn">+ Add Review</a>

@@ -140,7 +140,7 @@ $(document).ready(() => {
                     scrollCollapse: true,
                     dom: 'rt<"bottom"lp>'
                 }).on('click', 'tr', function () {
-                    sessionStorage.setItem('selectedOrgId', dataTable.row($(this)).data()[0]);
+                    sessionStorage.setItem('organizationId', dataTable.row($(this)).data()[0]);
                     window.location.href = '/organization-details';
                 });
 
@@ -209,161 +209,164 @@ $(document).ready(() => {
             /** 3. HANDLE ORGANIZATION DETAILS **/
 
             $('#organization-details-page').ready(() => {
-                const organizationId = sessionStorage.getItem('selectedOrgId');
-                const pageId = '#organization-details-page';
-                $.ajax({
-                    url: '/wp-admin/admin-ajax.php?action=organization_details',
-                    data: { organizationId },
-                    success: response => {
-                        const [details, address, contacts] = JSON.parse(JSON.stringify(response));
-                        const addressInputFields = ['street', 'city', 'state', 'zipCode'];
-                        const detailInputFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
-                        const detailSelectFields = ['region', 'country'];
-                        const contactInputFields = ['name', 'role', 'phone', 'email'];
-                        let elem;
-                        // populate organization info
-                        detailInputFields.forEach(elemId => {
-                            elem = $(`${pageId} #organization-info #${elemId}`);
-                            updateField(elem, details[elemId]);
-                        });
-                        // populate organization affiliations
-                        let affiliations = '';
-                        details['affiliations'].split('^').forEach(affiliation => {
-                            affiliations += radioUtil(affiliation);
-                        });
-                        $(`${pageId} #affiliations`).html(affiliations);
-                        // populate type of of organization
-                        let type = radioUtil(details['type']);
-                        $(`${pageId} #type`).html(type);
-                        // populate organization sectors
-                        let sectors = '';
-                        details['sectors'].split('^').forEach(sector => {
-                            sectors += radioUtil(sector);
-                        });
-                        $(`${pageId} #sectors`).html(sectors);
-                        // populate organization address
-                        addressInputFields.forEach(elemId => {
-                            elem = $(`${pageId} #organization-info #${elemId}`);
-                            elem.val(address[elemId]);
-                            elem.prop('disabled', true);
-                        });
-                        // populate organization info select option
-                        detailSelectFields.forEach(elemId => {
-                            elem = $(`${pageId} #organization-info #${elemId}`);
-                            updateField(elem, details[elemId]);
-                        });
-                        // populate organization contacts
-                        let noContact = true;
-                        for (let i = 0; i < 3; i++) {
-                            contactInputFields.forEach(elemId => {
-                                elem = $(`${pageId} #organization-contact-${i+1} #${elemId}`);
-                                if (contacts[i][elemId] !== '') {
-                                    elem.val(contacts[i][elemId]);
-                                    $(`${pageId} #organization-contact-${i+1}`).removeClass('d-none');
-                                    noContact = false;
-                                } else {
-                                    elem.val('-');
-                                }
+                const organizationId = sessionStorage.getItem('organizationId');
+                if (organizationId) {
+                    const pageId = '#organization-details-page';
+                    $.ajax({
+                        url: '/wp-admin/admin-ajax.php?action=organization_details',
+                        data: { organizationId },
+                        success: response => {
+                            const [details, address, contacts] = JSON.parse(JSON.stringify(response));
+                            console.log(response);
+                            const addressInputFields = ['street', 'city', 'state', 'zipCode'];
+                            const detailInputFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
+                            const detailSelectFields = ['region', 'country'];
+                            const contactInputFields = ['name', 'role', 'phone', 'email'];
+                            let elem;
+                            // populate organization info
+                            detailInputFields.forEach(elemId => {
+                                elem = $(`${pageId} #organization-info #${elemId}`);
+                                updateField(elem, details[elemId]);
+                            });
+                            // populate organization affiliations
+                            let affiliations = '';
+                            details['affiliations'].split('^').forEach(affiliation => {
+                                affiliations += radioUtil(affiliation);
+                            });
+                            $(`${pageId} #affiliations`).html(affiliations);
+                            // populate type of of organization
+                            let type = radioUtil(details['type']);
+                            $(`${pageId} #type`).html(type);
+                            // populate organization sectors
+                            let sectors = '';
+                            details['sectors'].split('^').forEach(sector => {
+                                sectors += radioUtil(sector);
+                            });
+                            $(`${pageId} #sectors`).html(sectors);
+                            // populate organization address
+                            addressInputFields.forEach(elemId => {
+                                elem = $(`${pageId} #organization-info #${elemId}`);
+                                elem.val(address[elemId]);
                                 elem.prop('disabled', true);
                             });
+                            // populate organization info select option
+                            detailSelectFields.forEach(elemId => {
+                                elem = $(`${pageId} #organization-info #${elemId}`);
+                                updateField(elem, details[elemId]);
+                            });
+                            // populate organization contacts
+                            let noContact = true;
+                            for (let i = 0; i < 3; i++) {
+                                contactInputFields.forEach(elemId => {
+                                    elem = $(`${pageId} #organization-contact-${i+1} #${elemId}`);
+                                    if (contacts[i][elemId] !== '') {
+                                        elem.val(contacts[i][elemId]);
+                                        $(`${pageId} #organization-contact-${i+1}`).removeClass('d-none');
+                                        noContact = false;
+                                    } else {
+                                        elem.val('-');
+                                    }
+                                    elem.prop('disabled', true);
+                                });
+                            }
+                            if (noContact) {
+                                $(pageId + '#no-contact-info').removeClass('d-none');
+                            }
+                            // approved status
+                            elem = $('#approval-status');
+                            elem.html(`<strong style="color: #4885af;">Approved:</strong> ${details['approved_status'] == 1 ? 'Yes' : 'No'}`);
+                            elem.removeClass('d-none');
                         }
-                        if (noContact) {
-                            $(pageId + '#no-contact-info').removeClass('d-none');
+                    });
+
+                    // populate organization reviews
+                    $.ajax({
+                        url: '/wp-admin/admin-ajax.php?action=organization_reviews',
+                        data: { organizationId },
+                        success: response => {
+                            const orgReviews = JSON.parse(JSON.stringify(response));
+                            let addressInfo;
+                            const reviews = [];
+                            let html = '<div class="row text-center"><div class="col"><p>This organization does not have any reviews yet.</p></div></div>';
+                            let count = 1;
+                            orgReviews.forEach(review => {
+                                addressInfo = review['address'];
+                                html = '<div class="row"><div class="col">';
+                                html += `<h6 class="review-header">Review #${count} <span>${getTimeDisplay(review['timestamp'], review)}</span></h6>`;
+                                html += `<p><strong class="review-description">Country: </strong>${addressInfo['country']}</p>`;
+                                html += `<p><strong class="review-description">Region: </strong>${review['region']}</p>`;
+                                html += `<p><strong class="review-description">City/Town Name: </strong>${addressInfo['city']}</p>`;
+                                html += `<p><strong class="review-description">Please list the languages spoken at your PE location: </strong><br />${review['languages'].split('^').join('<br />')}</p>`;
+                                html += `<p><strong class="review-description">Did you experience any language difficulties? Please describe</strong><br />${review['difficulties']}</p>`;
+                                html += `<p><strong class="review-description">Sectors: </strong><br />\n${review['sectors'].split('^').join('<br />')}</p>`;
+                                html += `<p><strong class="review-description">What was the cost of your PE? </strong>$${review['cost']}</p>`;
+                                html += `<p><strong class="review-description">How much stipend were you paid by the organization: </strong>$${review['stipend']}</p>`;
+                                html += `<p><strong class="review-description">What was the duration of your PE? </strong>${review['duration']}</p>`;
+                                html += `<p><strong class="review-description">Please describe the work you did with your organization:</strong><br />${review['what_you_did']}</p>`;
+                                html += `<p><strong class="review-description">What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)</strong><br />${review['typical_day']}</p>`;
+                                html += `<p><strong class="review-description">What were your organization's strengths and weaknesses?</strong><br />${review['strength_and_weaknesses']}</p>`;
+                                html += `<p><strong class="review-description">Is there anything else you would like to share with other students who may work with this organization?</strong><br />${review['other_comments']}</p>`;
+                                html += '</div></div>';
+                                count++;
+                                reviews.push(html);
+                            });
+                            $('#organization-reviews-container').html(orgReviews.length === 0 ? html : reviews.join('<hr class="w-100" />'));
                         }
-                        // approved status
-                        elem = $('#approval-status');
-                        elem.html(`<strong style="color: #4885af;">Approved:</strong> ${details['approved_status'] == 1 ? 'Yes' : 'No'}`);
-                        elem.removeClass('d-none');
-                    }
-                });
+                    });
 
-                // populate organization reviews
-                $.ajax({
-                    url: '/wp-admin/admin-ajax.php?action=organization_reviews',
-                    data: { organizationId },
-                    success: response => {
-                        const orgReviews = JSON.parse(JSON.stringify(response));
-                        let addressInfo;
-                        const reviews = [];
-                        let html = '<div class="row text-center"><div class="col"><p>This organization does not have any reviews yet.</p></div></div>';
-                        let count = 1;
-                        orgReviews.forEach(review => {
-                            addressInfo = review['address'];
-                            html = '<div class="row"><div class="col">';
-                            html += `<h6 class="review-header">Review #${count} <span>${getTimeDisplay(review['timestamp'], review)}</span></h6>`;
-                            html += `<p><strong class="review-description">Country: </strong>${addressInfo['country']}</p>`;
-                            html += `<p><strong class="review-description">Region: </strong>${review['region']}</p>`;
-                            html += `<p><strong class="review-description">City/Town Name: </strong>${addressInfo['city']}</p>`;
-                            html += `<p><strong class="review-description">Please list the languages spoken at your PE location: </strong><br />${review['languages'].split('^').join('<br />')}</p>`;
-                            html += `<p><strong class="review-description">Did you experience any language difficulties? Please describe</strong><br />${review['difficulties']}</p>`;
-                            html += `<p><strong class="review-description">Sectors: </strong><br />\n${review['sectors'].split('^').join('<br />')}</p>`;
-                            html += `<p><strong class="review-description">What was the cost of your PE? </strong>$${review['cost']}</p>`;
-                            html += `<p><strong class="review-description">How much stipend were you paid by the organization: </strong>$${review['stipend']}</p>`;
-                            html += `<p><strong class="review-description">What was the duration of your PE? </strong>${review['duration']}</p>`;
-                            html += `<p><strong class="review-description">Please describe the work you did with your organization:</strong><br />${review['what_you_did']}</p>`;
-                            html += `<p><strong class="review-description">What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)</strong><br />${review['typical_day']}</p>`;
-                            html += `<p><strong class="review-description">What were your organization's strengths and weaknesses?</strong><br />${review['strength_and_weaknesses']}</p>`;
-                            html += `<p><strong class="review-description">Is there anything else you would like to share with other students who may work with this organization?</strong><br />${review['other_comments']}</p>`;
-                            html += '</div></div>';
-                            count++;
-                            reviews.push(html);
-                        });
-                        $('#organization-reviews-container').html(orgReviews.length === 0 ? html : reviews.join('<hr class="w-100" />'));
+                    function updateField(elem, val) {
+                        if (!val) {
+                            elem.val('-');
+                        } else if (val.includes('http') || val.includes('www')) {
+                            elem.prop('href', val);
+                            elem.text(val);
+                        } else {
+                            elem.val(val);
+                        }
+                        elem.prop('disabled', true);
                     }
-                });
 
-                function updateField(elem, val) {
-                    if (!val) {
-                        elem.val('-');
-                    } else if (val.includes('http') || val.includes('www')) {
-                        elem.prop('href', val);
-                        elem.text(val);
-                    } else {
-                        elem.val(val);
+                    function radioUtil(value) {
+                        return `<label class="label-container w-100"><input type="checkbox" data-value="${value}" checked disabled><span class="checkmark"></span>${value}</label>`;
                     }
-                    elem.prop('disabled', true);
+
+                    function getTimeDisplay(timestamp, review) {
+                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        const date = new Date(parseFloat(timestamp));
+                        const dd = date.getDay();
+                        const mm = date.getMonth() - 1;
+                        const d = date.getDate();
+                        const yy = date.getFullYear();
+                        const h = date.getHours();
+                        const m = date.getMinutes();
+                        const s = date.getSeconds();
+                        let reviewerDetails = '';
+                        if (sessionState['user']['roles'].includes('admin') || review['anonymous_review'] == '0') {
+                            reviewerDetails = `by <strong>${review['reviewer_name']} (${review['reviewer_email']}) </strong>`;
+                        }
+                        return `<i style="font-size: 14px;">${reviewerDetails} on ${days[dd]}, ${months[mm]} ${d}, ${yy} ${h}:${m}:${s}</i>`;
+                    }
+
+                    const organizationDetailsSwitchBtn = $('#organization-details-btn');
+                    const organizationDetailsSwitchBtnText = 'Organization Reviews';
+                    $('#organization-details-page .add-contact-btn-container').addClass('d-none');
+                    organizationDetailsSwitchBtn.click(() => {
+                        if (organizationDetailsSwitchBtn.text() === organizationDetailsSwitchBtnText) {
+                            $('#organization-details-page .add-experience-container.right-page').css({ display: 'block' });
+                            $('#organization-details-page .add-experience-container.left-page').css({ display: 'none' });
+                            $('#organization-details-page .text-center .display-5').text('Organization Reviews');
+                            organizationDetailsSwitchBtn.text('Organization Details');
+                            $('#org-details-page-header div h3').text('Organization Reviews');
+                        } else {
+                            $('#organization-details-page .add-experience-container.left-page').css({ display: 'block' });
+                            $('#organization-details-page .add-experience-container.right-page').css({ display: 'none' });
+                            $('#organization-details-page .text-center .display-5').text('Organization Details');
+                            organizationDetailsSwitchBtn.text(organizationDetailsSwitchBtnText);
+                            $('#org-details-page-header div h3').text('Organization Details');
+                        }
+                    });
                 }
-
-                function radioUtil(value) {
-                    return `<label class="label-container w-100"><input type="checkbox" data-value="${value}" checked disabled><span class="checkmark"></span>${value}</label>`;
-                }
-
-                function getTimeDisplay(timestamp, review) {
-                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                    const date = new Date(parseFloat(timestamp));
-                    const dd = date.getDay();
-                    const mm = date.getMonth() - 1;
-                    const d = date.getDate();
-                    const yy = date.getFullYear();
-                    const h = date.getHours();
-                    const m = date.getMinutes();
-                    const s = date.getSeconds();
-                    let reviewerDetails = '';
-                    if (sessionState['user']['roles'].includes('admin') || review['anonymous_review'] == '0') {
-                        reviewerDetails = `by <strong>${review['reviewer_name']} (${review['reviewer_email']}) </strong>`;
-                    }
-                    return `<i style="font-size: 14px;">${reviewerDetails} on ${days[dd]}, ${months[mm]} ${d}, ${yy} ${h}:${m}:${s}</i>`;
-                }
-
-                const organizationDetailsSwitchBtn = $('#organization-details-btn');
-                const organizationDetailsSwitchBtnText = 'Organization Reviews';
-                $('#organization-details-page .add-contact-btn-container').addClass('d-none');
-                organizationDetailsSwitchBtn.click(() => {
-                    if (organizationDetailsSwitchBtn.text() === organizationDetailsSwitchBtnText) {
-                        $('#organization-details-page .add-experience-container.right-page').css({ display: 'block' });
-                        $('#organization-details-page .add-experience-container.left-page').css({ display: 'none' });
-                        $('#organization-details-page .text-center .display-5').text('Organization Reviews');
-                        organizationDetailsSwitchBtn.text('Organization Details');
-                        $('#org-details-page-header div h3').text('Organization Reviews');
-                    } else {
-                        $('#organization-details-page .add-experience-container.left-page').css({ display: 'block' });
-                        $('#organization-details-page .add-experience-container.right-page').css({ display: 'none' });
-                        $('#organization-details-page .text-center .display-5').text('Organization Details');
-                        organizationDetailsSwitchBtn.text(organizationDetailsSwitchBtnText);
-                        $('#org-details-page-header div h3').text('Organization Details');
-                    }
-                });
             });
 
 
