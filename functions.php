@@ -69,15 +69,6 @@ function get_countries() {
     return $options;
 }
 
-
-// handle sessions
-add_action('init', 'start_session', 1);
-function start_session() {
-    if (!session_id()) {
-        session_start();
-    }
-}
-
 // load stylesheets
 add_action('wp_enqueue_scripts', 'load_stylesheets');
 function load_stylesheets() {
@@ -121,34 +112,19 @@ function load_js() {
 	wp_enqueue_script('custom_js');
 }
 
-
-// redirect wp-logout to logout page
-add_action('wp_logout', 'redirect_logout');
-function redirect_logout() {
-	wp_redirect(home_url('/logout'));
-	exit();
-}
-
-
-// redirect wp-login to login page
-add_action('init', 'redirect_login');
-function redirect_login() {
-	global $pagenow;
-	if ($pagenow == 'wp-login.php' && !isset($_SESSION['access_token'])) {
-		wp_redirect(home_url());
-		exit();
-	}
-}
-
 // get user role
 add_action('wp_ajax_session_state', 'get_session_state');
 add_action('wp_ajax_nopriv_session_state', 'get_session_state');
 function get_session_state() {
+    $user = wp_get_current_user();
     $session_state = array(
+        'session' => $_SESSION,
+        'cookie' => $_COOKIE,
         'user' => array(
-            'name' => $_SESSION['givenName'] . ' ' . $_SESSION['familyName'],
-            'email' => $_SESSION['email'],
-            'roles' => $_SESSION['roles']
+            'name' => $user->user_firstname,
+            'email' => $user->user_email,
+            'roles' => $user->roles,
+            'user_object' => $user
         ),
         'dataTableFilters' => array(
             'area' => 'all',
@@ -156,64 +132,22 @@ function get_session_state() {
             'price' => 5000
         ),
         'organization' => array(
-            'name' => '',
-            'street' => '',
-            'city' => '',
-            'state' => '',
-            'zipCode' => '',
-            'region' => '',
-            'country' => '',
-            'phone' => '',
-            'email' => '',
-            'website' => '',
             'affiliations' => array(),
-            'type' => '',
             'sectors' => array(),
             'contacts' => array(
-                array(
-                    'name' => '',
-                    'role' => '',
-                    'phone' => '',
-                    'email' => ''
-                ),
-                array(
-                    'name' => '',
-                    'role' => '',
-                    'phone' => '',
-                    'email' => ''
-                ),
-                array(
-                    'name' => '',
-                    'role' => '',
-                    'phone' => '',
-                    'email' => ''
-                )
+                array(),
+                array(),
+                array()
             )
         ),
         'review' => array(
-            'street' => '',
-            'city' => '',
-            'state' => '',
-            'zipCode' => '',
-            'region' => '',
-            'country' => '',
-            'languages' => '',
-            'languageDifficulties' => '',
             'sectors' => array(),
             'stipend' => '5000',
-            'cost' => '5000',
-            'duration' => '',
-            'whatYouDid' => '',
-            'typicalDay' => '',
-            'strengthsAndWeaknesses' => '',
-            'otherComments' => '',
-            'safety' => '',
-            'responsiveness' => '',
-            'anonymousReview' => '',
-            'timeStamp' => ''
+            'cost' => '5000'
         )
     );
     wp_send_json($session_state);
+    exit();
 }
 
 // fetch datatable data

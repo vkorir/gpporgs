@@ -9,11 +9,10 @@
 
 require_once 'google-api/config.php';
 
-if (isset($_SESSION['access_token'])) { // check for access_token is set
-    $client->setAccessToken($_SESSION['access_token']);
-} else if (isset($_GET['code'])) {  // check for auth code from Google API
-    $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-    $_SESSION['access_token'] = $token;
+start_session();
+
+ if (isset($_GET['code'])) {  // check for auth code from Google API
+    $client->fetchAccessTokenWithAuthCode($_GET['code']);
 } else {    // otherwise redirect to login
     wp_redirect(home_url('/login'));
     exit();
@@ -22,25 +21,27 @@ if (isset($_SESSION['access_token'])) { // check for access_token is set
 // fetch user attributes from Google API
 $obj_res = new Google_Service_Oauth2($client);
 $user_data = $obj_res->userinfo_v2_me->get();
-$email = strtolower($user_data['email']);
-$name = ucwords(strtolower($user_data['givenName']));
-$username = substr($email, 0, strpos($email, '@'));
+$email = $user_data['email'];
+$username = strtolower(substr($user_data['email'], 0, strpos($email, '@')));
 
 // check if existing user
-$user = get_user_by('email', $email);
 
+$user = get_user_by('login', $username);
 if ($user == false) { // register a new user
-    $random_password = wp_generate_password(16, false);
-    $user_id = wp_create_user($username, $random_password, $email);
-    $user = new WP_User($user_id);
-    $user->set_role('contributor');
+    $user_details = array(
+        'user_pass' => wp_generate_password(16, false),
+        'user_login' => $username,
+        'user_email' => $email,
+        'first_name' => ucfirst(strtolower($user_data['givenName'])),
+        'last_name' => ucfirst(strtolower($user_data['familyName'])),
+        'role' => 'contributor'
+    );
+    $user = new WP_User(wp_insert_user($user_details));
 }
 
-// register session variables
-$_SESSION['email'] = $email;
-$_SESSION['givenName'] = $name;
-$_SESSION['familyName'] = $user_data['familyName'];
-$_SESSION['roles'] = $user->roles;
+// login current user
+wp_signon(array('user_login' => $user->user_login));
+wp_set_current_user($user->ID, $user->user_login);
 
 // redirect user to front-page
 wp_redirect(home_url());

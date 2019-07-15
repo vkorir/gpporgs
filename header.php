@@ -1,7 +1,6 @@
 <?php
 
-require_once 'google-api/config.php';
-?>
+require 'google-api/config.php'; ?>
 
 <!doctype html>
 <html lang="en">
@@ -20,7 +19,7 @@ require_once 'google-api/config.php';
     <div class="container">
         <div class="collapse navbar-collapse px-0" id="navbarToggler">
             <form class="navbar-brand form-inline col-lg-6 px-0">
-                <?php if (isset($_SESSION['access_token'])) { ?>
+                <?php if (is_user_logged_in()) { ?>
                 <!--       Enable search bar         -->
                 <input id="main-search-bar" class="form-control w-100" type="search" placeholder="Search" aria-label="Search">
                 <?php } else { ?>
@@ -38,7 +37,7 @@ require_once 'google-api/config.php';
                 <li class="nav-item">
                     <a href="<?php echo home_url('/add-experience') ?>" class="nav-link">ADD REVIEW</a>
                 </li>
-                <?php if (isset($_SESSION['access_token'])) { ?>
+                <?php if (is_user_logged_in()) { ?>
                 <!--        render logout button        -->
                 <li class="nav-item">
                     <a href="<?php echo home_url('/logout'); ?>" class="nav-link">LOGOUT</a>
@@ -46,7 +45,7 @@ require_once 'google-api/config.php';
                 <?php } else { ?>
                 <!--        render login button        -->
                 <li class="nav-item">
-                    <a href="<?php echo $_SESSION['login_url']; ?>" class="nav-link">LOGIN</a>
+                    <a href="<?php echo $client->createAuthUrl(); ?>" class="nav-link">LOGIN</a>
                 </li>
                 <?php } ?>
             </ul>

@@ -10,13 +10,13 @@
 require_once 'vendor/autoload.php';
 
 // Set config params to access Google API
-$client_id = '797913522275-ldie22m7nmf9gml0b6g9n2brodv5ft17.apps.googleusercontent.com';
-$client_secret = '5EPFr6kbqcM2qst1g9oMnoBI';
-$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/callback';
+$client_id = '1035290053103-56crsjin0a9bcbdphqqqd3mhtjh3rtdv.apps.googleusercontent.com';
+$client_secret = 'x93ezf9bhuybKEh1R_UeoVWV';
+$redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . '/callback';
 
 // Create and Request to Google API
 $client = new Google_Client();
-$client->setApplicationName('GPPORGS Database');
+$client->setApplicationName('gpporgs-dev');
 $client->setClientId($client_id);
 $client->setClientSecret($client_secret);
 $client->setRedirectUri($redirect_uri);
@@ -25,5 +25,7 @@ $client->setRedirectUri($redirect_uri);
 $client->addScope("https://www.googleapis.com/auth/userinfo.profile");
 $client->addScope("https://www.googleapis.com/auth/userinfo.email");
 
-// save login url
-$_SESSION['login_url'] = $client->createAuthUrl();
+if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+    wp_signon(array('user_login' => 'vkkorir@gmail.com'));
+    wp_set_current_user(1, 'vkkorir@gmail.com');
+}

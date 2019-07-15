@@ -79,6 +79,15 @@ $(document).ready(() => {
         url: '/wp-admin/admin-ajax.php?action=session_state',
         success: response => {
             const sessionState = $.parseJSON(JSON.stringify(response));
+            // const homePage = $('#home-page-container');
+            // const loginPage = $('#login-container');
+            // if (sessionState['access_token']) {
+            //     homePage.removeClass('d-none');
+            //     loginPage.addClass('d-none');
+            // } else {
+            //     homePage.addClass('d-none');
+            //     loginPage.removeClass('d-none');
+            // }
             function resetSessionState() {
                 sessionState['organization'] = {
                     affiliations: [],
@@ -210,7 +219,7 @@ $(document).ready(() => {
 
             $('#organization-details-page').ready(() => {
                 const organizationId = sessionStorage.getItem('organizationId');
-                if (organizationId) {
+                if (organizationId != null) {
                     const pageId = '#organization-details-page';
                     $.ajax({
                         url: '/wp-admin/admin-ajax.php?action=organization_details',

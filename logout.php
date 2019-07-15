@@ -10,11 +10,7 @@
 // Logout and redirect user to login page
 require_once 'google-api/config.php';
 
-unset($_SESSION['access_token']);
-unset($_SESSION['email']);
-unset($_SESSION['givenName']);
-
+wp_logout();
 $client->revokeToken();
-session_destroy();
 wp_redirect(home_url());
 exit();
