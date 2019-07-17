@@ -12,8 +12,7 @@ add_action('rest_api_init', function () {
 function google_callback(WP_REST_Request $request) {
     $code = $request->get_param('code');
     if ($code == null) {
-        wp_redirect(home_url());
-        exit();
+        return 'invalid access code.';
     }
 
     global $client;
@@ -44,31 +43,23 @@ function google_callback(WP_REST_Request $request) {
     wp_signon(array('user_login' => $user->user_login), true);
     wp_set_current_user($user->ID);
     wp_set_auth_cookie($user->ID);
-    do_action('wp_login', $user->user_login, $user);
+//    do_action('wp_login', $user->user_login, $user);
 
-    setcookie('access_token', $client->getAccessToken());
     wp_redirect(home_url());
     exit();
 }
 
-// handle logout
-add_action('rest_api_init', function () {
-    register_rest_route('oauth/v2', 'logout', array(
-        'methods' => WP_REST_Server::READABLE,
-        'callback' => function() {
-            wp_logout();
-            wp_clear_auth_cookie();
-            wp_redirect(home_url());
-        }
-    ));
-});
-
 // rewrite add-experience page endpoint url
-add_action('init', function () {
-    add_rewrite_endpoint('add-experience', EP_PERMALINK);
+add_filter('generate_rewrite_rules', function ($wp_rewrite) {
+    $wp_rewrite->rules = array_merge(['add-experience/?$' => 'add-experience.php?custom=1'], $wp_rewrite->rules);
 });
+add_filter( 'query_vars', function( $query_vars ) {
+    $query_vars[] = 'custom';
+    return $query_vars;
+} );
 add_action('template_redirect', function () {
-    if (is_singular() && get_query_var('add-experience')) {
+    $custom = intval( get_query_var( 'custom' ) );
+    if ($custom) {
         include dirname(__FILE__) . '/../add-experience.php';
         die;
     }
