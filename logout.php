@@ -10,7 +10,7 @@
 // Logout and redirect user to login page
 require_once 'google-api/config.php';
 
-wp_logout();
+//wp_logout();
 $client->revokeToken();
 wp_redirect(home_url());
 exit();

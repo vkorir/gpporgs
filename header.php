@@ -40,7 +40,7 @@ require 'google-api/config.php'; ?>
                 <?php if (is_user_logged_in()) { ?>
                 <!--        render logout button        -->
                 <li class="nav-item">
-                    <a href="<?php echo home_url('/logout'); ?>" class="nav-link">LOGOUT</a>
+                    <a href="<?php echo home_url('/wp-json/oauth/v2/logout'); ?>" class="nav-link">LOGOUT</a>
                 </li>
                 <?php } else { ?>
                 <!--        render login button        -->

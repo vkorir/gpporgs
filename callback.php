@@ -9,8 +9,6 @@
 
 require_once 'google-api/config.php';
 
-start_session();
-
  if (isset($_GET['code'])) {  // check for auth code from Google API
     $client->fetchAccessTokenWithAuthCode($_GET['code']);
 } else {    // otherwise redirect to login
