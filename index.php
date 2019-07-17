@@ -71,7 +71,6 @@ if (is_user_logged_in()) { ?>
 <?php } else { ?>
 <div class="container" id="login-container">
     <div class="jumbotron w-100 mx-0 my-5">
-<!--        --><?php //echo 'expired token: ' . $client->getAccessToken(); ?>
         <h1 class="display-4">Hello,</h1>
         <p class="lead">You need to be signed in to view the contents of this site. Click on the button below to login with your CalNet ID.</p>
         <hr class="my-4">

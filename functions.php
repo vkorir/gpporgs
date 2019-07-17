@@ -1,9 +1,9 @@
 <?php
 
-// front-end utility functions
+// load front-end utility functions
 require_once 'utils/utility-functions.php';
 
-// rest api endpoints
+// load rest api endpoints
 require_once 'utils/rest-apis.php';
 
 // load stylesheets
@@ -49,7 +49,7 @@ function load_js() {
 	wp_enqueue_script('custom_js');
 }
 
-// disable toolbar for non admins
+// disable toolbar for non admin users
 add_action('after_setup_theme', function () {
     if (!current_user_can('administrator') && !is_admin()) {
         show_admin_bar(false);
