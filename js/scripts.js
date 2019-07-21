@@ -342,7 +342,7 @@ $(document).ready(() => {
                         const m = date.getMinutes();
                         const s = date.getSeconds();
                         let reviewerDetails = '';
-                        if (sessionState['user']['roles'].includes('admin') || review['anonymous_review'] == '0') {
+                        if (sessionState['user']['roles'].includes('administrator') || review['anonymous_review'] == '0') {
                             reviewerDetails = `by <strong>${review['reviewer_name']} (${review['reviewer_email']}) </strong>`;
                         }
                         return `<i style="font-size: 14px;">${reviewerDetails} on ${days[dd]}, ${months[mm]} ${d}, ${yy} ${h}:${m}:${s}</i>`;

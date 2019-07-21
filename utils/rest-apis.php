@@ -48,7 +48,7 @@ function google_callback(WP_REST_Request $request) {
     exit();
 }
 
-// organization details page
+// rewrite endpoints for organization details & add experience pages
 add_action('init', function () {
     add_rewrite_endpoint('organization-details', EP_PERMALINK, '');
     add_rewrite_endpoint('add-experience', EP_PERMALINK, '');
@@ -70,11 +70,12 @@ add_action('template_redirect', function () {
 add_action('wp_ajax_session_state', 'get_session_state');
 add_action('wp_ajax_nopriv_session_state', 'get_session_state');
 function get_session_state() {
-    global $client;
     $session_state = array(
-        'user' => get_current_user(),
-        'cookie' => $_COOKIE,
-        'token' => $client->getAccessToken(),
+        'user' => array(
+            'name' => wp_get_current_user()->user_firstname,
+            'email' => wp_get_current_user()->user_email,
+            'roles' => wp_get_current_user()->roles
+        ),
         'dataTableFilters' => array(
             'area' => 'all',
             'sector' => 'all',
