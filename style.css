@@ -11,9 +11,6 @@ input[type='search'] {
 	background-color: #084e83;
 	box-shadow: 0 4px 6px #05365b;
 }
-input[type='search']:disabled {
-	background-color: #4885af;
-}
 input[type='search']:focus {
 	color: #ffffff;
 	border: none;
@@ -46,6 +43,10 @@ input[type='search']::placeholder {
 	transition: 1.2s;
 }
 .navbar-nav .nav-item .nav-link.nav-selected {
+	background-color: #4885af;
+}
+input[type='search']:disabled,
+.navbar-nav .nav-item .nav-link.disabled {
 	background-color: #4885af;
 }
 

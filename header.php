@@ -1,6 +1,7 @@
 <?php
 
-require 'google-api/config.php'; ?>
+require 'google-api/config.php';
+global $wp; ?>
 
 <!doctype html>
 <html lang="en">
@@ -32,10 +33,10 @@ require 'google-api/config.php'; ?>
             </button>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="<?php echo home_url(); ?>" class="nav-link">DATABASE</a>
+                    <a href="<?php echo home_url(); ?>" class="nav-link <?php if (!is_user_logged_in() || $wp->request == '') echo 'disabled'; ?>">DATABASE</a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?php echo home_url('/add-experience') ?>" class="nav-link">ADD REVIEW</a>
+                    <a href="<?php echo home_url('/add-experience') ?>" class="nav-link <?php if (!is_user_logged_in() || $wp->request == 'add-experience') echo 'disabled'; ?>">ADD REVIEW</a>
                 </li>
                 <?php if (is_user_logged_in()) { ?>
                 <!--        render logout button        -->
