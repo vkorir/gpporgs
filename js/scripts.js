@@ -79,15 +79,6 @@ $(document).ready(() => {
         url: '/wp-admin/admin-ajax.php?action=session_state',
         success: response => {
             const sessionState = $.parseJSON(JSON.stringify(response));
-            // const homePage = $('#home-page-container');
-            // const loginPage = $('#login-container');
-            // if (sessionState['access_token']) {
-            //     homePage.removeClass('d-none');
-            //     loginPage.addClass('d-none');
-            // } else {
-            //     homePage.addClass('d-none');
-            //     loginPage.removeClass('d-none');
-            // }
             function resetSessionState() {
                 sessionState['organization'] = {
                     affiliations: [],

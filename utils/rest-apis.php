@@ -43,28 +43,28 @@ function google_callback(WP_REST_Request $request) {
     wp_signon(array('user_login' => $user->user_login), true);
     wp_set_current_user($user->ID);
     wp_set_auth_cookie($user->ID);
-//    do_action('wp_login', $user->user_login, $user);
 
     wp_redirect(home_url());
     exit();
 }
 
-// rewrite add-experience page endpoint url
-add_filter('generate_rewrite_rules', function ($wp_rewrite) {
-    $wp_rewrite->rules = array_merge(['add-experience/?$' => 'add-experience.php?custom=1'], $wp_rewrite->rules);
+// organization details page
+add_action('init', function () {
+    add_rewrite_endpoint('organization-details', EP_PERMALINK, '');
+    add_rewrite_endpoint('add-experience', EP_PERMALINK, '');
 });
-add_filter( 'query_vars', function( $query_vars ) {
-    $query_vars[] = 'custom';
-    return $query_vars;
-} );
 add_action('template_redirect', function () {
-    $custom = intval( get_query_var( 'custom' ) );
-    if ($custom) {
-        include dirname(__FILE__) . '/../add-experience.php';
+    global $wp;
+    if ($wp->request == 'organization-details') {
+        include get_template_directory() . '/pages/organization-details.php';
         die;
     }
+    if ($wp->request == 'add-experience') {
+        include get_template_directory() . '/pages/add-experience.php';
+        die;
+    };
+    return;
 });
-
 
 // get user role
 add_action('wp_ajax_session_state', 'get_session_state');

@@ -26,7 +26,8 @@ $client->setRedirectUri($redirect_uri);
 $client->addScope("https://www.googleapis.com/auth/userinfo.profile");
 $client->addScope("https://www.googleapis.com/auth/userinfo.email");
 
-//if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
-//    wp_signon(array('user_login' => 'vkkorir@gmail.com'));
-//    wp_set_current_user(1, 'vkkorir@gmail.com');
-//}
+if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+    wp_signon(array('user_login' => 'vkkorir@gmail.com'));
+    wp_set_current_user(1, 'vkkorir@gmail.com');
+    wp_set_auth_cookie(1);
+}
