@@ -56,6 +56,8 @@ get_header();
                     ?>
                 </fieldset>
             </form>
+            <?php echo subsection_heading('organization-description-header', 'Describe the Organization',''); ?>
+            <textarea id="organization-details-description" class="col-lg-11 px-1" aria-label="Organization Description"></textarea>
             <?php echo subsection_heading('affiliation', 'Affiliation', ': Select all that may apply'); ?>
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -109,12 +111,16 @@ get_header();
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                     $sector_org_btn_list_1 = array(
-                        'organization-sector-btn-1' => 'Agriculture / Food Security / Hunger / Malnutrition',
+                        'organization-sector-btn-1' => 'Agriculture / Food Security',
                         'organization-sector-btn-2' => 'Collective Mobilization / Advocacy',
                         'organization-sector-btn-3' => 'Disaster / Humanitarian Relief',
-                        'organization-sector-btn-4' => 'Environment / Sustainability',
-                        'organization-sector-btn-5' => 'Fair Trade / Market Access',
-                        'organization-sector-btn-6' => 'Gender Empowerment'
+                        'organization-sector-btn-4' => 'Education',
+                        'organization-sector-btn-5' => 'Energy',
+                        'organization-sector-btn-6' => 'Environment / Sustainability',
+                        'organization-sector-btn-7' => 'Fair Trade/Market Access',
+                        'organization-sector-btn-8' => 'Gender Empowerment',
+                        'organization-sector-btn-9' => 'Health',
+                        'organization-sector-btn-10' => 'Housing'
                     );
                     echo radio_buttons($sector_org_btn_list_1);
                     ?>
@@ -122,12 +128,15 @@ get_header();
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                     $sector_org_btn_list_2 = array(
-                        'organization-sector-btn-7' => 'Healthcare (Basic Heath, HIV/AIDS, Maternal, Child, etc)',
-                        'organization-sector-btn-8' => 'Human Rights (Housing, Water, Sanitation) / Law',
-                        'organization-sector-btn-9' => 'Immigration',
-                        'organization-sector-btn-10' => 'Information Technology',
-                        'organization-sector-btn-11' => 'Microfinance / Small Enterprise',
-                        'organization-sector-btn-12' => 'Other (please describe below)'
+                        'organization-sector-btn-11' => 'Human Rights / Law',
+                        'organization-sector-btn-12' => 'Hunger / Malnutrition',
+                        'organization-sector-btn-13' => 'Law',
+                        'organization-sector-btn-14' => 'Immigration',
+                        'organization-sector-btn-15' => 'Information Technology',
+                        'organization-sector-btn-16' => 'Microfinance',
+                        'organization-sector-btn-17' => 'Refugee / Displaced Persons',
+                        'organization-sector-btn-18' => 'Water / Sanitation',
+                        'organization-sector-btn-19' => 'Other (please describe below)'
                     );
                     echo radio_buttons($sector_org_btn_list_2);
                     ?>
@@ -226,12 +235,16 @@ get_header();
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                     $pe_sector_btn_list_1 = array(
-                        'physical-experience-sector-radio-btn-1' => 'Agriculture / Food Security / Hunger / Malnutrition',
+                        'physical-experience-sector-radio-btn-1' => 'Agriculture / Food Security',
                         'physical-experience-sector-radio-btn-2' => 'Collective Mobilization / Advocacy',
                         'physical-experience-sector-radio-btn-3' => 'Disaster / Humanitarian Relief',
-                        'physical-experience-sector-radio-btn-4' => 'Environment / Sustainability',
-                        'physical-experience-sector-radio-btn-5' => 'Fair Trade / Market Access',
-                        'physical-experience-sector-radio-btn-6' => 'Gender Empowerment'
+                        'physical-experience-sector-radio-btn-4' => 'Education',
+                        'physical-experience-sector-radio-btn-5' => 'Energy',
+                        'physical-experience-sector-radio-btn-6' => 'Environment / Sustainability',
+                        'physical-experience-sector-radio-btn-7' => 'Fair Trade/Market Access',
+                        'physical-experience-sector-radio-btn-8' => 'Gender Empowerment',
+                        'physical-experience-sector-radio-btn-9' => 'Health',
+                        'physical-experience-sector-radio-btn-10' => 'Housing'
                     );
                     echo radio_buttons($pe_sector_btn_list_1);
                     ?>
@@ -239,12 +252,15 @@ get_header();
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <?php
                     $pe_sector_btn_list_2 = array(
-                        'physical-experience-sector-radio-btn-7' => 'Healthcare (Basic Heath, HIV/AIDS, Maternal, Child, etc)',
-                        'physical-experience-sector-radio-btn-8' => 'Human Rights (Housing, Water, Sanitation) / Law',
-                        'physical-experience-sector-radio-btn-9' => 'Immigration',
-                        'physical-experience-sector-radio-btn-10' => 'Information Technology',
-                        'physical-experience-sector-radio-btn-11' => 'Microfinance / Small Enterprise',
-                        'physical-experience-sector-radio-btn-12' => 'Other (please describe below)'
+                        'physical-experience-sector-radio-btn-11' => 'Human Rights / Law',
+                        'physical-experience-sector-radio-btn-12' => 'Hunger / Malnutrition',
+                        'physical-experience-sector-radio-btn-13' => 'Law',
+                        'physical-experience-sector-radio-btn-14' => 'Immigration',
+                        'physical-experience-sector-radio-btn-15' => 'Information Technology',
+                        'physical-experience-sector-radio-btn-16' => 'Microfinance',
+                        'physical-experience-sector-radio-btn-17' => 'Refugee / Displaced Persons',
+                        'physical-experience-sector-radio-btn-18' => 'Water / Sanitation',
+                        'physical-experience-sector-radio-btn-19' => 'Other (please describe below)'
                     );
                     echo radio_buttons($pe_sector_btn_list_2);
                     ?>
@@ -315,7 +331,11 @@ get_header();
                 </div>
             </div>
             <hr />
-            <p>Post as Anonymous: <input id="anonymous-review" type="checkbox" checked /></p>
+            <?php
+                echo subsection_heading('anonymous-review-text', 'Would you like your name to be included in the review?', ' *required');
+                echo radio_button_util('anonymous-review-yes', 'Yes');
+                echo radio_button_util('anonymous-review-no', 'No');
+            ?>
         </div>
         <hr />
         <div class="text-center">

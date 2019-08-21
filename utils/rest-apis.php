@@ -2,11 +2,17 @@
 
 require_once dirname(__FILE__) . '/../google-api/config.php';
 
+session_start();
+
 // google oauth v2 endpoint
 add_action('rest_api_init', function () {
     register_rest_route('oauth/v2', 'callback', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => 'google_callback'
+    ));
+    register_rest_route('oauth/v2', 'logout', array(
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => 'logout'
     ));
 });
 function google_callback(WP_REST_Request $request) {
@@ -26,24 +32,29 @@ function google_callback(WP_REST_Request $request) {
 
     // check if existing user
 
-    $user = get_user_by('login', $username);
-    if ($user == false) { // register a new user
-        $user_details = array(
-            'user_login' => $username,
-            'user_email' => $email,
-            'user_pass' => wp_generate_password(16, false),
-            'first_name' => ucfirst(strtolower($user_data['givenName'])),
-            'last_name' => ucfirst(strtolower($user_data['familyName'])),
-            'role' => 'contributor'
-        );
-        $user = new WP_User(wp_insert_user($user_details));
+    $user = get_user_by('email', $email);
+    if ($user == false) {
+        wp_redirect(home_url());
+        exit();
     }
+    $user_details = array(
+        'ID' => $user->ID,
+        'user_login' => $username,
+        'first_name' => ucfirst(strtolower($user_data['givenName'])),
+        'last_name' => ucfirst(strtolower($user_data['familyName']))
+    );
+    wp_update_user($user_details);
 
     // login current user
-    wp_signon(array('user_login' => $user->user_login), true);
+    wp_signon(array('user_login' => $username), true);
     wp_set_current_user($user->ID);
     wp_set_auth_cookie($user->ID);
 
+    wp_redirect(home_url());
+    exit();
+}
+function logout() {
+    wp_clear_auth_cookie();
     wp_redirect(home_url());
     exit();
 }
@@ -52,6 +63,8 @@ function google_callback(WP_REST_Request $request) {
 add_action('init', function () {
     add_rewrite_endpoint('organization-details', EP_PERMALINK, '');
     add_rewrite_endpoint('add-experience', EP_PERMALINK, '');
+    add_rewrite_endpoint('new-organization', EP_PERMALINK, '');
+    add_rewrite_endpoint('admin', EP_PERMALINK, '');
 });
 add_action('template_redirect', function () {
     global $wp;
@@ -63,6 +76,14 @@ add_action('template_redirect', function () {
         include get_template_directory() . '/pages/add-experience.php';
         die;
     };
+    if ($wp->request == 'new-organization') {
+        include get_template_directory() . '/pages/new-organization.php';
+        die;
+    }
+    if ($wp->request == 'admin') {
+        include get_template_directory() . '/pages/admin-tools.php';
+        die;
+    }
     return;
 });
 
@@ -78,22 +99,7 @@ function get_session_state() {
         ),
         'dataTableFilters' => array(
             'area' => 'all',
-            'sector' => 'all',
-            'price' => 5000
-        ),
-        'organization' => array(
-            'affiliations' => array(),
-            'sectors' => array(),
-            'contacts' => array(
-                array(),
-                array(),
-                array()
-            )
-        ),
-        'review' => array(
-            'sectors' => array(),
-            'stipend' => '5000',
-            'cost' => '5000'
+            'sector' => 'all'
         )
     );
     wp_send_json($session_state);
@@ -111,12 +117,11 @@ function get_datatable_data() {
         'international' => ' where country != "united states"'
     );
 
-    $query = 'select id, name, type, country, sectors, region, average_cost from gpp_details';
+    $query = 'select id, name, type, country, sectors, region from gpp_details';
     $query .= $area_options[$_GET['area']];
     if ($_GET['sector'] != 'all') {
         $query .= ' and sectors like "%' . $_GET['sector'] . '%"';
     }
-    $query .= ' and average_cost <= ' . intval($_GET['price']);
     wp_send_json($wpdb->get_results($query));
 }
 
@@ -159,6 +164,41 @@ function get_organization_reviews() {
     wp_send_json($reviews);
 }
 
+// approve organization
+add_action('wp_ajax_approve_org', 'approve_organization');
+add_action('wp_ajax_nopriv_approve_org', 'approve_organization');
+function approve_organization() {
+    global $wpdb;
+    $wpdb->update('gpp_details', array('approved_status' => 1), array('id' => $_GET['organizationId']));
+    wp_die();
+}
+
+function is_access_code_verified() {
+    return $_SESSION['access_code_verified'];
+}
+
+// verify and update access code
+add_action('wp_ajax_verify_access_code', 'verify_access_code');
+add_action('wp_ajax_nopriv_verify_access_code', 'verify_access_code');
+function verify_access_code() {
+    global $wpdb;
+    $response = $wpdb->get_row('select access_code from gpp_access_code;');
+    if ($_GET['accessCode'] == $response->access_code) {
+        $_SESSION['access_code_verified'] = true;
+        wp_send_json(array('success' => true));
+    }
+    wp_send_json(array('success' => false));
+}
+
+// handle new organization
+add_action('wp_ajax_register_organization', 'register_organization');
+add_action('wp_ajax_nopriv_register_organization', 'register_organization');
+function register_organization() {
+    store_organization_details();
+    $_SESSION['access_code_verified'] = false;
+    wp_die();
+}
+
 // handle form submission
 add_action('wp_ajax_submission', 'submission');
 add_action('wp_ajax_nopriv_submission', 'submission');
@@ -166,62 +206,11 @@ function submission() {
     global $wpdb;
 
     $user = $_POST['user'];
-    $organization = $_POST['organization'];
     $review = $_POST['review'];
 
-    // store organization address
-    $tableName = 'gpp_addresses';
-    $address_id = $organization['addressId'];
-    $address = address_util($organization);
-    $format = array('%s', '%s', '%s', '%s', '%s');
-    if (isset($organization['id'])) {
-        $address = array_merge(array('id' => $address_id), $address);
-        $format = array_merge(array('%d'), $format);
-        $wpdb->replace($tableName, $address, $format);
-    } else {
-        $wpdb->insert($tableName, $address, $format);
-        $address_id = $wpdb->insert_id;
-    }
-
-    // store org contact
-    $tableName = 'gpp_contacts';
-    $format = array('%s', '%s', '%s', '%s');
-    $ids = array();
-    if (isset($organization['id'])) {
-        $format = array_merge(array('%d'), $format);
-        $ids = explode('^', $organization['contactIds']);
-    }
-    for ($i = 0; $i < 3; $i++) {
-        $contact = contacts_util($organization['contacts'][$i]);
-        if (isset($organization['id'])) {
-            $contact = array_merge(array('id' => $ids[$i]), $contact);
-            $wpdb->replace($tableName, $contact, $format);
-        } else {
-            $wpdb->insert($tableName, $contact, $format);
-            array_push($ids, $wpdb->insert_id);
-        }
-    }
-    $contact_ids = join('^', $ids);
-
-
-    // store organization details
-    $tableName = 'gpp_details';
-    $organization_id = $organization['id'];
-    $details = details_util($organization, $address_id, $contact_ids);
-    $format = array('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d');
-    if (isset($organization['id'])) {
-        $review_cost = intval($review['cost']);
-        $average_cost = intval($organization['averageCost']);
-        $num_reviews = intval($organization['numReviews']);
-        $details['average_cost'] = ($review_cost + $average_cost * $num_reviews) / ($num_reviews + 1);
-        $details['num_reviews'] = $num_reviews + 1;
-        $details = array_merge(array('id' => $organization_id), $details);
-        $format = array_merge(array('%d'), $format);
-        $wpdb->replace($tableName, $details, $format);
-    } else {
-        $details['average_cost'] = $review['cost'];
-        $wpdb->insert($tableName, $details, $format);
-        $organization_id = $wpdb->insert_id;
+    $organization_id = store_organization_details();
+    if ($organization_id == 0) {
+        wp_die();
     }
 
     // store review address
@@ -238,6 +227,63 @@ function submission() {
     $wpdb->insert($tableName, $review, $format);
 
     wp_die();
+}
+
+function store_organization_details() {
+    global $wpdb;
+    if ($_POST['organization']) {
+        $organization = $_POST['organization'];
+
+        // store organization address
+        $tableName = 'gpp_addresses';
+        $address_id = $organization['addressId'];
+        $address = address_util($organization);
+        $format = array('%s', '%s', '%s', '%s', '%s');
+        if (isset($organization['id'])) {
+            $address = array_merge(array('id' => $address_id), $address);
+            $format = array_merge(array('%d'), $format);
+            $wpdb->replace($tableName, $address, $format);
+        } else {
+            $wpdb->insert($tableName, $address, $format);
+            $address_id = $wpdb->insert_id;
+        }
+
+        // store org contact
+        $tableName = 'gpp_contacts';
+        $format = array('%s', '%s', '%s', '%s');
+        $ids = array();
+        if (isset($organization['id'])) {
+            $format = array_merge(array('%d'), $format);
+            $ids = explode('^', $organization['contactIds']);
+        }
+        for ($i = 0; $i < 3; $i++) {
+            $contact = contacts_util($organization['contacts'][$i]);
+            if (isset($organization['id'])) {
+                $contact = array_merge(array('id' => $ids[$i]), $contact);
+                $wpdb->replace($tableName, $contact, $format);
+            } else {
+                $wpdb->insert($tableName, $contact, $format);
+                array_push($ids, $wpdb->insert_id);
+            }
+        }
+        $contact_ids = join('^', $ids);
+
+        // store organization details
+        $tableName = 'gpp_details';
+        $organization_id = $organization['id'];
+        $details = details_util($organization, $address_id, $contact_ids);
+        $format = array('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d');
+        if (isset($organization['id'])) {
+            $details = array_merge(array('id' => $organization_id), $details);
+            $format = array_merge(array('%d'), $format);
+            $wpdb->replace($tableName, $details, $format);
+        } else {
+            $wpdb->insert($tableName, $details, $format);
+            $organization_id = $wpdb->insert_id;
+        }
+        return $organization_id;
+    }
+    return false;
 }
 
 function address_util($state) {
@@ -267,14 +313,13 @@ function details_util($state, $address_id, $contact_ids) {
         'phone' => $state['phone'],
         'email' => $state['email'],
         'website' => $state['website'],
+        'description' => $state['description'],
         'affiliations' => $state['affiliations'],
         'type' => $state['type'],
         'country' => $state['country'],
         'region' => $state['region'],
         'sectors' => $state['sectors'],
-        'approved_status' => 0,
-        'average_cost' => 0,
-        'num_reviews' => 1
+        'approved_status' => 0
     );
 }
 

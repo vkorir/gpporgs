@@ -16,8 +16,13 @@ get_header();
             <?php echo page_title('Organization Details');?>
         </div>
         <hr />
-        <div id="add-experience-container-left" class="add-experience-container left-page">
+        <div id="add-experience-container-left" class="add-experience-container left-page" style="padding: 0 26%;">
             <?php echo section_subheading('ORGANIZATION INFORMATION'); ?>
+            <div class="row">
+                <div class="col" id="details-page-description">
+                    <!--       populate with organization description       -->
+                </div>
+            </div>
             <form id="organization-info" action="">
                 <fieldset>
                     <?php
@@ -102,7 +107,7 @@ get_header();
         </div>
         <hr />
         <div class="text-center">
-<!--            <button class="add-experience-btn" id="organization-details-add-review-btn">Add Review</button>-->
+            <button id="approve-organization">Approve</button>
             <button class="add-experience-btn" id="organization-details-btn" >Organization Reviews</button>
         </div>
     </div>

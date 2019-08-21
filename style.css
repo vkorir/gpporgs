@@ -240,7 +240,8 @@ table {
 	background-color: #4885af;
 	transition: .4s linear;
 }
-.add-experience-btn {
+.add-experience-btn,
+#approve-organization {
 	border: 1px solid #084e83;
 	border-radius: 4px;
 	color: #084e83;
@@ -256,6 +257,16 @@ table {
 	color: #fff;
 	transition: 1.3s;
 	outline: none;
+}
+#approve-organization {
+	color: #bb2a2a;
+	border: 1px solid #bb2a2a;
+}
+#approve-organization:hover {
+	cursor: pointer;
+	background: #bb2a2a;
+	color: #ffffff;
+	transition: 1.3s;
 }
 .directive {
 	font-style: italic;
@@ -322,14 +333,16 @@ textarea {
 #languages-spoken-input,
 #organization-type-other-input,
 #organization-sector-other-input,
-#physical-experience-sector-other-input {
+#physical-experience-sector-other-input,
+#access-code-input {
 	border-radius: 4px;
 	border: 1px solid #d9d9d9;
 }
 #languages-spoken-input:focus,
 #organization-type-other-input:focus,
 #organization-sector-other-input:focus,
-#physical-experience-sector-other-input:focus {
+#physical-experience-sector-other-input:focus,
+#access-code-input:focus {
 	outline: none;
 	border: 1px solid #084e83;
 }
@@ -430,3 +443,5 @@ textarea {
 #organization-reviews-container .review-description {
 	color: #4885af;
 }
+
+/* New Organization Page */

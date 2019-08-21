@@ -38,10 +38,15 @@ global $wp; ?>
                 <li class="nav-item">
                     <a href="<?php echo home_url('/add-experience') ?>" class="nav-link <?php if (!is_user_logged_in() || $wp->request == 'add-experience') echo 'disabled'; ?>">ADD REVIEW</a>
                 </li>
+                <?php if (current_user_can('administrator')) {?>
+                <li class="nav-item">
+                    <a href="<?php echo home_url('/admin'); ?>" class="nav-link">ADMIN</a>
+                </li>
+                <?php }?>
                 <?php if (is_user_logged_in()) { ?>
                 <!--        render logout button        -->
                 <li class="nav-item">
-                    <a href="<?php echo wp_logout_url(home_url()); ?>" class="nav-link">LOGOUT</a>
+                    <a href="<?php echo home_url('/wp-json/oauth/v2/logout'); ?>" class="nav-link">LOGOUT</a>
                 </li>
                 <?php } else { ?>
                 <!--        render login button        -->

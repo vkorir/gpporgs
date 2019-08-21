@@ -1,4 +1,4 @@
-$(document).ready(() => {
+$(document).ready(function () {
     /** GENERAL SCRIPTS **/
 
     // dynamic styles (look at it later)
@@ -89,6 +89,7 @@ $(document).ready(() => {
                     sectors: []
                 };
             }
+            resetSessionState();
 
             /** 2. PREPARE DATATABLE **/
 
@@ -117,12 +118,11 @@ $(document).ready(() => {
                         { title: 'Type' },
                         { title: 'Location' },
                         { title: 'Sectors' },
-                        { title: 'Region' },
-                        { title: 'Average Cost' }
+                        { title: 'Region' }
                     ],
                     columnDefs: [
                         {
-                            targets: [0, 5, 6],
+                            targets: [0, 5],
                             visible: false,
                             searchable: true
                         },
@@ -176,12 +176,12 @@ $(document).ready(() => {
 
                 // sector filter
                 let elem;
-                for (let i = 1; i <= 8; i++) {
+                for (let i = 1; i <= 18; i++) {
                     elem = $(`#sectors-btn-${i}`);
                     elem.click(function () {
                         elem = $(this);
                         if (elem.prop('checked')) {
-                            for (let j = 1; j <= 8; j++) {
+                            for (let j = 1; j <= 18; j++) {
                                 if (i !== j) {
                                     $(`#sectors-btn-${j}`).prop('checked', false);
                                 }
@@ -194,15 +194,6 @@ $(document).ready(() => {
                         }
                     });
                 }
-
-                // price range filter
-                const priceRangeSlider = $('#price-range-slider');
-                priceRangeSlider.change(() => {
-                    const price = priceRangeSlider.val();
-                    $('#price-range-display').val(price);
-                    sessionState['dataTableFilters']['price'] = price;
-                    dataTableAjaxUtil(applyFilterHandler);
-                });
             });
 
 
@@ -217,7 +208,6 @@ $(document).ready(() => {
                         data: { organizationId },
                         success: response => {
                             const [details, address, contacts] = JSON.parse(JSON.stringify(response));
-                            console.log(response);
                             const addressInputFields = ['street', 'city', 'state', 'zipCode'];
                             const detailInputFields = ['name', 'phone', 'email', 'website', 'location', 'region'];
                             const detailSelectFields = ['region', 'country'];
@@ -228,6 +218,7 @@ $(document).ready(() => {
                                 elem = $(`${pageId} #organization-info #${elemId}`);
                                 updateField(elem, details[elemId]);
                             });
+                            $('#details-page-description').html(details['description']);
                             // populate organization affiliations
                             let affiliations = '';
                             details['affiliations'].split('^').forEach(affiliation => {
@@ -269,13 +260,30 @@ $(document).ready(() => {
                                     elem.prop('disabled', true);
                                 });
                             }
+                            // display no contact message if organization has no contacts
                             if (noContact) {
                                 $(pageId + '#no-contact-info').removeClass('d-none');
                             }
                             // approved status
                             elem = $('#approval-status');
-                            elem.html(`<strong style="color: #4885af;">Approved:</strong> ${details['approved_status'] == 1 ? 'Yes' : 'No'}`);
+                            const approveBtn = $('#approve-organization');
+                            let status = 'No';
+                            if (details['approved_status'] == 1) {
+                                status = 'Yes';
+                                approveBtn.addClass('d-none');
+                            }
+                            elem.html(`<strong style="color: #4885af;">Approved:</strong> ${status}`);
                             elem.removeClass('d-none');
+                            approveBtn.click(function () {
+                                $.ajax({
+                                    url: '/wp-admin/admin-ajax.php?action=approve_org',
+                                    data: { organizationId },
+                                    success: () => {
+                                        approveBtn.addClass('d-none');
+                                        elem.html(`<strong style="color: #4885af;">Approved:</strong> Yes`);
+                                    }
+                                });
+                            });
                         }
                     });
 
@@ -298,7 +306,9 @@ $(document).ready(() => {
                                 html += `<p><strong class="review-description">City/Town Name: </strong>${addressInfo['city']}</p>`;
                                 html += `<p><strong class="review-description">Please list the languages spoken at your PE location: </strong><br />${review['languages'].split('^').join('<br />')}</p>`;
                                 html += `<p><strong class="review-description">Did you experience any language difficulties? Please describe</strong><br />${review['difficulties']}</p>`;
-                                html += `<p><strong class="review-description">Sectors: </strong><br />\n${review['sectors'].split('^').join('<br />')}</p>`;
+                                html += `<p><strong class="review-description">Sectors: </strong><br />${review['sectors'].split('^').join('<br />')}</p>`;
+                                html += `<p><strong class="review-description">How safe did you feel during your experience? </strong>${review['safety_score']}/5</p>`;
+                                html += `<p><strong class="review-description">How responsive was your organization? </strong>${review['responsiveness']}/5</p>`;
                                 html += `<p><strong class="review-description">What was the cost of your PE? </strong>$${review['cost']}</p>`;
                                 html += `<p><strong class="review-description">How much stipend were you paid by the organization: </strong>$${review['stipend']}</p>`;
                                 html += `<p><strong class="review-description">What was the duration of your PE? </strong>${review['duration']}</p>`;
@@ -311,6 +321,7 @@ $(document).ready(() => {
                                 reviews.push(html);
                             });
                             $('#organization-reviews-container').html(orgReviews.length === 0 ? html : reviews.join('<hr class="w-100" />'));
+
                         }
                     });
 
@@ -327,7 +338,7 @@ $(document).ready(() => {
                     }
 
                     function radioUtil(value) {
-                        return `<label class="label-container w-100"><input type="checkbox" data-value="${value}" checked disabled><span class="checkmark"></span>${value}</label>`;
+                        return `<label class="label-container"><input type="checkbox" data-value="${value}" checked disabled><span class="checkmark"></span>${value}</label>`;
                     }
 
                     function getTimeDisplay(timestamp, review) {
@@ -396,13 +407,13 @@ $(document).ready(() => {
                 function clearOrganizationInputFields() {
                     delete sessionState['organization']['id'];
                     ['street', 'city', 'state', 'zipCode', 'phone', 'email', 'website'].forEach(elemId => {
-                        $('#organization-info #' + elemId).val('');
+                        $(`${pageId} #organization-info #${elemId}`).val('');
                     });
                     ['#organization-type-other-input', '#organization-sector-other-input'].forEach(elemId => {
-                        $(elemId).val('');
+                        $(`${pageId} ${elemId}`).val('');
                     });
                     ['region', 'country'].forEach(elemId => {
-                        $('#organization-info #' + elemId).prop('selectedIndex', 0);
+                        $(`${pageId} #organization-info #${elemId}`).prop('selectedIndex', 0);
                     });
                     const radios = {'#affiliation-radio-btn-': 6, '#organization-type-btn-': 7, '#organization-sector-btn-': 12 };
                     $.each(radios, (elemId, num) => {
@@ -471,6 +482,7 @@ $(document).ready(() => {
                             detailInputFields.forEach(elemId => {
                                 $(`${pageId} #organization-info #${elemId}`).val(details[elemId]);
                             });
+                            $('#organization-details-description').val(details['description']);
                             // populate organization affiliations
                             details['affiliations'].split('^').forEach(affiliation => {
                                 for (let i = 1; i <= 6; i++) {
@@ -541,18 +553,18 @@ $(document).ready(() => {
                 // radio button event handlers
                 let elem;
                 for (let i = 1; i <= 6; i++) {
-                    $(`#affiliation-radio-btn-${i}`).click(function () {
+                    $(`${pageId} #affiliation-radio-btn-${i}`).click(function () {
                         radioUpdateSessionUtil(sessionState['organization']['affiliations'], $(this));
                     });
                 }
                 radioUpdateSessionUtilUnselect(7, '#organization-type-btn-', sessionState['organization'], 'type');
                 for (let i = 1; i <= 12; i++) {
-                    $(`#organization-sector-btn-${i}`).click(function () {
+                    $(`${pageId} #organization-sector-btn-${i}`).click(function () {
                         radioUpdateSessionUtil(sessionState['organization']['sectors'], $(this));
                     });
                 }
                 for (let i = 1; i <= 12; i++) {
-                    $(`#physical-experience-sector-radio-btn-${i}`).click(function () {
+                    $(`${pageId} #physical-experience-sector-radio-btn-${i}`).click(function () {
                         radioUpdateSessionUtil(sessionState['review']['sectors'], $(this))
                     });
                 }
@@ -588,8 +600,8 @@ $(document).ready(() => {
                 // handle other radio select inputs
                 const otherInputRadios = [
                     ['#organization-type-other-input', '#organization-type-btn-7'],
-                    ['#organization-sector-other-input', '#organization-sector-btn-12'],
-                    ['#physical-experience-sector-other-input', '#physical-experience-sector-radio-btn-12']
+                    ['#organization-sector-other-input', '#organization-sector-btn-19'],
+                    ['#physical-experience-sector-other-input', '#physical-experience-sector-radio-btn-19']
                 ];
                 for (const [inputId, radioId] of otherInputRadios) {
                     $(inputId).focus(function () {
@@ -669,6 +681,18 @@ $(document).ready(() => {
                     document.querySelector('#add-contact-btn').scrollIntoView();
                 });
 
+                // anonymous review option
+                const anonymousYes = $('#anonymous-review-yes');
+                const anonymousNo = $('#anonymous-review-no');
+                anonymousYes.click(function () {
+                    sessionState['review']['anonymousReview'] = 1;
+                    anonymousNo.prop('checked', false);
+                });
+                anonymousNo.click(function () {
+                    sessionState['review']['anonymousReview'] = 0;
+                    anonymousYes.prop('checked', false);
+                });
+
                 function submitReview() {
                     // read organization details & contacts
                     const orgDetailsInputFields = ['name', 'street', 'city', 'state', 'zipCode', 'phone', 'email', 'website'];
@@ -684,21 +708,21 @@ $(document).ready(() => {
                         }
                     });
                     const contactInputFields = ['name', 'role', 'phone', 'email'];
-                    for (let i = 1; i <= 3; i++) {
-                        contactInputFields.forEach(fieldName => {
-                            elem = $(`#organization-contact-${i} #${fieldName}`);
-                            sessionState['organization']['contacts'][i-1][fieldName] = elem.val();
+                    for (let i = 0; i < 3; i++) {
+                        contactInputFields.forEach(elemId => {
+                            elem = $(`#organization-contact-${i+1} #${elemId}`);
+                            sessionState['organization']['contacts'][i][elemId] = elem.val();
                         });
                     }
                     elem = $(`#organization-type-btn-7`);
                     if (elem.prop('checked')) {
                         sessionState['organization']['type'] = $('#organization-type-other-input').val();
                     }
-                    elem = $(`#organization-sector-btn-12`);
+                    elem = $(`#organization-sector-btn-19`);
                     if (elem.prop('checked')) {
                         sessionState['organization']['sectors'].push($('#organization-sector-other-input').val());
                     }
-                    elem = $(`#physical-experience-sector-radio-btn-12`);
+                    elem = $(`#physical-experience-sector-radio-btn-19`);
                     if (elem.prop('checked')) {
                         sessionState['review']['sectors'].push($('#physical-experience-sector-other-input').val());
                     }
@@ -731,7 +755,6 @@ $(document).ready(() => {
                     sessionState['review']['typicalDay'] = $('#organization-typical-day').val();
                     sessionState['review']['strengthsAndWeaknesses'] = $('#organization-strength-and-weakness').val();
                     sessionState['review']['otherComments'] = $('#organization-other-comments').val();
-                    sessionState['review']['anonymousReview'] = $('#anonymous-review').prop('checked') ? '1' : '0';
 
                     // clean sectors items & flatten lists
                     sessionState['organization']['sectors'] = sessionState['organization']['sectors'].filter(sector => {
@@ -740,6 +763,7 @@ $(document).ready(() => {
                     sessionState['review']['sectors'] = sessionState['review']['sectors'].filter(sector => {
                         return !sector.includes('Other');
                     });
+                    sessionState['organization']['description'] = $('#organization-details-description').val();
                     sessionState['organization']['affiliations'] = sessionState['organization']['affiliations'].join('^');
                     sessionState['organization']['sectors'] = sessionState['organization']['sectors'].join('^');
                     sessionState['review']['sectors'] = sessionState['review']['sectors'].join('^');
@@ -751,6 +775,7 @@ $(document).ready(() => {
                         url: '/wp-admin/admin-ajax.php?action=submission',
                         data: sessionState,
                         success: () => {
+                            console.log(sessionState);
                             alert('Data submission success!');
                             resetSessionState();
                             window.location.href = document.location.origin;
@@ -761,6 +786,137 @@ $(document).ready(() => {
                         }
                     });
                 }
+            });
+
+
+            /** New Organization **/
+            let pageId = '#new-organization-page';
+            $(pageId).ready(function () {
+                const accessCodeInput = $(`${pageId} #access-code-input`);
+                accessCodeInput.focus();
+                accessCodeInput.keyup(function (event) {
+                    const accessCode = $(this).val();
+                    $.ajax({
+                        url: '/wp-admin/admin-ajax.php?action=verify_access_code',
+                        data: { accessCode },
+                        success: response => {
+                            const result = $.parseJSON(JSON.stringify(response));
+                            if (!result.success && event.which === 13) {
+                                $('#access-code-input').val('');
+                                $('#invalid-access-code').css({ color: '#e74c3c' });
+                                setTimeout(function () {
+                                    $('#invalid-access-code').css({ color: 'transparent' });
+                                }, 2000);
+                            } else if (result.success) {
+                                window.location.href = '/new-organization';
+                            }
+                        }
+                    });
+                });
+                // set up radios
+                (function () {
+                    // affiliations
+                    for (let i = 1; i <= 6; i++) {
+                        $(`${pageId} #affiliation-radio-btn-${i}`).click(function () {
+                            updateRadioInput(sessionState['organization']['affiliations'], $(this));
+                        });
+                    }
+                    // type
+                    for (let i = 1; i <= 7; i++) {
+                        $(`${pageId} #organization-type-btn-${i}`).click(function () {
+                            let value = '';
+                            if ($(this).prop('checked')) {
+                                value = $(this).data('value');
+                                for (let j = 1; j <= 7; j++) {
+                                    const target = $(`${pageId} #organization-type-btn-${j}`);
+                                    if (j !== i && target.prop('checked')) {
+                                        target.trigger('click');
+                                    }
+                                }
+                            }
+                            sessionState['organization']['type'] = value;
+                        });
+                    }
+                    // sectors
+                    for (let i = 1; i <= 18; i++) {
+                        $(`${pageId} #organization-sector-btn-${i}`).click(function () {
+                            updateRadioInput(sessionState['organization']['sectors'], $(this));
+                        });
+                    }
+                    // other inputs
+                    $(`${pageId} #organization-type-btn-7`).click(function () {
+                        if ($(this).prop('checked')) {
+                            $(`${pageId} #organization-type-other-input`).focus();
+                        } else {
+                            $(`${pageId} #organization-type-other-input`).val('');
+                        }
+                    });
+                    $(`${pageId} #organization-sector-btn-19`).click(function () {
+                        if ($(this).prop('checked')) {
+                            $(`${pageId} #organization-sector-other-input`).focus();
+                        } else {
+                            $(`${pageId} #organization-sector-other-input`).val('');
+                        }
+                    });
+
+                    function updateRadioInput(store, elem) {
+                        if (elem.prop('checked')) {
+                            store.push(elem.data('value'));
+                        } else {
+                            const index = store.indexOf(elem.data('value'));
+                            if (index !== -1) store.splice(index, 1);
+                        }
+                    }
+                })();
+
+                function readOrganizationDetails() {
+                    const organizationInputFields = ['name' , 'street', 'city', 'state', 'zipCode', 'phone', 'email',
+                        'website', 'description'];
+                    organizationInputFields.forEach(fieldName => {
+                        sessionState['organization'][fieldName] = $(`${pageId} #${fieldName}`).val();
+                    });
+                    if ($(`${pageId} #organization-type-btn-7`).prop('checked')) {
+                        sessionState['organization']['type'] = $('#organization-type-other-input').val();
+                    }
+                    if ($(`${pageId} #organization-sector-btn-19`).prop('checked')) {
+                        sessionState['organization']['sectors'].push($('#organization-sector-other-input').val());
+                    }
+                    const contactFieldNames = ['name', 'role', 'phone', 'email'];
+                    contactFieldNames.forEach(fieldName => {
+                        for (let i = 0; i < 3; i++) {
+                            const elem = $(`${pageId} #organization-contact-${i+1} #${fieldName}`);
+                            sessionState['organization']['contacts'][i][fieldName] = elem.val();
+                        }
+                    });
+                    ['region', 'country'].forEach(fieldName => {
+                        const elem = $(`${pageId} #${fieldName} option:selected`);
+                        sessionState['organization'][fieldName] = elem.text();
+                    });
+                    // clean and flatten affiliations & sectors with delimiter (^)
+                    sessionState['organization']['sectors'] = sessionState['organization']['sectors'].filter(sector => {
+                        return !sector.includes('Other');
+                    });
+                    sessionState['review']['sectors'] = sessionState['review']['sectors'].filter(sector => {
+                        return !sector.includes('Other');
+                    });
+                    sessionState['organization']['affiliations'] = sessionState['organization']['affiliations'].join('^');
+                    sessionState['organization']['sectors'] = sessionState['organization']['sectors'].join('^');
+                }
+
+                // submission button clicked
+                $(`${pageId} #new-organization-btn`).click(function () {
+                    readOrganizationDetails();
+                    $.ajax({
+                        type: 'post',
+                        url: '/wp-admin/admin-ajax.php?action=register_organization',
+                        data: sessionState,
+                        success: () => {
+                            alert('New organization successfully registered!');
+                            resetSessionState();
+                            window.location.href = '/new-organization';
+                        }
+                    });
+                });
             });
         }
     });

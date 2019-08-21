@@ -17,7 +17,7 @@ $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . '/wp-json/oauth/v2/callback
 // Create and Request to Google API
 global $client;
 $client = new Google_Client();
-$client->setApplicationName('gpporgs-dev');
+$client->setApplicationName('gpporgs');
 $client->setClientId($client_id);
 $client->setClientSecret($client_secret);
 $client->setRedirectUri($redirect_uri);

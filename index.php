@@ -36,20 +36,27 @@ if (is_user_logged_in()) { ?>
 
                 // sectors subsection
                 $sectors = array(
-                    'sectors-btn-1' => 'Information Technology',
-                    'sectors-btn-2' => 'Education',
-                    'sectors-btn-3' => 'Environment / Sustainability',
-                    'sectors-btn-4' => 'Business',
-                    'sectors-btn-5' => 'Healthcare',
-                    'sectors-btn-6' => 'Basic Rights',
-                    'sectors-btn-7' => 'Relief Mobilization',
-                    'sectors-btn-8' => 'Gender Empowerment'
+                    'sectors-btn-1' => 'Agriculture / Food Security',
+                    'sectors-btn-2' => 'Collective Mobilization / Advocacy',
+                    'sectors-btn-3' => 'Disaster / Humanitarian Relief',
+                    'sectors-btn-4' => 'Education',
+                    'sectors-btn-5' => 'Energy',
+                    'sectors-btn-6' => 'Environment / Sustainability',
+                    'sectors-btn-7' => 'Fair Trade/Market Access',
+                    'sectors-btn-8' => 'Gender Empowerment',
+                    'sectors-btn-9' => 'Health',
+                    'sectors-btn-10' => 'Housing',
+                    'sectors-btn-11' => 'Human Rights / Law',
+                    'sectors-btn-12' => 'Hunger / Malnutrition',
+                    'sectors-btn-13' => 'Law',
+                    'sectors-btn-14' => 'Immigration',
+                    'sectors-btn-15' => 'Information Technology',
+                    'sectors-btn-16' => 'Microfinance',
+                    'sectors-btn-17' => 'Refugee / Displaced Persons',
+                    'sectors-btn-18' => 'Water / Sanitation'
                 );
                 echo section_subheading('SECTOR');
                 echo radio_buttons($sectors);
-
-                // price range slider
-                echo slider('PRICE RANGE', 'w-100', 'price-range', '5000', '0', '10000', '500');
                 ?>
             </div>
         </div>

@@ -55,3 +55,11 @@ add_action('after_setup_theme', function () {
         show_admin_bar(false);
     }
 });
+
+// start session
+add_action('init', function () {
+    if (!session_id()) {
+        session_start();
+        $_SESSION['access_code_verified'] = false;
+    }
+});
