@@ -1,0 +1,71 @@
+schema {
+    query: Query
+}
+
+type Query {
+    user(calNetId: String): User
+    organizations: [Organization]
+    organization(id: Int): Organization
+    reviews: [Review]
+    review(id: Int): Review
+}
+
+type User {
+    calNetId: String!
+    firstName: String!
+    lastName: String
+    isAdmin: Boolean!
+}
+
+type Organization {
+    id: ID!
+    name: String!
+    description: String
+    addressId: Int!
+    phone: String
+    email: String
+    website: String
+    affiliations: [String]!
+    type: String!
+    region: String!
+    sectors: [String]
+    approved: Boolean!
+}
+
+type Review {
+    id: ID!
+    organizationId: Int!
+    addressId: Int!
+    region: String!
+    languages: [String]!
+    difficulties: String
+    sectors: [String]
+    stipend: Int
+    cost: Int
+    duration: String
+    workDone: String!
+    typicalDay: String
+    evaluation: String!
+    other: String
+    safety: Int
+    responsiveness: Int
+    anonymous: Boolean
+}
+
+type Address {
+    id: ID!
+    street: String
+    city: String
+    state: String
+    zip: String
+    country: String
+}
+
+type Contact {
+    id: ID!
+    organizationId: Int!
+    name: String
+    role: String
+    email: String
+    phone: String
+}
