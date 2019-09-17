@@ -1,0 +1,691 @@
+[15-Jul-2019 16:49:36 UTC] PHP Parse error:  syntax error, unexpected '<', expecting end of file in phar:///usr/local/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/SynopsisValidator.php on line 92
+[15-Jul-2019 16:49:36 UTC] PHP Parse error:  syntax error, unexpected '<', expecting end of file in phar:///usr/local/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/SynopsisValidator.php on line 92
+[15-Jul-2019 16:55:12 UTC] WordPress database error Table 'local.gpp_details' doesn't exist for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" and average_cost <= 5000 made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[15-Jul-2019 16:55:23 UTC] WordPress database error Table 'local.gpp_details' doesn't exist for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" and average_cost <= 5000 made by do_action('wp_ajax_nopriv_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[15-Jul-2019 16:56:42 UTC] WordPress database error Table 'local.gpp_details' doesn't exist for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" and sectors like "%Education%" and average_cost <= 5000 made by do_action('wp_ajax_nopriv_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[15-Jul-2019 16:56:42 UTC] WordPress database error Table 'local.gpp_details' doesn't exist for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" and average_cost <= 5000 made by do_action('wp_ajax_nopriv_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[16-Jul-2019 08:08:23 UTC] PHP Warning:  include_once(../google-api/config.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:08:23 UTC] PHP Warning:  include_once(): Failed opening '../google-api/config.php' for inclusion (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:08:24 UTC] PHP Warning:  include_once(../google-api/config.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:08:24 UTC] PHP Warning:  include_once(): Failed opening '../google-api/config.php' for inclusion (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:08:24 UTC] PHP Warning:  include_once(../google-api/config.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:08:24 UTC] PHP Warning:  include_once(): Failed opening '../google-api/config.php' for inclusion (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:09:09 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php:12
+Stack trace:
+#0 /app/public/wp-includes/rest-api/class-wp-rest-server.php(946): google_callback(Object(WP_REST_Request))
+#1 /app/public/wp-includes/rest-api/class-wp-rest-server.php(329): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#2 /app/public/wp-includes/rest-api.php(309): WP_REST_Server->serve_request('/oauth/v2/callb...')
+#3 /app/public/wp-includes/class-wp-hook.php(286): rest_api_loaded(Object(WP))
+#4 /app/public/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#5 /app/public/wp-includes/plugin.php(531): WP_Hook->do_action(Array)
+#6 /app/public/wp-includes/class-wp.php(387): do_action_ref_array('parse_request', Array)
+#7 /app/public/wp-includes/class-wp.php(737): WP->parse_request('')
+#8 /app/public/wp-includes/functions.php(1105): WP->main('')
+#9 /app/public/wp-blog-header.php(16): wp()
+#10 /app/public/index.php(17): require('/app/public/wp-...')
+ in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 12
+[16-Jul-2019 08:11:13 UTC] PHP Warning:  include_once(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 11
+[16-Jul-2019 08:11:13 UTC] PHP Warning:  include_once(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 11
+[16-Jul-2019 08:11:13 UTC] PHP Warning:  include_once(): Failed opening 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' for inclusion (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 11
+[16-Jul-2019 08:11:13 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php:13
+Stack trace:
+#0 /app/public/wp-includes/rest-api/class-wp-rest-server.php(946): google_callback(Object(WP_REST_Request))
+#1 /app/public/wp-includes/rest-api/class-wp-rest-server.php(329): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#2 /app/public/wp-includes/rest-api.php(309): WP_REST_Server->serve_request('/oauth/v2/callb...')
+#3 /app/public/wp-includes/class-wp-hook.php(286): rest_api_loaded(Object(WP))
+#4 /app/public/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#5 /app/public/wp-includes/plugin.php(531): WP_Hook->do_action(Array)
+#6 /app/public/wp-includes/class-wp.php(387): do_action_ref_array('parse_request', Array)
+#7 /app/public/wp-includes/class-wp.php(737): WP->parse_request('')
+#8 /app/public/wp-includes/functions.php(1105): WP->main('')
+#9 /app/public/wp-blog-header.php(16): wp()
+#10 /app/public/index.php(17): require('/app/public/wp-...')
+ in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 13
+[16-Jul-2019 08:11:28 UTC] PHP Warning:  require_once(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 11
+[16-Jul-2019 08:11:28 UTC] PHP Warning:  require_once(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 11
+[16-Jul-2019 08:11:28 UTC] PHP Fatal error:  require_once(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 11
+[16-Jul-2019 08:11:50 UTC] PHP Warning:  require_once(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:50 UTC] PHP Warning:  require_once(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:50 UTC] PHP Fatal error:  require_once(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Warning:  require_once(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Warning:  require_once(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Fatal error:  require_once(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Warning:  require_once(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Warning:  require_once(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Fatal error:  require_once(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Warning:  require_once(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Warning:  require_once(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:51 UTC] PHP Fatal error:  require_once(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:59 UTC] PHP Warning:  require(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:59 UTC] PHP Warning:  require(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:11:59 UTC] PHP Fatal error:  require(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:12:00 UTC] PHP Warning:  require(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:12:00 UTC] PHP Warning:  require(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:12:00 UTC] PHP Fatal error:  require(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:12:00 UTC] PHP Warning:  require(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:12:00 UTC] PHP Warning:  require(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:12:00 UTC] PHP Fatal error:  require(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:13:09 UTC] PHP Warning:  require(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:13:09 UTC] PHP Warning:  require(http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:13:09 UTC] PHP Fatal error:  require(): Failed opening required 'http://gpporgs.local/wp-content/themes/gpporgs/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:14:20 UTC] PHP Warning:  require(/app/public/wp-content/themes/gpporgs/utils/google-api/config.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:14:20 UTC] PHP Fatal error:  require(): Failed opening required '/app/public/wp-content/themes/gpporgs/utils/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:14:22 UTC] PHP Warning:  require(/app/public/wp-content/themes/gpporgs/utils/google-api/config.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:14:22 UTC] PHP Fatal error:  require(): Failed opening required '/app/public/wp-content/themes/gpporgs/utils/google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:17:24 UTC] PHP Warning:  require(/app/public/wp-content/themes/gpporgs/utils../google-api/config.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:17:24 UTC] PHP Fatal error:  require(): Failed opening required '/app/public/wp-content/themes/gpporgs/utils../google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:17:25 UTC] PHP Warning:  require(/app/public/wp-content/themes/gpporgs/utils../google-api/config.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 08:17:25 UTC] PHP Fatal error:  require(): Failed opening required '/app/public/wp-content/themes/gpporgs/utils../google-api/config.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 3
+[16-Jul-2019 17:22:26 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:01 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:02 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:03 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:11 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:12 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:32 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:34 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:42 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:43 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:23:44 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:24:21 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:24:22 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:24:30 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:24:31 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:38:21 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:38:23 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:38:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:38:40 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:39:04 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:39:04 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:39:16 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:39:17 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 17:39:23 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[16-Jul-2019 18:46:02 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[17-Jul-2019 06:44:44 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[17-Jul-2019 06:45:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function createAuthUrl() on null in /app/public/wp-content/themes/gpporgs/header.php:48
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 48
+[17-Jul-2019 06:46:56 UTC] PHP Fatal error:  Uncaught Error: Call to a member function isAccessTokenExpired() on null in /app/public/wp-content/themes/gpporgs/header.php:22
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 22
+[17-Jul-2019 06:47:30 UTC] PHP Fatal error:  Uncaught Error: Call to a member function isAccessTokenExpired() on null in /app/public/wp-content/themes/gpporgs/header.php:22
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 22
+[17-Jul-2019 06:48:15 UTC] PHP Fatal error:  Uncaught Error: Call to a member function isAccessTokenExpired() on null in /app/public/wp-content/themes/gpporgs/header.php:22
+Stack trace:
+#0 /app/public/wp-includes/template.php(722): require_once()
+#1 /app/public/wp-includes/template.php(671): load_template('/app/public/wp-...', true)
+#2 /app/public/wp-includes/general-template.php(41): locate_template(Array, true)
+#3 /app/public/wp-content/themes/gpporgs/index.php(11): get_header()
+#4 /app/public/wp-includes/template-loader.php(78): include('/app/public/wp-...')
+#5 /app/public/wp-blog-header.php(19): require_once('/app/public/wp-...')
+#6 /app/public/index.php(17): require('/app/public/wp-...')
+#7 {main}
+  thrown in /app/public/wp-content/themes/gpporgs/header.php on line 22
+[17-Jul-2019 14:46:14 UTC] PHP Warning:  include(/app/public/wp-content/themes/gpporgs/utils/add-experience.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 70
+[17-Jul-2019 14:46:14 UTC] PHP Warning:  include(): Failed opening '/app/public/wp-content/themes/gpporgs/utils/add-experience.php' for inclusion (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 70
+[17-Jul-2019 14:47:44 UTC] PHP Warning:  include(/app/public/wp-content/themes/gpporgs/utils../add-experience.php): failed to open stream: No such file or directory in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 70
+[17-Jul-2019 14:47:44 UTC] PHP Warning:  include(): Failed opening '/app/public/wp-content/themes/gpporgs/utils../add-experience.php' for inclusion (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 70
+[21-Jul-2019 05:36:32 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[21-Jul-2019 05:36:32 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[21-Jul-2019 05:36:32 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[21-Jul-2019 05:50:09 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[21-Jul-2019 05:50:09 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[21-Jul-2019 05:50:09 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[21-Jul-2019 08:23:01 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[21-Jul-2019 08:23:01 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[21-Jul-2019 08:23:01 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[21-Jul-2019 08:23:44 UTC] PHP Warning:  include(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 58
+[21-Jul-2019 08:23:44 UTC] PHP Warning:  include(http://gpporgs.local/wp-content/themes/gpporgs/pages/organization-details.php): failed to open stream: no suitable wrapper could be found in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 58
+[21-Jul-2019 08:23:44 UTC] PHP Warning:  include(): Failed opening 'http://gpporgs.local/wp-content/themes/gpporgs/pages/organization-details.php' for inclusion (include_path='.:/usr/share/php:/www/wp-content/pear') in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 58
+[21-Jul-2019 08:52:41 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[21-Jul-2019 08:52:41 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[21-Jul-2019 08:52:41 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:10:58 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:13:02 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:01 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:06 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:21:09 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1137
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 09:25:48 UTC] PHP Warning:  A non-numeric value encountered in /app/public/wp-includes/class-wp-rewrite.php on line 1031
+[21-Jul-2019 13:36:43 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[21-Jul-2019 13:36:43 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[21-Jul-2019 13:36:43 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[21-Jul-2019 14:06:10 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[21-Jul-2019 14:06:10 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[21-Jul-2019 14:06:10 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[21-Jul-2019 15:06:57 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[21-Jul-2019 15:06:57 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[21-Jul-2019 15:06:57 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[30-Jul-2019 17:17:30 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[30-Jul-2019 17:17:30 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[30-Jul-2019 17:17:30 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[30-Jul-2019 17:17:41 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /app/public/wp-includes/update.php on line 160
+[30-Jul-2019 17:17:51 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /app/public/wp-includes/update.php on line 384
+[30-Jul-2019 17:18:01 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /app/public/wp-includes/update.php on line 569
+[07-Aug-2019 17:36:36 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[07-Aug-2019 17:36:36 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[07-Aug-2019 17:36:36 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[07-Aug-2019 22:56:13 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[07-Aug-2019 22:56:13 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[07-Aug-2019 22:56:13 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[12-Aug-2019 22:50:13 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[12-Aug-2019 22:50:13 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[12-Aug-2019 22:50:13 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[14-Aug-2019 17:54:03 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[14-Aug-2019 17:54:03 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[14-Aug-2019 17:54:03 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[14-Aug-2019 21:05:25 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[14-Aug-2019 21:05:25 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[14-Aug-2019 21:05:25 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[14-Aug-2019 21:53:30 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[14-Aug-2019 21:53:30 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[14-Aug-2019 21:53:30 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[14-Aug-2019 22:50:46 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[14-Aug-2019 22:50:46 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[14-Aug-2019 22:50:46 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[14-Aug-2019 23:52:28 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[14-Aug-2019 23:52:28 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[14-Aug-2019 23:52:28 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[15-Aug-2019 01:23:27 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[15-Aug-2019 01:23:27 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[15-Aug-2019 01:23:27 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[15-Aug-2019 19:05:18 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[15-Aug-2019 19:05:18 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[15-Aug-2019 19:05:18 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[15-Aug-2019 19:45:41 UTC] PHP Parse error:  syntax error, unexpected '}' in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 180
+[20-Aug-2019 18:35:31 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[20-Aug-2019 18:35:31 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[20-Aug-2019 18:35:31 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[20-Aug-2019 18:50:21 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[20-Aug-2019 18:50:21 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[20-Aug-2019 18:50:21 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[20-Aug-2019 18:50:21 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[20-Aug-2019 20:20:59 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[20-Aug-2019 20:20:59 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[20-Aug-2019 20:20:59 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[20-Aug-2019 20:20:59 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[20-Aug-2019 22:38:58 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[20-Aug-2019 22:38:58 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[20-Aug-2019 22:38:58 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[20-Aug-2019 22:38:58 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[20-Aug-2019 22:38:59 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:39:00 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:39:01 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:39:03 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:39:06 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:39:24 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:39:26 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:39:27 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:39:28 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:40:13 UTC] WordPress database error Unknown column 'average_cost' in 'field list' for query select id, name, type, country, sectors, region, average_cost from gpp_details where country like "%" made by do_action('wp_ajax_datatable_data'), WP_Hook->do_action, WP_Hook->apply_filters, get_datatable_data
+[20-Aug-2019 22:49:59 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[20-Aug-2019 22:49:59 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[20-Aug-2019 22:49:59 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[20-Aug-2019 22:49:59 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 5
+[20-Aug-2019 22:49:59 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[20-Aug-2019 22:52:50 UTC] PHP Warning:  mysqli_real_escape_string() expects parameter 2 to be string, array given in /app/public/wp-includes/wp-db.php on line 1172
+[20-Aug-2019 22:52:50 UTC] PHP Warning:  mysqli_real_escape_string() expects parameter 2 to be string, array given in /app/public/wp-includes/wp-db.php on line 1172
+[20-Aug-2019 23:50:16 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[20-Aug-2019 23:50:16 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[20-Aug-2019 23:50:16 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[20-Aug-2019 23:50:16 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 5
+[20-Aug-2019 23:50:16 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[21-Aug-2019 00:12:40 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[21-Aug-2019 00:12:40 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[21-Aug-2019 00:12:40 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[21-Aug-2019 00:12:40 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 5
+[21-Aug-2019 00:12:40 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[22-Aug-2019 16:58:29 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[22-Aug-2019 16:58:29 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[22-Aug-2019 16:58:29 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[22-Aug-2019 16:58:29 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 5
+[22-Aug-2019 16:58:29 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[14-Sep-2019 18:23:27 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[14-Sep-2019 18:23:27 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[14-Sep-2019 18:23:27 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[14-Sep-2019 18:23:27 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 5
+[14-Sep-2019 18:23:27 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[15-Sep-2019 21:37:19 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[15-Sep-2019 21:37:19 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[15-Sep-2019 21:37:19 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[15-Sep-2019 21:37:19 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 5
+[15-Sep-2019 21:37:19 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62
+[15-Sep-2019 22:24:11 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 928
+[15-Sep-2019 22:24:11 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 929
+[15-Sep-2019 22:24:11 UTC] PHP Warning:  Cannot modify header information - headers already sent in /app/public/wp-includes/pluggable.php on line 930
+[15-Sep-2019 22:24:11 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/utils/rest-apis.php on line 5
+[15-Sep-2019 22:24:11 UTC] PHP Warning:  session_start(): Cannot start session when headers already sent in /app/public/wp-content/themes/gpporgs/functions.php on line 62

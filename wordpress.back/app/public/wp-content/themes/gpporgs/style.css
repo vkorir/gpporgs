@@ -1,0 +1,447 @@
+.navbar.navbar-expand-lg {
+	background-color: #0c6099;
+}
+input[type='search'] {
+	color: #ffffff;
+	font-size: 14px;
+	padding: 24px 12px;
+	margin: 5px 0;
+	border-radius: 4px;
+	border: none;
+	background-color: #084e83;
+	box-shadow: 0 4px 6px #05365b;
+}
+input[type='search']:focus {
+	color: #ffffff;
+	border: none;
+	outline: none;
+	background-color: #4885af;
+	box-shadow: 0 4px 6px #05365b;
+}
+input[type='search']::placeholder {
+	color: #ffffff;
+}
+.navbar-nav .nav-item:nth-child(1) .nav-link,
+.navbar-nav .nav-item:nth-child(2) .nav-link,
+.navbar-nav .nav-item:nth-child(3) .nav-link,
+.navbar-nav .nav-item:nth-child(4) .nav-link,
+.btn.practice-btn,
+.jumbotron .btn.jumbotron-login {
+	border-radius: 4px;
+	color: #ffffff;
+	font-size: 12px;
+	padding: 12px;
+	margin-left: 10px;
+	background-color: #084e83;
+	box-shadow: 0 4px 6px #05365b;
+}
+.navbar-nav .nav-item .nav-link:hover,
+.done-with-experience .btn.practice-btn:hover,
+.jumbotron .btn.jumbotron-login:hover {
+	color: #ffffff;
+	background-color: #4885af;
+	transition: 1.2s;
+}
+.navbar-nav .nav-item .nav-link.nav-selected {
+	background-color: #4885af;
+}
+input[type='search']:disabled,
+.navbar-nav .nav-item .nav-link.disabled {
+	background-color: #4885af;
+}
+
+/* Home Page */
+
+hr {
+	width: 50%;
+}
+.container .jumbotron {
+	border: 1px solid #d9d9d9;
+	border-radius: 4px;
+	box-shadow: 0 4px 6px #d9d9d9;
+	background: #eaecee;
+}
+.jumbotron .btn.jumbotron-login {
+	font-size: 16px;
+	padding: 10px 20px;
+}
+.jumbotron hr {
+	width: 100%;
+}
+.rounded-container {
+	margin: 10px 0;
+	border: 1px solid #d9d9d9;
+	border-radius: 4px;
+	box-shadow: 0 4px 6px #d9d9d9;
+	background: #eaecee;
+	padding: 8px;
+	overflow-y: scroll;
+}
+.rounded-container::-webkit-scrollbar {
+	background: transparent;
+}
+.rounded-container.max-height {
+	height: calc(100vh - 140px);
+	padding: 20px;
+}
+.rounded-container.max-height .display-5 {
+	text-align: center;
+}
+.rounded-container.middle-section {
+	margin: 10px 0 10px 10px;
+}
+.rounded-container.done-with-experience {
+	height: 200px;
+}
+.col-rounded-container-side {
+	width: 22%;
+}
+.col-rounded-container-page-table {
+	width: 78%;
+}
+.btn.practice-btn {
+	font-size: 14px;
+}
+.btn.practice-btn {
+	padding: 10px 20px;
+}
+.rounded-container.sort-by {
+	height: calc(100vh - 100px - 200px - 50px);
+	padding-top: 20px;
+}
+.section-heading {
+	text-align: center;
+}
+.section-subheading {
+	color: #084e83;
+	font-size: 16px;
+	font-weight: 400;
+}
+.slider-value-display {
+	width: 65px;
+	color: #0b2e13;
+	background: transparent;
+	border: none;
+	padding-left: 5px;
+}
+
+/* Slider Style */
+
+input[type=range] {
+	height: 14px;
+	background-color: #ffffff;
+	outline: none;
+	border: 1px solid #d9d9d9;
+	border-radius: 40px;
+	-webkit-appearance: none;
+}
+input[type=range]:hover {
+	border: 1px solid #0c5c96;
+}
+input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 110px;
+	height: 14px;
+	background: #0c5c96;
+	cursor: pointer;
+	border-radius: 40px;
+}
+#price-range-slider::-webkit-slider-thumb {
+	width: 70px;
+}
+#price-range-display {
+	font-weight: 300;
+	color: #0b2e13;
+	font-size: 14px;
+}
+input[type=range]::-moz-range-thumb {
+	width: 110px;
+	height: 14px;
+	background: #0c5c96;
+	cursor: pointer;
+	border-radius: 40px;
+}
+
+/* Data Table */
+
+#middle-section-container {
+	overflow-y: hidden;
+}
+#organizations-database-records_wrapper .bottom {
+	z-index: 100;
+	position: fixed;
+	bottom: 47px;
+	background-color: #eaecee;
+	width: 57%;
+}
+
+table {
+	font-size: 14px;
+	font-weight: 300;
+}
+
+#org-records_info {
+	display: none;
+}
+
+.page-item .page-link {
+	color: #084e83;
+}
+
+.page-item.active .page-link {
+	background-color: #084e83;
+	color: #ffffff;
+	border: none;
+	outline: none;
+}
+#organizations-database-records tbody tr {
+	cursor: pointer;
+}
+.dataTables_filter,
+.dataTables_info {
+	display: none;
+}
+#organizations-database-records_length,
+#organizations-database-records_paginate {
+	width: 50%;
+	margin-top: 10px;
+	display: inline-block;
+}
+#table-container {
+	height: calc(100% - 70px);
+}
+#organizations-database-records_length, #organizations-database-records_paginate {
+	margin-top: 0;
+}
+
+/* Add Experience Page */
+
+.add-experience-container {
+	height: calc(100% - 140px);
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.add-experience-container.right-page {
+	display: none;
+}
+#add-contact-btn {
+	outline: none;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 4px;
+	color: #ffffff;
+	margin-bottom: 10px;
+	background-color: #084e83;
+}
+#add-contact-btn:hover,
+#add-contact-btn:active {
+	outline: none;
+	border: none;
+	background-color: #4885af;
+	transition: .4s linear;
+}
+.add-experience-btn,
+#approve-organization {
+	border: 1px solid #084e83;
+	border-radius: 4px;
+	color: #084e83;
+	padding: 10px 20px;
+	background-color: transparent;
+	width: 100px;
+	outline: none !important;
+}
+.add-experience-btn:hover,
+.add-experience-btn:active {
+	cursor: pointer;
+	background: #084e83;
+	color: #fff;
+	transition: 1.3s;
+	outline: none;
+}
+#approve-organization {
+	color: #bb2a2a;
+	border: 1px solid #bb2a2a;
+}
+#approve-organization:hover {
+	cursor: pointer;
+	background: #bb2a2a;
+	color: #ffffff;
+	transition: 1.3s;
+}
+.directive {
+	font-style: italic;
+	font-size: 0.9rem;
+	color: #7f7f7f;
+}
+#practice-experience-address {
+	display: none;
+}
+
+table .bottom {
+	display: none !important;
+}
+
+/* Form Style */
+
+form fieldset {
+	border: none;
+	font-weight: 400;
+	display: inline-block;
+	vertical-align: middle;
+	width: 100%;
+}
+form fieldset div {
+	padding: 5px;
+}
+form fieldset label {
+	display: inline-block;
+	vertical-align: middle;
+	min-width: 100px;
+	text-align: left;
+	margin: 5px 0;
+	font-weight: 500;
+}
+form fieldset input {
+	min-width: 110px;
+	margin: 5px 0;
+	vertical-align: middle;
+	font-weight: 300;
+	background-color: #fff;
+	border: 1px solid #d9d9d9;
+	border-radius: 4px;
+	padding: 5px;
+	font-size: 14px;
+}
+form fieldset input:focus,
+textarea:focus {
+	outline: none;
+	border: 1px solid #084e83;
+	transition: .6s all linear;
+}
+textarea {
+	height: 150px;
+	padding: 5px;
+	border-radius: 4px;
+	background-color: #fff;
+	resize: none;
+	vertical-align: middle;
+	border: 1px solid #d9d9d9;
+	outline: none;
+	font-size: 14px;
+	font-weight: 300;
+}
+#languages-spoken-input,
+#organization-type-other-input,
+#organization-sector-other-input,
+#physical-experience-sector-other-input,
+#access-code-input {
+	border-radius: 4px;
+	border: 1px solid #d9d9d9;
+}
+#languages-spoken-input:focus,
+#organization-type-other-input:focus,
+#organization-sector-other-input:focus,
+#physical-experience-sector-other-input:focus,
+#access-code-input:focus {
+	outline: none;
+	border: 1px solid #084e83;
+}
+
+/* Radio buttons style */
+
+.label-container {
+	display: block;
+	position: relative;
+	padding-left: 24px;
+	margin-bottom: 10px;
+	font-size: 14px;
+	font-weight: 300;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+.label-container input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+.checkmark {
+	position: absolute;
+	top: 4px;
+	left: 0;
+	height: 12px;
+	width: 12px;
+	background-color: #fff;
+	border: 1px solid #d9d9d9;
+}
+.label-container:hover input ~ .checkmark {
+	background-color: #d9d9d9;
+	transition: .3s all linear;
+}
+.label-container input:checked ~ .checkmark {
+	background-color: #084e83;
+	border: 2px solid #084e83;
+}
+
+
+/* Autocomplete Dropdown */
+
+#organization-info #organizations-list {
+	position: absolute;
+	border: 1px solid #d4d4d4;
+	border-radius: 4px;
+	z-index: 99;
+	top: 41px;
+	background-color: #fff;
+	display: none;
+}
+#organization-info #organizations-list ul li:hover {
+	cursor: pointer;
+	background-color: #084e83;
+	color: #fff;
+}
+
+/* Organization Details */
+
+#organization-details-btn,
+#organization-details-add-review-btn {
+	width: 200px;
+}
+#organization-details-page input,
+#organization-details-page select {
+	border: none;
+	background: transparent;
+}
+#organization-details-page .directive {
+	display: none;
+}
+#organization-details-page fieldset div {
+	padding: 0;
+	margin: 0 !important;
+}
+#organization-reviews-container p {
+	margin: 8px 0 0 0;
+}
+#organization-reviews-container .review-header {
+	margin-bottom: 10px;
+}
+#organization-details-page p,
+#organization-details-page a {
+	font-size: 14px;
+}
+#organization-details-page a#website {
+	text-decoration: none;
+	color: #545454;
+	font-weight: 300;
+}
+#organization-details-page .section-subheading {
+	color: #000;
+}
+#organization-details-page fieldset label,
+#organization-reviews-container .review-description {
+	color: #4885af;
+}
+
+/* New Organization Page */

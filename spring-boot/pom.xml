@@ -8,7 +8,7 @@
 		<version>2.1.8.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.gpporgs</groupId>
+	<groupId>edu.berkeley.gpporgs</groupId>
 	<artifactId>gpporgs-database</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gpporgs-database</name>
