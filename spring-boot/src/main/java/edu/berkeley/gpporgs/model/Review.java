@@ -17,7 +17,7 @@ public class Review {
     private @NonNull Long organizationId;
     private @NonNull Long addressId;
     private @NonNull String region;
-    private @NonNull String languageIds;
+    private @NonNull String languageCodes;
     @Transient
     private @NonNull Iterable<Language> languages;
     private String difficulties;

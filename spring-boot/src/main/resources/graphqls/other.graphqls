@@ -1,0 +1,26 @@
+type Affiliation {
+    id: ID
+    name: String
+}
+
+input AffiliationInput {
+    id: ID!
+}
+
+type Type {
+    id: ID
+    name: String
+}
+
+input TypeInput {
+    id: ID!
+}
+
+type Sector {
+    id: ID
+    name: String
+}
+
+input SectorInt {
+    id: ID!
+}

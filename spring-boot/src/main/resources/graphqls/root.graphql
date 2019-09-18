@@ -17,9 +17,3 @@ type Mutation {
     createReview(review: ReviewInput): Review
     updateReview(reviewId: ID!, reviewDetails: ReviewInput): Review
 }
-
-
-
-
-
-

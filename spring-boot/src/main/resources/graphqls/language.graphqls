@@ -2,3 +2,7 @@ type Language {
     code: String!
     name: String!
 }
+
+input LanguageInput {
+    code: String!
+}

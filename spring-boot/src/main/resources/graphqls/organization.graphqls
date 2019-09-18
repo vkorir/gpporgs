@@ -6,10 +6,10 @@ type Organization {
     phone: String
     email: String
     website: String
-    affiliations: [String]
+    affiliations: [Affiliation]
     type: String!
     region: String!
-    sectors: [String]
+    sectors: [Sector]
     approved: Boolean!
     contacts: [Contact]
 }

@@ -42,8 +42,8 @@ public class Query implements GraphQLQueryResolver {
     @Value("${mysql_data_delimiter}")
     private String dataDelimiter;
 
-    public Optional<User> getUser(String calNetId) {
-        return userRepository.findById(calNetId);
+    public User getUser(String calNetId) {
+        return userRepository.findById(calNetId).orElse(null);
     }
 
     public List<Organization> getOrganizations() {

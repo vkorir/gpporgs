@@ -3,7 +3,7 @@ type Review {
     region: String!
     languages: [Language]!
     difficulties: String
-    sectors: [String]
+    sectors: [Sector]
     stipend: Int
     cost: Int
     duration: String
@@ -19,9 +19,9 @@ type Review {
 
 input ReviewInput {
     region: String!
-    languages: [String]!
+    languages: [LanguageInput]!
     difficulties: String
-    sectors: [String]
+    sectors: [SectorInt]
     stipend: Int
     cost: Int
     duration: String
