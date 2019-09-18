@@ -8,12 +8,14 @@ import edu.berkeley.gpporgs.model.User;
 import edu.berkeley.gpporgs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Query implements GraphQLQueryResolver {
+@Component
+public class QueryResolver implements GraphQLQueryResolver {
 
     @Autowired
     private UserRepository userRepository;

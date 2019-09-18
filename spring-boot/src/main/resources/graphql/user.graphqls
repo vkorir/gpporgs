@@ -11,3 +11,7 @@ input UserInput {
     lastName: String
     isAdmin: Boolean
 }
+
+#extend type Query {
+##    getUser(calNetId: String): User
+##}
