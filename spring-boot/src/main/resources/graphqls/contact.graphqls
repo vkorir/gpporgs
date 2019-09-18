@@ -1,0 +1,6 @@
+type Contact {
+    name: String
+    role: String
+    email: String
+    phone: String
+}

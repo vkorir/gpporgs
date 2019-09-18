@@ -1,0 +1,15 @@
+type Organization {
+    id: ID!
+    name: String!
+    description: String
+    address: Address
+    phone: String
+    email: String
+    website: String
+    affiliations: [String]
+    type: String!
+    region: String!
+    sectors: [String]
+    approved: Boolean!
+    contacts: [Contact]
+}

@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "sectors")
-public class Sector {
+@Table(name = "type")
+public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

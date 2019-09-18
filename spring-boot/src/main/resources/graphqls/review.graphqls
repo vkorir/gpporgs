@@ -1,0 +1,36 @@
+type Review {
+    id: ID!
+    region: String!
+    languages: [Language]!
+    difficulties: String
+    sectors: [String]
+    stipend: Int
+    cost: Int
+    duration: String
+    workDone: String!
+    typicalDay: String
+    evaluation: String!
+    other: String
+    safety: Int
+    responsiveness: Int
+    anonymous: Boolean!
+    reviewerId: Int!
+}
+
+input ReviewInput {
+    region: String!
+    languages: [String]!
+    difficulties: String
+    sectors: [String]
+    stipend: Int
+    cost: Int
+    duration: String
+    workDone: String!
+    typicalDay: String
+    evaluation: String!
+    other: String
+    safety: Int
+    responsiveness: Int
+    anonymous: Boolean!
+    reviewerId: Int!
+}

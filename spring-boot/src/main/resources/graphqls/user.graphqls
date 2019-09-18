@@ -1,0 +1,13 @@
+type User {
+    calNetId: String!
+    firstName: String!
+    lastName: String
+    isAdmin: Boolean!
+}
+
+input UserInput {
+    calNetId: String
+    firstName: String
+    lastName: String
+    isAdmin: Boolean
+}
