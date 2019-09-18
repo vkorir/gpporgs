@@ -6,3 +6,7 @@ type Language {
 input LanguageInput {
     code: String!
 }
+
+extend type Query {
+    getLanguages: [Language]
+}

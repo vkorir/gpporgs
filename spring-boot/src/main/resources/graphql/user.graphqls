@@ -12,6 +12,11 @@ input UserInput {
     isAdmin: Boolean
 }
 
-#extend type Query {
-##    getUser(calNetId: String): User
-##}
+extend type Query {
+    getUser(calNetId: ID!): User
+}
+
+extend type Mutation {
+    createUser(user: UserInput): User
+    updateUser(userId: ID!, userDetails: UserInput): User
+}

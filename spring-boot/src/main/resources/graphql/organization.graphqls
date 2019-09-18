@@ -13,3 +13,8 @@ type Organization {
     approved: Boolean!
     contacts: [Contact]
 }
+
+extend type Query {
+    getOrganizations: [Organization]
+    getOrganization(id: ID!): Organization
+}

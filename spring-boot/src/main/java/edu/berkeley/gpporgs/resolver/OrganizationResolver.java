@@ -2,10 +2,7 @@ package edu.berkeley.gpporgs.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import edu.berkeley.gpporgs.model.*;
-import edu.berkeley.gpporgs.repository.AffiliationRepository;
-import edu.berkeley.gpporgs.repository.ContactRepository;
-import edu.berkeley.gpporgs.repository.SectorRepository;
-import edu.berkeley.gpporgs.repository.TypeRepository;
+import edu.berkeley.gpporgs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +13,9 @@ import java.util.Optional;
 
 @Component
 public class OrganizationResolver implements GraphQLResolver<Organization> {
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     private AffiliationRepository affiliationRepository;
@@ -31,6 +31,10 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
 
     @Value("${mysql_data_delimiter}")
     private String dataDelimiter;
+
+    public Optional<Address> getAddress(Organization organization) {
+        return addressRepository.findById(organization.getAddressId());
+    }
 
     public Iterable<Affiliation> getAffiliations(Organization organization) {
         return affiliationRepository.findAllById(getLongIds(organization.getAffiliationIds()));

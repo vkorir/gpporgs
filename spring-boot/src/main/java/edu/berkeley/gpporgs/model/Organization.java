@@ -19,6 +19,8 @@ public class Organization {
     private @NonNull String name;
     private String description;
     private @NonNull Long addressId;
+    @Transient
+    private Address address;
     private String phone;
     private String email;
     private String website;

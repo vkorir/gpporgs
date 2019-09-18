@@ -34,3 +34,12 @@ input ReviewInput {
     anonymous: Boolean!
     reviewerId: Int!
 }
+
+extend type Query {
+    getReviews: [Review]
+}
+
+extend type Mutation {
+    createReview(review: ReviewInput): Review
+    updateReview(reviewId: ID!, reviewDetails: ReviewInput): Review
+}
