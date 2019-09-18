@@ -1,5 +1,5 @@
 type Affiliation {
-    id: ID
+    id: ID!
     name: String
 }
 
@@ -8,7 +8,7 @@ input AffiliationInput {
 }
 
 type Type {
-    id: ID
+    id: ID!
     name: String
 }
 
@@ -17,7 +17,7 @@ input TypeInput {
 }
 
 type Sector {
-    id: ID
+    id: ID!
     name: String
 }
 

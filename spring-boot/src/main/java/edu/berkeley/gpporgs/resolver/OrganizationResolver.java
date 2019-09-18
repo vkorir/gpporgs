@@ -40,8 +40,8 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
         return affiliationRepository.findAllById(getLongIds(organization.getAffiliationIds()));
     }
 
-    public Optional<Type> getType(Organization organization) {
-        return typeRepository.findById(organization.getTypeId());
+    public Type getType(Organization organization) {
+        return typeRepository.findById(organization.getTypeId()).get();
     }
 
     public Iterable<Sector> getSectors(Organization organization) {

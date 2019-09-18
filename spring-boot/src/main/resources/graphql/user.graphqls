@@ -6,10 +6,10 @@ type User {
 }
 
 input UserInput {
-    calNetId: String
-    firstName: String
+    calNetId: String!
+    firstName: String!
     lastName: String
-    isAdmin: Boolean
+    isAdmin: Boolean!
 }
 
 extend type Query {

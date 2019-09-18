@@ -34,7 +34,7 @@ public class Organization {
     private String sectorIds;
     @Transient
     private Iterable<Sector> sectors;
-    private Boolean approved;
+    private @NonNull Boolean approved;
     @Transient
     private Iterable<Contact> contacts;
 }

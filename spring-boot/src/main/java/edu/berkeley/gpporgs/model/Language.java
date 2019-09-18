@@ -15,6 +15,6 @@ import javax.persistence.*;
 @Table(name = "languages")
 public class Language {
     @Id
-    private String code;
-    private String name;
+    private @NonNull String code;
+    private @NonNull String name;
 }

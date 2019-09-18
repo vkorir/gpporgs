@@ -7,7 +7,7 @@ type Organization {
     email: String
     website: String
     affiliations: [Affiliation]
-    type: String!
+    type: Type!
     region: String!
     sectors: [Sector]
     approved: Boolean!
