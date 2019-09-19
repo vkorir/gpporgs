@@ -1,87 +1,85 @@
 package edu.berkeley.gpporgs.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import edu.berkeley.gpporgs.model.Language;
-import edu.berkeley.gpporgs.model.Organization;
-import edu.berkeley.gpporgs.model.Review;
-import edu.berkeley.gpporgs.model.User;
+import edu.berkeley.gpporgs.Area;
+import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class QueryResolver implements GraphQLQueryResolver {
 
     @Autowired
-    private UserRepository userRepository;
+    private AffiliationRepository affiliationRepository;
+
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @Autowired
+    private LanguageRepository languageRepository;
 
     @Autowired
     private OrganizationRepository organizationRepository;
 
     @Autowired
-    private ContactRepository contactRepository;
-
-    @Autowired
-    private AffiliationRepository affiliationRepository;
-
-    @Autowired
-    private TypeRepository typeRepository;
-
-    @Autowired
-    private SectorRepository sectorRepository;
+    private RegionRepository regionRepository;
 
     @Autowired
     private ReviewRepository reviewRepository;
 
     @Autowired
-    private LanguageRepository languageRepository;
+    private SectorRepository sectorRepository;
+
+    @Autowired
+    private TypeRepository typeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Value("${mysql_data_delimiter}")
     private String dataDelimiter;
 
-    public User getUser(String calNetId) {
-        return userRepository.findById(calNetId).orElse(null);
+    public Iterable<Affiliation> getAffiliations() {
+        return affiliationRepository.findAll();
     }
 
-    public List<Organization> getOrganizations() {
-        List<Organization> organizations = new ArrayList<>();
-        for (Organization organization: organizationRepository.findAll()) {
-            organizations.add(populateTransientFields(organization));
-        }
-        return organizations;
-    }
-
-    public Organization getOrganization(Long organizationId) {
-        Optional<Organization> organization = organizationRepository.findById(organizationId);
-        return organization.map(this::populateTransientFields).orElse(null);
-    }
-
-    private Organization populateTransientFields(Organization organization) {
-        organization.setAffiliations(affiliationRepository.findAllById(retrieveRecordIds(organization.getAffiliationIds())));
-        organization.setType(typeRepository.findById(organization.getTypeId()).get());
-        organization.setSectors(sectorRepository.findAllById(retrieveRecordIds(organization.getSectorIds())));
-        organization.setContacts(contactRepository.findByOrOrganizationId(organization.getId()));
-        return organization;
-    }
-
-    private List<Long> retrieveRecordIds(String stringIds) {
-        List<Long> longIds = new ArrayList<>();
-        for (String stringId: stringIds.split(dataDelimiter)) {
-            longIds.add(Long.parseLong(stringId));
-        }
-        return longIds;
-    }
-
-    public Iterable<Review> getReviews() {
-        return reviewRepository.findAll();
+    public Iterable<Country> getCountries() {
+        return countryRepository.findAll();
     }
 
     public Iterable<Language> getLanguages() {
         return languageRepository.findAll();
+    }
+
+    public Organization getOrganization(Long organizationId) {
+        return organizationRepository.findById(organizationId).orElse(null);
+    }
+
+    public Iterable<Organization> getOrganizations(Area area, List<Long> sectorIds, Integer offset, Integer limit) {
+        return organizationRepository.findAll();
+    }
+
+    public Iterable<Region> getRegions() {
+        return regionRepository.findAll();
+    }
+
+    public Iterable<Review> getReviews(Long organizationId) {
+        return reviewRepository.findAllByOrganizationId(organizationId);
+    }
+
+    public Iterable<Sector> getSectors() {
+        return sectorRepository.findAll();
+    }
+
+    public Iterable<Type> getTypes() {
+        return typeRepository.findAll();
+    }
+
+    public User getUser(String userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 }

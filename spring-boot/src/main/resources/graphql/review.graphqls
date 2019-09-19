@@ -19,11 +19,12 @@ type Review {
 }
 
 input ReviewInput {
+    organizationId: Int!
     region: String!
     address: AddressInput!
-    languageCodes: [String]!
+    languages: [String]!
     difficulties: String
-    sectorIds: [String]
+    sectors: [String]
     stipend: Int
     cost: Int
     duration: String
@@ -42,7 +43,6 @@ extend type Query {
 }
 
 extend type Mutation {
-    createReview(organizationId: ID!, review: ReviewInput!): Review
+    createReview(review: ReviewInput!): Review
     updateReview(reviewId: ID!, details: ReviewInput!): Review
-    deleteReview(reviewId: ID!): Review
 }

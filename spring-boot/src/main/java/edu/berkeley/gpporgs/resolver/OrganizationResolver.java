@@ -32,24 +32,32 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
     @Value("${mysql_data_delimiter}")
     private String dataDelimiter;
 
-    public Optional<Address> getAddress(Organization organization) {
-        return addressRepository.findById(organization.getAddressId());
+    public Address getAddress(Organization organization) {
+        return addressRepository.findById(organization.getAddressId()).orElse(null);
     }
 
-    public Iterable<Affiliation> getAffiliations(Organization organization) {
-        return affiliationRepository.findAllById(getLongIds(organization.getAffiliationIds()));
+    public Iterable<String> getAffiliations(Organization organization) {
+        List<String> affiliations = new ArrayList<>();
+        affiliationRepository.findAllById(getLongIds(organization.getAffiliationIds())).forEach(affiliation -> {
+            affiliations.add(affiliation.getName());
+        });
+        return affiliations;
     }
 
     public Type getType(Organization organization) {
-        return typeRepository.findById(organization.getTypeId()).get();
+        return typeRepository.findById(organization.getTypeId()).orElse(null);
     }
 
-    public Iterable<Sector> getSectors(Organization organization) {
-        return sectorRepository.findAllById(getLongIds(organization.getSectorIds()));
+    public Iterable<String> getSectors(Organization organization) {
+        List<String> sectors = new ArrayList<>();
+        sectorRepository.findAllById(getLongIds(organization.getSectorIds())).forEach(sector -> {
+            sectors.add(sector.getName());
+        });
+        return sectors;
     }
 
     public Iterable<Contact> getContacts(Organization organization) {
-        return contactRepository.findByOrOrganizationId(organization.getId());
+        return contactRepository.findContactByOrganizationId(organization.getId());
     }
 
     private Iterable<Long> getLongIds(String stringIds) {

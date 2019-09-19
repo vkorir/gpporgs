@@ -21,21 +21,20 @@ input OrganizationInput {
     phone: String
     email: String
     website: String
-    affiliationIds: [String]
-    type: TypeInput
+    affiliations: [String]
+    typeId: Int!
     region: String
-    sectorIds: [String]
+    sectors: [String]
     approved: Boolean
     contacts: [ContactInput]
 }
 
 extend type Query {
-    getOrganizations(area: Area!, sectorIds: [Int]!, offset: Int, limit: Int): [Organization]
     getOrganization(organizationId: ID!): Organization
+    getOrganizations(area: Area!, sectorIds: [Int]!, offset: Int!, limit: Int!): [Organization]
 }
 
 extend type Mutation {
     createOrganization(details: OrganizationInput!): Organization
     updateOrganization(organizationId: ID!, details: OrganizationInput!): Organization
-    deleteOrganization(organizationId: ID!): Organization
 }
