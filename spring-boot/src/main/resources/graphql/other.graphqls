@@ -3,26 +3,14 @@ type Affiliation {
     name: String!
 }
 
-input AffiliationInput {
-    id: ID!
-}
-
 type Country {
     code: ID!
     name: String!
 }
 
-input CountryInput {
-    code: String!
-}
-
 type Language {
     code: String!
     name: String!
-}
-
-input LanguageInput {
-    code: String!
 }
 
 type Region {
@@ -35,17 +23,9 @@ type Sector {
     name: String!
 }
 
-input SectorInput {
-    id: ID!
-}
-
 type Type {
     id: ID!
     name: String!
-}
-
-input TypeInput {
-    id: ID!
 }
 
 extend type Query {

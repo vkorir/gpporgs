@@ -3,6 +3,9 @@ type User {
     firstName: String!
     lastName: String
     isAdmin: Boolean!
+    creationTime: Int!
+    numberOfLogin: Int!
+    lastLogin: Int!
 }
 
 input UserInput {
@@ -10,6 +13,8 @@ input UserInput {
     firstName: String!
     lastName: String
     isAdmin: Boolean!
+    creationTime: Int!
+    lastLogin: Int!
 }
 
 extend type Query {

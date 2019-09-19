@@ -3,11 +3,13 @@ package edu.berkeley.gpporgs.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
+import graphql.GraphQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class QueryResolver implements GraphQLQueryResolver {
@@ -54,7 +56,7 @@ public class QueryResolver implements GraphQLQueryResolver {
         return languageRepository.findAll();
     }
 
-    public Organization getOrganization(Long organizationId) {
+    public Organization getOrganization(Long organizationId) throws GraphQLException {
         return organizationRepository.findById(organizationId).orElse(null);
     }
 
