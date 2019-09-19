@@ -19,5 +19,4 @@ extend type Query {
 extend type Mutation {
     createUser(details: UserInput!): User
     updateUser(userId: ID!, details: UserInput!): User
-    deleteUser(userId: ID!): User
 }

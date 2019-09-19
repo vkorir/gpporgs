@@ -1,7 +1,6 @@
 package edu.berkeley.gpporgs.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import edu.berkeley.gpporgs.Area;
 import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ public class QueryResolver implements GraphQLQueryResolver {
         return organizationRepository.findById(organizationId).orElse(null);
     }
 
-    public Iterable<Organization> getOrganizations(Area area, List<Long> sectorIds, Integer offset, Integer limit) {
+    public Iterable<Organization> getOrganizations(String area, List<Long> sectorIds, Integer offset, Integer limit) {
         return organizationRepository.findAll();
     }
 

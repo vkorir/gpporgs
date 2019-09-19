@@ -48,12 +48,6 @@ input TypeInput {
     id: ID!
 }
 
-enum Area {
-    DOMESTIC
-    INTERNATIONAL
-    ALL
-}
-
 extend type Query {
     getAffiliations: [Affiliation]
     getCountries: [Country]
