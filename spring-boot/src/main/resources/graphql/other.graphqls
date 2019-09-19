@@ -1,26 +1,64 @@
 type Affiliation {
     id: ID!
-    name: String
+    name: String!
 }
 
 input AffiliationInput {
     id: ID!
 }
 
+type Country {
+    code: ID!
+    name: String!
+}
+
+input CountryInput {
+    code: String!
+}
+
+type Language {
+    code: String!
+    name: String!
+}
+
+input LanguageInput {
+    code: String!
+}
+
+type Region {
+    id: ID!
+    name: String!
+}
+
+type Sector {
+    id: ID!
+    name: String!
+}
+
+input SectorInput {
+    id: ID!
+}
+
 type Type {
     id: ID!
-    name: String
+    name: String!
 }
 
 input TypeInput {
     id: ID!
 }
 
-type Sector {
-    id: ID!
-    name: String
+enum Area {
+    DOMESTIC
+    INTERNATIONAL
+    ALL
 }
 
-input SectorInt {
-    id: ID!
+extend type Query {
+    getAffiliations: [Affiliation]
+    getCountries: [Country]
+    getLanguages: [Language]
+    getRegions: [Region]
+    getSectors: [Sector]
+    getTypes: [Type]
 }

@@ -1,9 +1,17 @@
 package edu.berkeley.gpporgs.model;
 
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Getter
@@ -16,14 +24,16 @@ public class Review {
     private Long id;
     private @NonNull Long organizationId;
     private @NonNull Long addressId;
+    @Transient
+    private @NonNull Address address;
     private @NonNull String region;
     private @NonNull String languageCodes;
     @Transient
-    private @NonNull Iterable<Language> languages;
+    private @NonNull Iterable<String> languages;
     private String difficulties;
     private String sectorIds;
     @Transient
-    private @NonNull Iterable<Sector> sectors;
+    private @NonNull Iterable<String> sectors;
     private Integer stipend;
     private Integer cost;
     private String duration;
@@ -35,4 +45,6 @@ public class Review {
     private Integer responsiveness;
     private @NonNull Boolean anonymous;
     private @NonNull Long reviewerId;
+    @Transient
+    private User reviewer;
 }

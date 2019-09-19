@@ -6,15 +6,36 @@ type Organization {
     phone: String
     email: String
     website: String
-    affiliations: [Affiliation]
+    affiliations: [String]
     type: Type!
     region: String!
-    sectors: [Sector]
+    sectors: [String]
     approved: Boolean!
     contacts: [Contact]
 }
 
+input OrganizationInput {
+    name: String
+    description: String
+    address: AddressInput
+    phone: String
+    email: String
+    website: String
+    affiliationIds: [String]
+    type: TypeInput
+    region: String
+    sectorIds: [String]
+    approved: Boolean
+    contacts: [ContactInput]
+}
+
 extend type Query {
-    getOrganizations: [Organization]
-    getOrganization(id: ID!): Organization
+    getOrganizations(area: Area!, sectorIds: [Int]!, offset: Int, limit: Int): [Organization]
+    getOrganization(organizationId: ID!): Organization
+}
+
+extend type Mutation {
+    createOrganization(details: OrganizationInput!): Organization
+    updateOrganization(organizationId: ID!, details: OrganizationInput!): Organization
+    deleteOrganization(organizationId: ID!): Organization
 }

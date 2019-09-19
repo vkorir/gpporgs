@@ -4,3 +4,10 @@ type Contact {
     email: String
     phone: String
 }
+
+input ContactInput {
+    name: String
+    role: String
+    email: String
+    phone: String
+}

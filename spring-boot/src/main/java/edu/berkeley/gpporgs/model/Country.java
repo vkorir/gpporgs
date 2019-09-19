@@ -6,22 +6,16 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Id;
-
-/**
- * @author Victor Korir
- */
+import javax.persistence.Table;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "users")
-public class User {
+@Table(name = "countries")
+public class Country {
     @Id
-    private String userId;
-    private @NonNull String firstName;
-    private String lastName;
-    private @NonNull Boolean isAdmin;
+    private String code;
+    private @NonNull String name;
 }

@@ -1,22 +1,23 @@
 type User {
-    calNetId: String!
+    userId: String!
     firstName: String!
     lastName: String
     isAdmin: Boolean!
 }
 
 input UserInput {
-    calNetId: String!
+    userId: String!
     firstName: String!
     lastName: String
     isAdmin: Boolean!
 }
 
 extend type Query {
-    getUser(calNetId: ID!): User
+    getUser(userId: ID!): User
 }
 
 extend type Mutation {
-    createUser(user: UserInput): User
-    updateUser(userId: ID!, userDetails: UserInput): User
+    createUser(details: UserInput!): User
+    updateUser(userId: ID!, details: UserInput!): User
+    deleteUser(userId: ID!): User
 }

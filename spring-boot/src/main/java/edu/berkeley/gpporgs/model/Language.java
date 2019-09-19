@@ -1,8 +1,13 @@
 package edu.berkeley.gpporgs.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author Victor Korir
@@ -15,6 +20,6 @@ import javax.persistence.*;
 @Table(name = "languages")
 public class Language {
     @Id
-    private @NonNull String code;
+    private String code;
     private @NonNull String name;
 }
