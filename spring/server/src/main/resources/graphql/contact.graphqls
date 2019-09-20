@@ -1,0 +1,14 @@
+type Contact {
+    name: String
+    role: String
+    email: String
+    phone: String
+}
+
+input ContactInput {
+    organizationId: Int!
+    name: String
+    role: String
+    email: String
+    phone: String
+}
