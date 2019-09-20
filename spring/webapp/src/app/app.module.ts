@@ -33,6 +33,9 @@ import { LoginComponent } from './login/login.component';
     HttpClientModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent,
+    AdminComponent
+  ]
 })
 export class AppModule { }
