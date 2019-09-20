@@ -1,10 +1,16 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**
-!**/src/test/**
-*DS_Store
+# compiled output
+dist
+tmp
+out-tsc
+# Only exists if Bazel was run
+bazel-out
+
+# dependencies
 node_modules
+
+# profiling files
+chrome-profiler-events*.json
+speed-measure-plugin*.json
 
 ### STS ###
 .apt_generated
@@ -15,19 +21,48 @@ node_modules
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
+### IDEs and editors ###
 .idea
 *.iws
 *.iml
 *.ipr
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
 ### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+nbproject/private/
+nbbuild//dist/
+nbdist/
+.nb-gradle/
 build/
 
 ### VS Code ###
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# misc
+.sass-cache
+connect.lock
+coverage
+libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+typings
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+# System Files
+.DS_Store
+Thumbs.db

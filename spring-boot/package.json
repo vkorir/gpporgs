@@ -1,7 +1,6 @@
 {
-  "name": "angular",
-  "version": "1.0.0",
-  "description": "GPPORGS Database",
+  "name": "webapp",
+  "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
