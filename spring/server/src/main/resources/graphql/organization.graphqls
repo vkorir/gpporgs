@@ -30,8 +30,8 @@ input OrganizationInput {
 }
 
 extend type Query {
-    getOrganization(organizationId: ID!): Organization
-    getOrganizations(area: String!, sectorIds: [Int]!, offset: Int!, limit: Int!): [Organization]
+    organization(organizationId: ID!): Organization
+    organizations(area: String!, sectorIds: [Int]!, offset: Int!, limit: Int!): [Organization]
 }
 
 extend type Mutation {

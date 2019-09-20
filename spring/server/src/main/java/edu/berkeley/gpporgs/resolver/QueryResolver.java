@@ -44,43 +44,43 @@ public class QueryResolver implements GraphQLQueryResolver {
     @Value("${mysql_data_delimiter}")
     private String dataDelimiter;
 
-    public Iterable<Affiliation> getAffiliations() {
+    public Iterable<Affiliation> affiliations() {
         return affiliationRepository.findAll();
     }
 
-    public Iterable<Country> getCountries() {
+    public Iterable<Country> countries() {
         return countryRepository.findAll();
     }
 
-    public Iterable<Language> getLanguages() {
+    public Iterable<Language> languages() {
         return languageRepository.findAll();
     }
 
-    public Organization getOrganization(Long organizationId) throws GraphQLException {
+    public Organization organization(Long organizationId) throws GraphQLException {
         return organizationRepository.findById(organizationId).orElse(null);
     }
 
-    public Iterable<Organization> getOrganizations(String area, List<Long> sectorIds, Integer offset, Integer limit) {
+    public Iterable<Organization> organizations(String area, List<Long> sectorIds, Integer offset, Integer limit) {
         return organizationRepository.findAll();
     }
 
-    public Iterable<Region> getRegions() {
+    public Iterable<Region> regions() {
         return regionRepository.findAll();
     }
 
-    public Iterable<Review> getReviews(Long organizationId) {
+    public Iterable<Review> reviews(Long organizationId) {
         return reviewRepository.findAllByOrganizationId(organizationId);
     }
 
-    public Iterable<Sector> getSectors() {
+    public Iterable<Sector> sectors() {
         return sectorRepository.findAll();
     }
 
-    public Iterable<Type> getTypes() {
+    public Iterable<Type> types() {
         return typeRepository.findAll();
     }
 
-    public User getUser(String userId) {
+    public User user(String userId) {
         return userRepository.findById(userId).orElse(null);
     }
 }

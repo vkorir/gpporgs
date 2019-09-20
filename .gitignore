@@ -5,6 +5,7 @@ target/
 !**/src/test/**
 *DS_Store
 node_modules
+logs
 
 ### STS ###
 .apt_generated

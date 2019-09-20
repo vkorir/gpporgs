@@ -18,7 +18,7 @@ input UserInput {
 }
 
 extend type Query {
-    getUser(userId: ID!): User
+    user(userId: ID!): User
 }
 
 extend type Mutation {

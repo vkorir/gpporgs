@@ -39,7 +39,7 @@ input ReviewInput {
 }
 
 extend type Query {
-    getReviews(organizationId: ID!): [Review]
+    reviews(organizationId: ID!): [Review]
 }
 
 extend type Mutation {

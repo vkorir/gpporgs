@@ -29,10 +29,10 @@ type Type {
 }
 
 extend type Query {
-    getAffiliations: [Affiliation]
-    getCountries: [Country]
-    getLanguages: [Language]
-    getRegions: [Region]
-    getSectors: [Sector]
-    getTypes: [Type]
+    affiliations: [Affiliation]
+    countries: [Country]
+    languages: [Language]
+    regions: [Region]
+    sectors: [Sector]
+    types: [Type]
 }
