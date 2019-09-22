@@ -15,7 +15,7 @@ type Organization {
 }
 
 input OrganizationInput {
-    name: String
+    name: String!
     description: String
     address: AddressInput
     phone: String

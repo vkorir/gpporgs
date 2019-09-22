@@ -9,7 +9,7 @@ type Country {
 }
 
 type Language {
-    code: String!
+    id: ID!
     name: String!
 }
 

@@ -9,21 +9,20 @@ import { HomeGuard } from './home/home.guard';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: HomeComponent,
     canActivate: [HomeGuard],
-    canLoad: [HomeGuard],
-    children: [
-      {
-        path: 'admin',
-        pathMatch: 'full',
-        component: AdminComponent,
-        canActivateChild: [AdminGuard]
-      },
-      {
-        path: '**',
-        redirectTo: ''
-      }
-    ]
+    canLoad: [HomeGuard]
+  },
+  {
+    path: 'admin',
+    pathMatch: 'full',
+    component: AdminComponent,
+    canActivateChild: [AdminGuard]
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
 

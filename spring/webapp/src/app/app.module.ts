@@ -13,6 +13,19 @@ import { DetailsComponent } from './details/details.component';
 import { ReviewComponent } from './review/review.component';
 import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './login/login.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatFormFieldModule,
+  MatGridListModule,
+  MatInputModule,
+  MatToolbarModule
+} from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
+
+
 
 @NgModule({
   declarations: [
@@ -30,12 +43,19 @@ import { LoginComponent } from './login/login.component';
     BrowserModule,
     AppRoutingModule,
     GraphQLModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    LayoutModule,
+    MatGridListModule,
+    FlexLayoutModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatCheckboxModule
   ],
   providers: [],
-  bootstrap: [
-    AppComponent,
-    AdminComponent
-  ]
+  bootstrap: [AppComponent],
+  entryComponents: [AdminComponent]
 })
 export class AppModule { }

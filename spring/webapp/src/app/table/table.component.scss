@@ -1,0 +1,10 @@
+@import "../../styles";
+
+.container {
+  text-align: center;
+  margin: (4px 0 4px 2px);
+  border-radius: $borderRadius;
+  height: calc(100% - 10px);
+  background: $containerBackground;
+  border: 1px solid $containerBorder;
+}
