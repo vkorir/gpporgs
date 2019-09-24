@@ -77,9 +77,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-
-## wordpress ##
-logs
-.git.back
-spring.back/*
