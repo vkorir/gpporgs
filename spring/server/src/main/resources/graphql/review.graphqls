@@ -1,0 +1,48 @@
+type Review {
+    id: ID!
+    address: Address!
+    region: String!
+    languages: [String]!
+    difficulties: String
+    sectors: [String]
+    stipend: Int
+    cost: Int
+    duration: String
+    workDone: String!
+    typicalDay: String
+    evaluation: String!
+    other: String
+    safety: Int
+    responsiveness: Int
+    anonymous: Boolean!
+    reviewer: User
+}
+
+input ReviewInput {
+    organizationId: Int!
+    region: String!
+    address: AddressInput!
+    languages: [String]!
+    difficulties: String
+    sectors: [String]
+    stipend: Int
+    cost: Int
+    duration: String
+    workDone: String!
+    typicalDay: String
+    evaluation: String!
+    other: String
+    safety: Int
+    responsiveness: Int
+    anonymous: Boolean!
+    reviewerId: Int!
+}
+
+extend type Query {
+    reviews(organizationId: ID!): [Review]
+}
+
+extend type Mutation {
+    createReview(review: ReviewInput!): Review
+    updateReview(reviewId: ID!, details: ReviewInput!): Review
+}

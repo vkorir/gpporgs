@@ -1,0 +1,12 @@
+##### General Properties #####
+mysql_data_delimiter: ^
+
+##### Database Properties #####
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/gpporgs?driver=com.mysql.jdbc.Driver&serverTimezone=UTC
+    username: user
+    password: pass
+  jpa:
+    hibernate:
+      ddl-auto: update
