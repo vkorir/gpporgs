@@ -8,11 +8,11 @@
 		<version>2.1.8.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>edu.berkeley.gpporgs</groupId>
 	<artifactId>server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>GPPORGS Database</name>
+	<description>Global Poverty and Practice Organizations Database</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -27,6 +27,43 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-maven-plugin</artifactId>
+			<version>1.18.10.0</version>
+			<type>maven-plugin</type>
+		</dependency>
+		<dependency>
+			<groupId>com.graphql-java</groupId>
+			<artifactId>graphql-spring-boot-starter</artifactId>
+			<version>5.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.graphql-java</groupId>
+			<artifactId>graphql-java-tools</artifactId>
+			<version>5.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.graphql-java-kickstart</groupId>
+			<artifactId>graphql-java-servlet</artifactId>
+			<version>8.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!--	test dependencies	-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -45,6 +82,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

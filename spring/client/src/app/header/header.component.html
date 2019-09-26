@@ -1,0 +1,15 @@
+<mat-toolbar>
+  <mat-toolbar-row class="content">
+    <form>
+      <mat-form-field>
+        <input matInput placeholder="Search" aria-label="Search">
+      </mat-form-field>
+    </form>
+    <span fxFlex="1 1 auto"></span>
+    <ng-container>
+      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Database</a>
+      <a mat-button routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Admin</a>
+      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Logout</a>
+    </ng-container>
+  </mat-toolbar-row>
+</mat-toolbar>
