@@ -1,1 +1,8 @@
-<p>login works!</p>
+<div class="content" fxLayout="row">
+  <div class="container" fxFlex>
+    <h1>Hello,</h1>
+    <p>You need to be signed in to view the contents of this site. Click on the button below to login with your CalNet ID.</p>
+    <mat-divider></mat-divider>
+    <a fxLayoutAlign="center" mat-button routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Login</a>
+  </div>
+</div>

@@ -10,3 +10,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1035290053103-56crsjin0a9bcbdphqqqd3mhtjh3rtdv.apps.googleusercontent.com
+            client-secret: 1wtwcqwy_eWL_jVhHQ1TPJyt

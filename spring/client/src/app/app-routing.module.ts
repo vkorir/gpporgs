@@ -4,7 +4,8 @@ import { HomeComponent } from './home/home.component';
 import { AdminGuard } from './admin/admin.guard';
 import { AdminComponent } from './admin/admin.component';
 import { HomeGuard } from './home/home.guard';
-import {LoginComponent} from './login/login.component';
+import { LoginComponent } from './login/login.component';
+import { LoginGuard } from './login/login.guard';
 
 
 const routes: Routes = [
@@ -19,12 +20,13 @@ const routes: Routes = [
     path: 'admin',
     pathMatch: 'full',
     component: AdminComponent,
-    canActivateChild: [AdminGuard]
+    canActivate: [AdminGuard]
   },
   {
     path: 'login',
     pathMatch: 'full',
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [LoginGuard]
   },
   {
     path: '**',

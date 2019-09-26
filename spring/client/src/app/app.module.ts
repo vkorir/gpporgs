@@ -16,7 +16,7 @@ import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatButtonModule,
-  MatCheckboxModule,
+  MatCheckboxModule, MatDividerModule,
   MatFormFieldModule,
   MatGridListModule,
   MatInputModule,
@@ -52,7 +52,8 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatInputModule,
     MatToolbarModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDividerModule
   ],
   providers: [],
   bootstrap: [AppComponent],

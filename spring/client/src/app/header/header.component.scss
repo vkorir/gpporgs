@@ -10,6 +10,12 @@
     display: none;
   }
 
+  .mat-focused,
+  .cdk-focused {
+    background: $lightBlue !important;
+    transition: ease-in .4s;
+  }
+
   mat-toolbar-row {
     height: 100%;
     margin: 0 auto;
