@@ -1,5 +1,5 @@
 type User {
-    userId: String!
+    username: String!
     firstName: String!
     lastName: String
     isAdmin: Boolean!
@@ -9,7 +9,7 @@ type User {
 }
 
 input UserInput {
-    userId: String!
+    username: String!
     firstName: String!
     lastName: String
     isAdmin: Boolean!

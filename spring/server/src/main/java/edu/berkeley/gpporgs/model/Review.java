@@ -44,7 +44,7 @@ public class Review {
     private Integer safety;
     private Integer responsiveness;
     private @NonNull Boolean anonymous;
-    private @NonNull String reviewerId;
+    private @NonNull Long reviewerId;
     @Transient
     private User reviewer;
 }

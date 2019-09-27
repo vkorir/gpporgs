@@ -45,7 +45,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<User> userOptional = userRepository.findById(User.getCalNetId(oAuth2UserInfo.getEmail()));
+        Optional<User> userOptional = userRepository.findByUsername(User.getCalNetId(oAuth2UserInfo.getEmail()));
         User user;
         if(userOptional.isPresent()) {
             user = userOptional.get();
@@ -59,7 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         User user = new User();
-        user.setUserId(User.getCalNetId(oAuth2UserInfo.getEmail()));
+        user.setUsername(User.getCalNetId(oAuth2UserInfo.getEmail()));
         user.setFirstName(oAuth2UserInfo.getName());
         user.setIsAdmin(false);
         Date now = new Date();

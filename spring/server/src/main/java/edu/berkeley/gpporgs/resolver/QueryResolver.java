@@ -87,7 +87,7 @@ public class QueryResolver implements GraphQLQueryResolver {
         return typeRepository.findAll();
     }
 
-    public User user(String userId) {
-        return userRepository.findById(userId).orElse(null);
+    public User user(String username) {
+        return userRepository.findByUsername(username).orElse(null);
     }
 }

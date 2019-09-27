@@ -50,8 +50,8 @@ public class MutationResolver implements GraphQLMutationResolver {
         return userRepository.save(user);
     }
 
-    public User updateUser(String userId, User user) {
-        if (userId.equals(user.getUserId())) {
+    public User updateUser(String username, User user) {
+        if (username.equals(user.getUsername())) {
             userRepository.save(user);
         }
         return user;

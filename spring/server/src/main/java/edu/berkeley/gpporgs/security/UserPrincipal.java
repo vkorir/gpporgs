@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
-    private String userId;
+    private Long userId;
+    private String username;
     private String name;
-    private boolean isAdmin;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(String userId, String firstName, Boolean isAdmin, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long userId, String username, String firstName, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
+        this.username = username;
         this.name = firstName;
-        this.isAdmin = isAdmin;
         this.authorities = authorities;
     }
 
@@ -30,9 +30,9 @@ public class UserPrincipal implements OAuth2User, UserDetails {
                 singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new UserPrincipal(
-                user.getUserId(),
+                user.getId(),
+                user.getUsername(),
                 user.getFirstName(),
-                user.getIsAdmin(),
                 authorities
         );
     }
@@ -43,18 +43,23 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         return userPrincipal;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return username;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -89,10 +94,5 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 }
