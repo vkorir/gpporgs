@@ -3,6 +3,8 @@ package edu.berkeley.gpporgs.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
+import edu.berkeley.gpporgs.security.CurrentUser;
+import edu.berkeley.gpporgs.security.UserPrincipal;
 import graphql.GraphQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +52,11 @@ public class QueryResolver implements GraphQLQueryResolver {
 
     public Iterable<Country> countries() {
         return countryRepository.findAll();
+    }
+
+    public User currentUser(@CurrentUser UserPrincipal userPrincipal) {
+        return userRepository.findById(userPrincipal.getUserId())
+                .orElse(null);
     }
 
     public Iterable<Language> languages() {

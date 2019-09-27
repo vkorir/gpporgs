@@ -10,6 +10,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
   security:
     oauth2:
       client:
@@ -17,3 +18,13 @@ spring:
           google:
             client-id: 1035290053103-56crsjin0a9bcbdphqqqd3mhtjh3rtdv.apps.googleusercontent.com
             client-secret: 1wtwcqwy_eWL_jVhHQ1TPJyt
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+app:
+  auth:
+    token-secret: 926D96C90030DD58429D2751AC1BDBBC
+    token-expiration: 84000000
+  oauth2:
+    authorized-redirect-uri: http://localhost:4200/oauth2/redirect

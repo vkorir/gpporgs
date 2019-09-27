@@ -15,7 +15,7 @@ export class AppService {
   private loginUrl = '';
   private isAuthenticated = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getUser(): BehaviorSubject<User> {
     return this.user$;
