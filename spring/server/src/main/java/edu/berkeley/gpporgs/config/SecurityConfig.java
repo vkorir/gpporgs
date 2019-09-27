@@ -1,5 +1,13 @@
 package edu.berkeley.gpporgs.config;
 
+import edu.berkeley.gpporgs.security.CustomUserDetailsService;
+import edu.berkeley.gpporgs.security.RestAuthenticationEntryPoint;
+import edu.berkeley.gpporgs.security.TokenAuthenticationFilter;
+import edu.berkeley.gpporgs.security.oauth2.CustomOAuth2UserService;
+import edu.berkeley.gpporgs.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import edu.berkeley.gpporgs.security.oauth2.OAuth2AuthenticationFailureHandler;
+import edu.berkeley.gpporgs.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +25,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+
+    @Autowired
+    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    @Autowired
+    private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    @Autowired
+    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {

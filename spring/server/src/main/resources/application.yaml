@@ -27,4 +27,5 @@ app:
     token-secret: 926D96C90030DD58429D2751AC1BDBBC
     token-expiration: 84000000
   oauth2:
-    authorized-redirect-uri: http://localhost:4200/oauth2/redirect
+    authorized-redirect-uris:
+      - http://localhost:4200/oauth2/redirect

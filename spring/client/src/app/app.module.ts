@@ -24,8 +24,11 @@ import {
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
+import { AppService } from './app.service';
 
-
+export function fetchCurrentUser(appService: AppService) {
+  appService.fetchCurrentUser();
+}
 
 @NgModule({
   declarations: [

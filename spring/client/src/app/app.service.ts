@@ -15,6 +15,8 @@ export class AppService {
   private loginUrl = '';
   private isAuthenticated = false;
 
+  // http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:4200/oauth2/redirect
+
   constructor(private http: HttpClient) {}
 
   getUser(): BehaviorSubject<User> {
@@ -29,8 +31,8 @@ export class AppService {
     return this.isSignedIn() && this.user$.getValue().isAdmin;
   }
 
-  fetchUser(userId: string): Promise<User> {
-    const body = this.getHttpBody(`{ user(userId: ${userId}) { userId, firstName }}`);
+  fetchCurrentUser(): Promise<User> {
+    const body = this.getHttpBody(`{ currentUser { userId, firstName }}`);
     return this.http.post<User>(this.graphQLEndpoint, body, { headers: this.headers })
       .pipe(
         tap(user => {
