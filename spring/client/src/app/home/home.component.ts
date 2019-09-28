@@ -13,6 +13,7 @@ export class HomeComponent implements OnInit {
   affiliations: Affiliation[] = [];
   private query: QueryRef<any>;
   constructor(private apollo: Apollo) { }
+
   ngOnInit() {
     this.query = this.apollo.watchQuery({
       query: AFFILIATIONS_QUERY ,

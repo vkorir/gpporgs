@@ -8,6 +8,8 @@ import edu.berkeley.gpporgs.security.UserPrincipal;
 import graphql.GraphQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -54,9 +56,10 @@ public class QueryResolver implements GraphQLQueryResolver {
         return countryRepository.findAll();
     }
 
-    public User currentUser(@CurrentUser UserPrincipal userPrincipal) {
-        return userRepository.findById(userPrincipal.getUserId())
-                .orElse(null);
+    public User currentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        return userRepository.findByUsername(currentUsername).orElse(null);
     }
 
     public Iterable<Language> languages() {

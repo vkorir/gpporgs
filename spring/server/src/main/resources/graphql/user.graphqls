@@ -18,6 +18,7 @@ input UserInput {
 }
 
 extend type Query {
+    currentUser: User
     user(userId: ID!): User
 }
 

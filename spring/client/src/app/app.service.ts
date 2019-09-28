@@ -9,15 +9,18 @@ import { Language } from './model/language';
   providedIn: 'root'
 })
 export class AppService {
+  private loginUrl = 'http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:4200/login';
   private graphQLEndpoint = 'http://localhost:8080/graphql';
-  private headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  private loginUrl = '';
   private isAuthenticated = false;
 
   // http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:4200/oauth2/redirect
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  getLoginUrl() {
+    return this.loginUrl;
+  }
 
   getUser(): BehaviorSubject<User> {
     return this.user$;
@@ -32,8 +35,8 @@ export class AppService {
   }
 
   fetchCurrentUser(): Promise<User> {
-    const body = this.getHttpBody(`{ currentUser { userId, firstName }}`);
-    return this.http.post<User>(this.graphQLEndpoint, body, { headers: this.headers })
+    const body = this.getHttpBody(`{ currentUser { username, firstName }}`);
+    return this.http.post<User>(this.graphQLEndpoint, body, { headers: this.getHttpHeaders() })
       .pipe(
         tap(user => {
           if (user !== null && user.userId !== null) {
@@ -47,7 +50,13 @@ export class AppService {
 
   getLanguages(): Observable<Language[]> {
     const body = this.getHttpBody(`{ languages: { code, name }}`);
-    return this.http.post<Language[]>(this.graphQLEndpoint, body, { headers: this.headers });
+    return this.http.post<Language[]>(this.graphQLEndpoint, body, { headers: this.getHttpHeaders() });
+  }
+
+  getHttpHeaders() {
+    return new HttpHeaders()
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
   }
 
   getHttpBody(query: string) {
