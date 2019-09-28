@@ -14,21 +14,19 @@ import java.util.Map;
 public class UserPrincipal implements OAuth2User, UserDetails {
     private Long userId;
     private String username;
-    private String name;
+    private String firstName;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long userId, String username, String firstName, Collection<? extends GrantedAuthority> authorities) {
+    private UserPrincipal(Long userId, String username, String firstName, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.username = username;
-        this.name = firstName;
+        this.firstName = firstName;
         this.authorities = authorities;
     }
 
-    public static UserPrincipal create(User user) {
-        List<GrantedAuthority> authorities = Collections.
-                singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-
+    static UserPrincipal create(User user) {
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         return new UserPrincipal(
                 user.getId(),
                 user.getUsername(),
@@ -59,7 +57,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     @Override
     public String getName() {
-        return name;
+        return firstName;
     }
 
     @Override
@@ -92,7 +90,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         return attributes;
     }
 
-    public void setAttributes(Map<String, Object> attributes) {
+    private void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
 }

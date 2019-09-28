@@ -22,7 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique = true)
-    private String username;
+    private @NonNull String username;
     private @NonNull String firstName;
     private String lastName;
     private @NonNull Boolean isAdmin;
