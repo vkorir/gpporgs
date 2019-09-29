@@ -8,11 +8,11 @@
     <span fxFlex="1 1 auto"></span>
     <ng-container *ngIf="isSignedIn">
       <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Database</a>
-      <a mat-button routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Admin</a>
-      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Logout</a>
+      <a *ngIf="isAdmin" mat-button routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Admin</a>
+      <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="appService.logout()">Logout</a>
     </ng-container>
     <ng-container *ngIf="!isSignedIn">
-      <a mat-button routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Login</a>
+      <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="appService.login()">Login</a>
     </ng-container>
   </mat-toolbar-row>
 </mat-toolbar>

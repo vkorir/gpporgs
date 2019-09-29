@@ -8,10 +8,13 @@ import { AppService } from '../app.service';
 })
 export class HeaderComponent implements OnInit {
 
-  isSignedIn = false;
-  constructor(private appService: AppService) { }
+  isSignedIn: boolean;
+  isAdmin: boolean;
+
+  constructor(private appService: AppService) {}
 
   ngOnInit() {
     this.isSignedIn = this.appService.isSignedIn();
+    this.isAdmin = this.appService.isAdmin();
   }
 }
