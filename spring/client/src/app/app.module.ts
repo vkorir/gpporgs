@@ -25,9 +25,10 @@ import {
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AppService } from './app.service';
+import gql from 'graphql-tag';
 
 export function fetchCurrentUser(appService: AppService) {
-  appService.fetchCurrentUser();
+  appService.queryService(gql('{ currentUser { username firstName isAdmin } }'));
 }
 
 @NgModule({
