@@ -5,6 +5,8 @@ import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -70,5 +72,10 @@ public class MutationResolver implements GraphQLMutationResolver {
         review.setLanguageCodes(String.join(dataDelimiter, review.getLanguages()));
         review.setSectorIds(String.join(dataDelimiter, review.getSectors()));
         return reviewRepository.save(review);
+    }
+
+    public Boolean logout() {
+        SecurityContextHolder.clearContext();
+        return true;
     }
 }

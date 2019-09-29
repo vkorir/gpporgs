@@ -5,4 +5,6 @@ schema {
 
 type Query { }
 
-type Mutation { }
+type Mutation {
+    logout: Boolean
+}
