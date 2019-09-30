@@ -75,7 +75,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     public Boolean logout() {
-        SecurityContextHolder.clearContext();
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
         return true;
     }
 }

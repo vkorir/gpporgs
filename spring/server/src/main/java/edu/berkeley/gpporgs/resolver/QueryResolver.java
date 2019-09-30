@@ -58,6 +58,9 @@ public class QueryResolver implements GraphQLQueryResolver {
 
     public User currentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return null;
+        }
         String currentUsername = authentication.getName();
         return userRepository.findByUsername(currentUsername).orElse(null);
     }
