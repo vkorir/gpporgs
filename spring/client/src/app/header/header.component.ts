@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +9,7 @@ import { AppService } from '../app.service';
 })
 export class HeaderComponent implements OnInit {
 
-  isSignedIn: boolean;
+  isSignedIn: Observable<boolean>;
   isAdmin: boolean;
 
   constructor(private appService: AppService) {}

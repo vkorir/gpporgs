@@ -7,7 +7,13 @@ import { AppService } from '../app.service';
 })
 export class HomeGuard implements CanActivate, CanLoad {
 
-  constructor(private appService: AppService, private router: Router) { }
+  isSignedIn = false;
+
+  constructor(private appService: AppService, private router: Router) {
+    this.appService.isSignedIn().subscribe(isSignedIn => {
+      this.isSignedIn = isSignedIn;
+    });
+  }
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -22,7 +28,7 @@ export class HomeGuard implements CanActivate, CanLoad {
   }
 
   checkAuthentication() {
-    if (this.appService.isSignedIn()) {
+    if (this.isSignedIn) {
       return true;
     }
     this.router.navigateByUrl('/login');

@@ -15,11 +15,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      if (params.token != null) {
-        this.loading = true;
-        localStorage.setItem('token', params.token);
-        localStorage.setItem('user', params.user);
-        this.appService.setCurrentUser(JSON.parse(params.user));
+      if (params.token !== null) {
+        this.appService.setCurrentUser(params.user, params.token);
         this.router.navigateByUrl('/');
       }
     });
