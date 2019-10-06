@@ -18,4 +18,12 @@ export class HeaderComponent implements OnInit {
     this.isSignedIn = this.appService.isSignedIn();
     this.isAdmin = this.appService.isAdmin();
   }
+
+  login() {
+    this.appService.login();
+  }
+
+  logout() {
+    this.appService.logout();
+  }
 }

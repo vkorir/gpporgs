@@ -9,10 +9,10 @@
     <ng-container *ngIf="isSignedIn | async">
       <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Database</a>
       <a *ngIf="isAdmin" mat-button routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Admin</a>
-      <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="appService.logout()">Logout</a>
+      <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="logout()">Logout</a>
     </ng-container>
     <ng-container *ngIf="!(isSignedIn | async)">
-      <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="appService.login()">Login</a>
+      <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="login()">Login</a>
     </ng-container>
   </mat-toolbar-row>
 </mat-toolbar>
