@@ -8,8 +8,8 @@ import gql from 'graphql-tag';
   providedIn: 'root'
 })
 export class AppService {
-  private loginUrl = 'http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:4200/login';
-  private logoutUrl = 'http://localhost:8080/logout';
+  private baseUrl = 'http://localhost:4200';
+  private serverUrl = 'http://localhost:8080';
   private tokenKey = 'token';
   private userKey = 'user';
   private user = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(this.userKey)));
@@ -18,7 +18,7 @@ export class AppService {
   constructor(private apollo: Apollo) { }
 
   login() {
-    return window.location.href = this.loginUrl;
+    return window.location.href = `${this.serverUrl}/oauth2/authorize/google?redirect_uri=${this.baseUrl}/login`;
   }
 
   logout() {
@@ -28,6 +28,7 @@ export class AppService {
     this.isAuthenticated.next(false);
     location.reload();
     // this.mutationService(gql('mutation { logout }'));
+    // window.location.href = `${serverUrl}/logout`;
   }
 
   getUser(): BehaviorSubject<User> {

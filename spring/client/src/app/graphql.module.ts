@@ -23,7 +23,7 @@ export function createApollo(httpLink: HttpLink) {
       provide: APOLLO_OPTIONS,
       useFactory: createApollo,
       deps: [HttpLink],
-    },
+    }
   ],
 })
 export class GraphQLModule {}
