@@ -95,7 +95,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>server</finalName>
+		<finalName>gpporgs</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

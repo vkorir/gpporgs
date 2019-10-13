@@ -11,7 +11,7 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication(exclude = { GraphQLWebAutoConfiguration.class })
+@SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

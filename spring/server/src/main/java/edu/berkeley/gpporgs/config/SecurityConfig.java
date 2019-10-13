@@ -19,8 +19,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.csrf.CsrfFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -38,6 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
+    @Autowired
+    private AuthenticationEntryPoint restAuthenticationEntryPoint;
+
     @Bean
     public JwtAuthenticationFilter tokenAuthenticationFilter() {
         return new JwtAuthenticationFilter();
@@ -50,16 +58,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -71,17 +76,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http
                 .cors().and()
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling()
-                    .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                    .authenticationEntryPoint(restAuthenticationEntryPoint)
                     .and()
                 .authorizeRequests()
                     .antMatchers("/index.html", "/", "/login", "/admin", "/favicon.ico", "/**/*.js", "/**/*.css").permitAll()
                     .antMatchers("/auth/**", "/oauth2/**").permitAll()
-                    .anyRequest().authenticated().and()
+                    .anyRequest().fullyAuthenticated().and()
                 .oauth2Login()
                     .authorizationEndpoint()
                         .baseUri("/oauth2/authorize")
@@ -95,7 +100,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler).and()
-                .logout().clearAuthentication(true).deleteCookies("JSESSIONID").permitAll().and()
+                .logout().invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").and()
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
