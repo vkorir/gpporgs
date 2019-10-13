@@ -3,32 +3,32 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './model/user';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
-  private baseUrl = 'http://localhost:4200';
-  private serverUrl = 'http://localhost:8080';
   private tokenKey = 'token';
   private userKey = 'user';
   private user = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(this.userKey)));
   private isAuthenticated = new BehaviorSubject<boolean>(this.user.getValue() != null);
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo, private httpClient: HttpClient, private router: Router) { }
 
   login() {
-    return window.location.href = `${this.serverUrl}/oauth2/authorize/google?redirect_uri=${this.baseUrl}/login`;
+    window.location.href = `/oauth2/authorize/google?redirect_uri=${window.location.origin}/login`;
   }
 
   logout() {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem(this.tokenKey)}`);
+    this.httpClient.get(`/logout`, { headers });
     localStorage.removeItem(this.userKey);
     localStorage.removeItem(this.tokenKey);
     this.user.next(null);
     this.isAuthenticated.next(false);
-    location.reload();
-    // this.mutationService(gql('mutation { logout }'));
-    // window.location.href = `${serverUrl}/logout`;
+    this.router.navigateByUrl('/login');
   }
 
   getUser(): BehaviorSubject<User> {

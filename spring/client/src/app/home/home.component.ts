@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-home',
@@ -7,8 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  private name: string;
+
+  constructor(private appService: AppService) { }
 
   ngOnInit() {
+    this.appService.queryService('{ currentUser { username, firstName } }').subscribe(response => {
+      console.log(response);
+    });
   }
 }
