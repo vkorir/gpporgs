@@ -1,20 +1,15 @@
 package edu.berkeley.gpporgs.security.oauth2;
 
 import edu.berkeley.gpporgs.exception.BadRequestException;
-import edu.berkeley.gpporgs.model.User;
-import edu.berkeley.gpporgs.repository.UserRepository;
 import edu.berkeley.gpporgs.security.CookieUtils;
 import edu.berkeley.gpporgs.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,11 +28,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Value("${app.oauth2.authorized-redirect-uris}")
+    private String[] authorizedRedirectUris;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -54,20 +49,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         String token = jwtTokenProvider.generateToken(authentication);
-        String currentUsername = authentication.getName();
-        Optional<User> currentUser = userRepository.findByUsername(currentUsername);
-        JSONObject userObject = new JSONObject();
-        if (currentUser.isPresent()) {
-            try {
-                User user = currentUser.get();
-                userObject.put("username", user.getUsername());
-                userObject.put("firstName", user.getFirstName());
-                userObject.put("isAdmin", user.getIsAdmin());
-            } catch (JSONException je) {
-                // ignore
-            }
-        }
-        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).queryParam("user", userObject.toString()).build().toUriString();
+        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();
     }
 
     private void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
@@ -77,8 +59,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
-        String baseUri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        URI authorizedURI = URI.create(baseUri + "/login");
-        return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost()) && authorizedURI.getPort() == clientRedirectUri.getPort();
+        for (String authorizedUri: authorizedRedirectUris) {
+            URI authorizedURI = URI.create(authorizedUri);
+            if (authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                    && authorizedURI.getPort() == clientRedirectUri.getPort()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

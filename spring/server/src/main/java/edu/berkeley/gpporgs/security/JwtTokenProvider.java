@@ -25,21 +25,12 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
-        return Jwts.builder()
-                .setSubject(userPrincipal.getUserId().toString())
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+        return Jwts.builder().setSubject(userPrincipal.getUsername()).setIssuedAt(now)
+                .setExpiration(expiryDate).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
     }
 
-    Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return Long.parseLong(claims.getSubject());
+    String getUsernameFromToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
     boolean validateToken(String authToken) {

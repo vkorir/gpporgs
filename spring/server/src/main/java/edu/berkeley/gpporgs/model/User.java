@@ -19,10 +19,7 @@ import java.sql.Timestamp;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(unique = true)
-    private @NonNull String username;
+    private @NonNull String id;
     private @NonNull String firstName;
     private String lastName;
     private @NonNull Boolean isAdmin;

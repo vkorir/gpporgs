@@ -4,8 +4,6 @@ import edu.berkeley.gpporgs.exception.OAuth2AuthenticationProcessingException;
 import edu.berkeley.gpporgs.model.User;
 import edu.berkeley.gpporgs.repository.UserRepository;
 import edu.berkeley.gpporgs.security.UserPrincipal;
-import edu.berkeley.gpporgs.security.oauth2.user.OAuth2UserInfo;
-import edu.berkeley.gpporgs.security.oauth2.user.OAuth2UserInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -21,7 +19,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class OAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -40,12 +38,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2User.getAttributes());
+        OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(oAuth2User.getAttributes());
         if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
-
-        Optional<User> userOptional = userRepository.findByUsername(User.getCalNetId(oAuth2UserInfo.getEmail()));
+        Optional<User> userOptional = userRepository.findById(User.getCalNetId(oAuth2UserInfo.getEmail()));
         User user;
         if(userOptional.isPresent()) {
             user = userOptional.get();
@@ -59,7 +56,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         User user = new User();
-        user.setUsername(User.getCalNetId(oAuth2UserInfo.getEmail()));
+        user.setId(User.getCalNetId(oAuth2UserInfo.getEmail()));
         user.setFirstName(oAuth2UserInfo.getName());
         user.setIsAdmin(false);
         Date now = new Date();

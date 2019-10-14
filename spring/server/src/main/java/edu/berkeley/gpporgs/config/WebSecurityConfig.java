@@ -1,9 +1,9 @@
 package edu.berkeley.gpporgs.config;
 
 import edu.berkeley.gpporgs.security.CustomUserDetailsService;
-import edu.berkeley.gpporgs.security.RestAuthenticationEntryPoint;
+import edu.berkeley.gpporgs.security.JwtAuthenticationEntryPoint;
 import edu.berkeley.gpporgs.security.JwtAuthenticationFilter;
-import edu.berkeley.gpporgs.security.oauth2.CustomOAuth2UserService;
+import edu.berkeley.gpporgs.security.oauth2.OAuth2UserService;
 import edu.berkeley.gpporgs.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import edu.berkeley.gpporgs.security.oauth2.OAuth2AuthenticationFailureHandler;
 import edu.berkeley.gpporgs.security.oauth2.OAuth2AuthenticationSuccessHandler;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,23 +18,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.csrf.CsrfFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
+    private OAuth2UserService OAuth2UserService;
 
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
@@ -44,12 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Autowired
-    private AuthenticationEntryPoint restAuthenticationEntryPoint;
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Bean
-    public JwtAuthenticationFilter tokenAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
@@ -66,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
+    @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -81,12 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling()
-                    .authenticationEntryPoint(restAuthenticationEntryPoint)
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                     .and()
                 .authorizeRequests()
                     .antMatchers("/index.html", "/", "/login", "/admin", "/favicon.ico", "/**/*.js", "/**/*.css").permitAll()
                     .antMatchers("/auth/**", "/oauth2/**").permitAll()
-                    .anyRequest().fullyAuthenticated().and()
+                    .anyRequest().authenticated().and()
                 .oauth2Login()
                     .authorizationEndpoint()
                         .baseUri("/oauth2/authorize")
@@ -96,11 +87,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .baseUri("/oauth2/callback/*")
                         .and()
                     .userInfoEndpoint()
-                        .userService(customOAuth2UserService)
+                        .userService(OAuth2UserService)
                         .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler).and()
                 .logout().invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").and()
-                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

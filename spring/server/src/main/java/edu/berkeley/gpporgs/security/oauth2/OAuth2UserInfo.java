@@ -1,4 +1,4 @@
-package edu.berkeley.gpporgs.security.oauth2.user;
+package edu.berkeley.gpporgs.security.oauth2;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
