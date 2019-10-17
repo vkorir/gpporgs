@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import {User} from '../model/user';
 
 @Component({
   selector: 'app-header',
@@ -9,14 +11,12 @@ import { Observable } from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
 
-  isSignedIn: Observable<boolean>;
-  isAdmin: boolean;
+  user: Observable<User>;
 
-  constructor(private appService: AppService) {}
+  constructor(private appService: AppService, private router: Router) {}
 
   ngOnInit() {
-    this.isSignedIn = this.appService.isSignedIn();
-    this.isAdmin = this.appService.isAdmin();
+    this.user = this.appService.userState();
   }
 
   login() {
@@ -25,5 +25,6 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this.appService.logout();
+    this.router.navigateByUrl('/login');
   }
 }

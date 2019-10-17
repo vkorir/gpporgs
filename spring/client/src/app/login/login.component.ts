@@ -9,17 +9,25 @@ import { AppService } from '../app.service';
 })
 export class LoginComponent implements OnInit {
 
-  loading = false;
-
   constructor(private appService: AppService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      if (params.token !== null) {
-        this.appService.setCurrentUser(params.user, params.token);
-        this.router.navigateByUrl('/');
+    this.appService.userState().subscribe(user => {
+      if (!!user) {
+        let redirectUrl = '/';
+        if (!!user && this.appService.isAdmin()) {
+          redirectUrl = '/admin';
+        }
+        this.router.navigateByUrl(redirectUrl);
       }
     });
+    const token = this.route.snapshot.queryParams.token;
+    if (!!token) {
+      this.appService.setToken(token);
+    }
+    if (this.appService.tokenExists()) {
+      this.appService.fetchUser();
+    }
   }
 
   login() {

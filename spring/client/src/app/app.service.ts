@@ -3,61 +3,66 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './model/user';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
-  private tokenKey = 'token';
-  private userKey = 'user';
-  private user = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(this.userKey)));
-  private isAuthenticated = new BehaviorSubject<boolean>(this.user.getValue() != null);
+  private readonly tokenKey = 'token';
+  private user = new BehaviorSubject<User>(null);
 
-  constructor(private apollo: Apollo, private httpClient: HttpClient, private router: Router) { }
+  constructor(private apollo: Apollo, private configService: ConfigService) { }
 
   login() {
-    window.location.href = `/oauth2/authorize/google?redirect_uri=${window.location.origin}/login`;
+    window.location.href = `${this.configService.getServerUrl()}/oauth2/authorize/google?redirect_uri=${window.location.origin}/login`;
   }
 
   logout() {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem(this.tokenKey)}`);
-    this.httpClient.get(`/logout`, { headers });
-    localStorage.removeItem(this.userKey);
-    localStorage.removeItem(this.tokenKey);
+    this.clearToken();
     this.user.next(null);
-    this.isAuthenticated.next(false);
-    this.router.navigateByUrl('/login');
   }
 
-  getUser(): BehaviorSubject<User> {
-    return this.user;
+  setToken(token: string) {
+    localStorage.setItem(this.tokenKey, token);
   }
 
-  getUsername(): string {
-    return this.getUser().getValue().username;
+  tokenExists(): boolean {
+    return this.getToken() != null;
   }
 
-  getFirstName(): string {
-    return this.getUser().getValue().firstName;
+  getToken(): string {
+    return localStorage.getItem(this.tokenKey);
   }
 
-  setCurrentUser(user: string, token: string) {
-    if (user && token) {
-      localStorage.setItem(this.userKey, user);
-      localStorage.setItem(this.tokenKey, token);
-      this.user.next(JSON.parse(user));
-      this.isAuthenticated.next(true);
-    }
+  clearToken() {
+    localStorage.removeItem(this.tokenKey);
   }
 
-  isSignedIn(): Observable<boolean> {
-    return this.isAuthenticated.asObservable();
+  fetchUser() {
+    this.queryService('{ currentUser { id firstName isAdmin }}').subscribe(response => {
+      if (response.errors) {
+        console.log('graphql validation error');
+      } else if (response.error) {
+        console.log(response.message);
+        this.clearToken();
+      } else {
+        response.data.currentUser.isAdmin = true;
+        this.user.next(response.data.currentUser);
+      }
+    });
+  }
+
+  userState(): Observable<User> {
+    return this.user.asObservable();
+  }
+
+  isSignedIn(): boolean {
+    return this.user.getValue() != null;
   }
 
   isAdmin(): boolean {
-    return this.getUser().getValue() != null && this.getUser().getValue().isAdmin;
+    return this.isSignedIn() && this.user.getValue().isAdmin;
   }
 
   queryService(query: string): Observable<any> {

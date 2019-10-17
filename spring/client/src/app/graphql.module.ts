@@ -2,16 +2,13 @@ import { NgModule } from '@angular/core';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { ConfigService } from './config.service';
 
-const uri = `${window.location.origin}/graphql`;
-export function createApollo(httpLink: HttpLink) {
+export function createApollo(httpLink: HttpLink, configService: ConfigService) {
   return {
-    link: httpLink.create({
-      uri,
-      headers: new HttpHeaders({ Authorization: `Bearer ${localStorage.getItem('token')}` })
-    }),
+    link: httpLink.create({ uri: `${configService.getServerUrl()}/graphql` }),
     cache: new InMemoryCache(),
   };
 }
@@ -22,7 +19,7 @@ export function createApollo(httpLink: HttpLink) {
     {
       provide: APOLLO_OPTIONS,
       useFactory: createApollo,
-      deps: [HttpLink],
+      deps: [HttpLink, ConfigService],
     }
   ],
 })

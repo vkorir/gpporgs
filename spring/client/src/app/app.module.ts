@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
-import {HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -24,6 +24,9 @@ import {
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
+import { TokenInterceptor } from './token.interceptor';
+import { AppService } from './app.service';
+import { ConfigService } from './config.service';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,15 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatCheckboxModule,
     MatDividerModule
   ],
-  providers: [],
+  providers: [
+    ConfigService,
+    AppService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent],
   entryComponents: [AdminComponent]
 })

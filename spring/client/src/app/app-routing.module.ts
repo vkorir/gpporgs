@@ -5,7 +5,6 @@ import { AdminGuard } from './admin/admin.guard';
 import { AdminComponent } from './admin/admin.component';
 import { HomeGuard } from './home/home.guard';
 import { LoginComponent } from './login/login.component';
-import { LoginGuard } from './login/login.guard';
 
 
 const routes: Routes = [
@@ -25,8 +24,7 @@ const routes: Routes = [
   {
     path: 'login',
     pathMatch: 'full',
-    component: LoginComponent,
-    canActivate: [LoginGuard]
+    component: LoginComponent
   },
   {
     path: '**',
