@@ -8,6 +8,7 @@ import edu.berkeley.gpporgs.security.oauth2.HttpCookieOAuth2AuthorizationRequest
 import edu.berkeley.gpporgs.security.oauth2.OAuth2AuthenticationFailureHandler;
 import edu.berkeley.gpporgs.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,6 +42,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Value("${app.oauth2.domain}")
+    private String domain;
 
     @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {

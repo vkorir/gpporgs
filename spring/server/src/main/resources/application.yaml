@@ -27,4 +27,5 @@ app:
     jwt-secret: 926D96C90030DD58429D2751AC1BDBBC
     jwt-expiration-ms: 84000000
   oauth2:
+    domain: berkeley.edu
     authorized-redirect-uris: http://localhost:8080/login, http://localhost:4200/login

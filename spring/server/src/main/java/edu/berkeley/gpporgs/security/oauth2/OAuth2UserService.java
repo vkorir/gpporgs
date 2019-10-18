@@ -28,7 +28,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
         try {
-            return processOAuth2User(oAuth2UserRequest, oAuth2User);
+            return processOAuth2User(oAuth2User);
         } catch (AuthenticationException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -37,38 +37,41 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
-    private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
+    private OAuth2User processOAuth2User(OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(oAuth2User.getAttributes());
         if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
-        Optional<User> userOptional = userRepository.findById(User.getCalNetId(oAuth2UserInfo.getEmail()));
+        Optional<User> userOptional = userRepository.findById(OAuth2UserInfo.getCalNetId(oAuth2UserInfo.getEmail()));
         User user;
         if(userOptional.isPresent()) {
             user = userOptional.get();
-            user = updateExistingUser(user, oAuth2UserInfo);
+            user = updateAndSaveUser(user, oAuth2UserInfo);
         } else {
-            user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
+            user = registerNewUser(oAuth2UserInfo);
         }
 
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
-    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+    private User registerNewUser(OAuth2UserInfo oAuth2UserInfo) {
         User user = new User();
-        user.setId(User.getCalNetId(oAuth2UserInfo.getEmail()));
-        user.setFirstName(oAuth2UserInfo.getName());
         user.setIsAdmin(false);
         Date now = new Date();
         Timestamp timestamp = new Timestamp(now.getTime());
         user.setCreationTime(timestamp);
-        user.setNumberOfLogin(1);
-        user.setLastLogin(timestamp);
-        return userRepository.save(user);
+        user.setNumberOfLogin(0);
+        return updateAndSaveUser(user, oAuth2UserInfo);
     }
 
-    private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.setFirstName(oAuth2UserInfo.getName());
-        return userRepository.save(existingUser);
+    private User updateAndSaveUser(User user, OAuth2UserInfo oAuth2UserInfo) {
+        user.setId(OAuth2UserInfo.getCalNetId(oAuth2UserInfo.getEmail()));
+        user.setFirstName(oAuth2UserInfo.getFirstName());
+        user.setLastName(oAuth2UserInfo.getLastName());
+        Date now = new Date();
+        Timestamp timestamp = new Timestamp(now.getTime());
+        user.setLastLogin(timestamp);
+        user.setNumberOfLogin(user.getNumberOfLogin() + 1);
+        return userRepository.save(user);
     }
 }

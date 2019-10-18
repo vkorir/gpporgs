@@ -26,8 +26,4 @@ public class User {
     private @NonNull Timestamp creationTime;
     private @NonNull Integer numberOfLogin;
     private @NonNull Timestamp lastLogin;
-
-    public static String getCalNetId(String email) {
-        return email.substring(0, email.indexOf('@'));
-    }
 }
