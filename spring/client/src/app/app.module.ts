@@ -16,17 +16,27 @@ import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatButtonModule,
-  MatCheckboxModule, MatDividerModule,
+  MatCheckboxModule,
+  MatDividerModule,
   MatFormFieldModule,
   MatGridListModule,
   MatInputModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatRadioModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
 import { TokenInterceptor } from './token.interceptor';
 import { AppService } from './app.service';
 import { ConfigService } from './config.service';
+
+const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
+  MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
+  MatSortModule
+];
 
 @NgModule({
   declarations: [
@@ -47,14 +57,8 @@ import { ConfigService } from './config.service';
     HttpClientModule,
     BrowserAnimationsModule,
     LayoutModule,
-    MatGridListModule,
     FlexLayoutModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatDividerModule
+    materialModules
   ],
   providers: [
     ConfigService,

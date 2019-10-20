@@ -1,10 +1,28 @@
 @import "../../styles";
 
 .container {
-  text-align: center;
+  text-align: left;
   margin: (4px 2px 4px 0);
   border-radius: $borderRadius;
   height: calc(100% - 10px);
   background: $containerBackground;
   border: 1px solid $containerBorder;
+
+  .mat-button {
+    width: 50%;
+  }
+
+  h3 {
+    margin: 16px 0 0 0;
+  }
+
+  h4 {
+    margin: 16px 0 8px;
+    color: $darkBlue;
+  }
+
+  .mat-divider {
+    width: 50%;
+    margin: 0 auto;
+  }
 }

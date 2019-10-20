@@ -2,7 +2,7 @@
   <mat-toolbar-row class="content">
     <form *ngIf="user | async">
       <mat-form-field>
-        <input matInput placeholder="Search" aria-label="Search">
+        <input matInput (keyup)="appService.applyFilter($event.target.value)" placeholder="Search" aria-label="Search">
       </mat-form-field>
     </form>
     <span fxFlex="1 1 auto"></span>

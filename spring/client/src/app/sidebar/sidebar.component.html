@@ -1,4 +1,17 @@
 <div class="container">
-  <h3>Hi {{fistName}},</h3>
+  <h2>Hi {{fistName}},</h2>
   <p>Done with your experience?</p>
+  <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >+ Add Review</a>
+  <h3 fxLayoutAlign="center center">FILTER BY</h3>
+  <mat-divider></mat-divider>
+  <h4>AREA</h4>
+  <mat-radio-group aria-label="Select Area" fxLayout="column" fxLayoutGap="4px">
+    <mat-radio-button value="all" checked>all</mat-radio-button>
+    <mat-radio-button value="domestic">domestic</mat-radio-button>
+    <mat-radio-button value="international">international</mat-radio-button>
+  </mat-radio-group>
+  <h4>SECTOR</h4>
+  <div *ngFor="let sector of sectors" fxLayout="column" fxLayoutGap="4px">
+    <mat-checkbox fxLayout="row" value="{{sector.id}}">{{sector.name}}</mat-checkbox>
+  </div>
 </div>

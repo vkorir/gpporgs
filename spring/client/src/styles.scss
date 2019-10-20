@@ -105,4 +105,41 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   border-radius: $borderRadius;
   background: $containerBackground;
   border: 1px solid $containerBorder;
+  padding: 20px;
 }
+
+.mat-button {
+  background: $darkBlue;
+  box-shadow: 0 4px 6px #05365b;
+  color: #ffffff;
+}
+
+.mat-button:hover,
+.mat-button:active {
+  background: $lightBlue;
+  transition: .3s all linear;
+}
+
+.mat-divider {
+  border-color: $containerBorder;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: $darkBlue;
+}
+
+.mat-radio-button.mat-accent .mat-radio-inner-circle {
+  color: $darkBlue;
+  background-color: $darkBlue;
+}
+
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: $darkBlue;
+}
+
+.mat-ripple-element {
+  background: $darkBlue !important;
+}
+
+
