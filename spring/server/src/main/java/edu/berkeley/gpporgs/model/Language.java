@@ -21,8 +21,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "languages")
 public class Language {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private @Id String code;
     private @NonNull String name;
 }

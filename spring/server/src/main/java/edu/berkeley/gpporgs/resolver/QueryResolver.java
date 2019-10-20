@@ -73,7 +73,11 @@ public class QueryResolver implements GraphQLQueryResolver {
         return organizationRepository.findById(organizationId).orElse(null);
     }
 
-    public Iterable<Organization> organizations(String area, List<Long> sectorIds, Integer offset, Integer limit) {
+    public Iterable<Organization> organizations() {
+        return organizationRepository.findAll();
+    }
+
+    public Iterable<Organization> filterOrganizations(Area area, List<Long> sectorIds, Integer offset, Integer limit) {
         return organizationRepository.findAll();
     }
 

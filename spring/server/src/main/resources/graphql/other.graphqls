@@ -9,7 +9,7 @@ type Country {
 }
 
 type Language {
-    id: ID!
+    code: ID!
     name: String!
 }
 
@@ -26,6 +26,10 @@ type Sector {
 type Type {
     id: ID!
     name: String!
+}
+
+enum Area {
+    ALL, DOMESTIC, INTERNATIONAL
 }
 
 extend type Query {

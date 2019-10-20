@@ -19,9 +19,7 @@ import javax.persistence.Transient;
 @NoArgsConstructor
 @Table(name = "reviews")
 public class Review {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private @NonNull Long organizationId;
     private @NonNull Long addressId;
     @Transient

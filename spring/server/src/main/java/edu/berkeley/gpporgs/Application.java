@@ -1,6 +1,5 @@
 package edu.berkeley.gpporgs;
 
-import com.oembedler.moon.graphql.boot.GraphQLWebAutoConfiguration;
 import org.apache.catalina.connector.Connector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

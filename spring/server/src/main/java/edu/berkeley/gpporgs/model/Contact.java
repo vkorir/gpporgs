@@ -17,9 +17,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "contacts")
 public class Contact {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private @NonNull Long organizationId;
     private String name;
     private String role;

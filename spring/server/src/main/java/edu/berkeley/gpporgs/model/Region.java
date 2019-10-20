@@ -17,8 +17,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "regions")
 public class Region {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private @NonNull String name;
 }

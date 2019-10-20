@@ -18,8 +18,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Table(name = "users")
 public class User {
-    @Id
-    private @NonNull String id;
+    private @Id String id;
     private @NonNull String firstName;
     private String lastName;
     private @NonNull Boolean isAdmin;

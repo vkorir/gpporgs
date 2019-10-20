@@ -18,9 +18,7 @@ import javax.persistence.Transient;
 @NoArgsConstructor
 @Table(name = "addresses")
 public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private String street;
     private String city;
     private String state;

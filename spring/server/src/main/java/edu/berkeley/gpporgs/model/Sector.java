@@ -17,8 +17,6 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Table(name = "sectors")
 public class Sector {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private @NonNull String name;
 }
