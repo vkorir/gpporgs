@@ -71,7 +71,7 @@ export class AppService {
     return this.apollo.watchQuery<any>({ query: gql(query) }).valueChanges.pipe(map(response => {
       if (response.errors) {
         this.clearToken();
-        alert('session timed our');
+        alert('session timed out');
         window.location.reload();
       }
       return response.data;

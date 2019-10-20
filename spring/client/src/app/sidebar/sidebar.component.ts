@@ -11,7 +11,7 @@ export class SidebarComponent implements OnInit {
 
   private fistName: string;
   private areas = ['all', 'domestic', 'international'];
-  private sectors: Sector[] = [{ id: 0, name: 'agriculture' }, { id: 1, name: 'education' }];
+  private sectors: Sector[];
 
   constructor(private appService: AppService) { }
 
@@ -20,7 +20,7 @@ export class SidebarComponent implements OnInit {
       this.fistName = user.firstName;
     });
     this.appService.queryService('{ sectors { id name }}').subscribe(({ sectors }) => {
-      // this.sectors = sectors;
+      this.sectors = sectors;
     });
   }
 }

@@ -93,11 +93,9 @@ strong, b {
   margin-left: 16px;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
 .content {
   height: calc(100% - #{$headerHeight});
+  margin: 0 auto;
 }
 
 .container {
@@ -136,6 +134,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
 .mat-checkbox-checked.mat-accent .mat-checkbox-background {
   background-color: $darkBlue;
+}
+
+.mat-checkbox-layout {
+  display: block !important;
+  width: 100%;
 }
 
 .mat-ripple-element {
