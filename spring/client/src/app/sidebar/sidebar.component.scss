@@ -1,10 +1,8 @@
 @import "../../styles";
 
-.container {
-  text-align: left;
-  margin: (4px 2px 4px 0);
+.inner-container {
   border-radius: $borderRadius;
-  height: calc(100% - 56px);
+  height: calc(100% - 34px);
   background: $containerBackground;
   border: 1px solid $containerBorder;
 
