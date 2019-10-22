@@ -25,7 +25,9 @@ import {
   MatRadioModule,
   MatTableModule,
   MatPaginatorModule,
-  MatSortModule
+  MatSortModule,
+  MatDialogModule,
+  MatSnackBarModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -35,7 +37,7 @@ import { ConfigService } from './config.service';
 
 const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
   MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
-  MatSortModule
+  MatSortModule, MatDialogModule, MatSnackBarModule
 ];
 
 @NgModule({
@@ -70,6 +72,9 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AdminComponent]
+  entryComponents: [
+    AdminComponent,
+    ReviewComponent
+  ]
 })
 export class AppModule { }

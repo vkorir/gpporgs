@@ -7,9 +7,39 @@
   height: calc(100% - 56px);
   background: $containerBackground;
   border: 1px solid $containerBorder;
+  padding-left: 8px;
+  padding-right: 8px;
 
-  table {
-    width: 100% !important;
-    text-align: left;
+  #container-table {
+    height: calc(100% - 100px);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid $containerBorder;
+    border-bottom: none;
+    overflow: auto;
+
+    table {
+      width: 100% !important;
+      text-align: left;
+      border-radius: 4px;
+      box-shadow: none;
+      max-height: 200px;
+    }
+
+    .mat-header-row {
+      position: sticky;
+    }
+
+    .mat-row:nth-child(odd) {
+      background-color: $containerBackground;
+    }
+  }
+
+  .mat-paginator {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border: 1px solid $containerBorder;
+    border-top: none;
+    box-shadow: none;
   }
 }

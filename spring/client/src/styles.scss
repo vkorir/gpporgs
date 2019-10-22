@@ -51,27 +51,43 @@ body {
   margin: 0 auto;
 }
 
-@media screen and (min-width: 576px) {
+@media screen and (min-width: 576px) and (max-width: 767.99px) {
   .content {
     max-width: 540px;
   }
-}
 
-@media screen and (min-width: 768px) {
-  .content {
-    max-width: 720px;
+  .snack-bar-custom {
+    left: calc(50% - 294px);
   }
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 768px) and (max-width: 991.99px) {
+  .content {
+    max-width: 720px;
+  }
+
+  .snack-bar-custom {
+    left: calc(50% - 384px);
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1199.99px) {
   .content {
     max-width: 960px;
+  }
+
+  .snack-bar-custom {
+    left: calc(50% - 504px);
   }
 }
 
 @media screen and (min-width: 1200px) {
   .content {
     max-width: 1140px;
+  }
+
+  .snack-bar-custom {
+    left: calc(50% - 594px);
   }
 }
 
@@ -95,15 +111,21 @@ strong, b {
 
 .content {
   height: calc(100% - #{$headerHeight});
+  width: 100%;
   margin: 0 auto;
 }
 
 .container {
+  min-height: 400px;
   text-align: center;
   border-radius: $borderRadius;
   background: $containerBackground;
   border: 1px solid $containerBorder;
-  padding: 20px;
+  padding: $containerPadding;
+}
+
+.overflow-y {
+  overflow-y: auto;
 }
 
 .mat-button {
@@ -115,6 +137,11 @@ strong, b {
 .mat-button:hover,
 .mat-button:active {
   background: $lightBlue;
+  transition: .3s all linear;
+}
+
+.warn:hover {
+  opacity: 0.7;
   transition: .3s all linear;
 }
 
@@ -145,4 +172,12 @@ strong, b {
   background: $darkBlue !important;
 }
 
+.mat-divider {
+  width: 50%;
+}
 
+.snack-bar-custom {
+  background: $lightBlue;
+  position: absolute;
+  bottom: -5px;
+}

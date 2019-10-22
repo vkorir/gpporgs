@@ -1,7 +1,7 @@
 <div class="container">
   <h2>Hi {{fistName}},</h2>
   <p>Done with your experience?</p>
-  <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >+ Add Review</a>
+  <button mat-button (click)="openReviewDialog()">+ Add Review</button>
   <h3 fxLayoutAlign="center center">FILTER BY</h3>
   <mat-divider></mat-divider>
   <h4>AREA</h4>
@@ -11,7 +11,9 @@
     <mat-radio-button value="international">international</mat-radio-button>
   </mat-radio-group>
   <h4>SECTOR</h4>
-  <div *ngFor="let sector of sectors" fxLayout="column" fxLayoutGap="4px">
-    <mat-checkbox fxLayout="row" value="{{sector.id}}">{{sector.name}}</mat-checkbox>
-<!--  </div>-->
+  <div fxLayout="column" fxLayoutGap="8px" class="overflow-y" id="filter-sectors">
+    <ng-container *ngFor="let sector of sectors">
+      <mat-checkbox fxLayout="row" value="{{sector.id}}">{{sector.name}}</mat-checkbox>
+    </ng-container>
+  </div>
 </div>

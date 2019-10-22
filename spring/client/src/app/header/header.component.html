@@ -1,5 +1,5 @@
 <mat-toolbar>
-  <mat-toolbar-row class="content">
+  <mat-toolbar-row class="content" fxFlex.md="960px" fxFlex.lg="1140px">
     <form *ngIf="user | async">
       <mat-form-field>
         <input matInput (keyup)="appService.applyFilter($event.target.value)" placeholder="Search" aria-label="Search">

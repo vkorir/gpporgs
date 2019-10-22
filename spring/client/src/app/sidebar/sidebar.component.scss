@@ -10,6 +10,7 @@
 
   .mat-button {
     width: 50%;
+    min-width: 100px;
   }
 
   h3 {
@@ -24,5 +25,11 @@
   .mat-divider {
     width: 50%;
     margin: 0 auto;
+  }
+
+  #filter-sectors {
+    height: calc(100% - 323px);
+    margin-left: -$containerPadding;
+    padding-left: $containerPadding;
   }
 }

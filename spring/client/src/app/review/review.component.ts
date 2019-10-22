@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef, MatSnackBar } from '@angular/material';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-review',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReviewComponent implements OnInit {
 
-  constructor() { }
+  constructor(private appService: AppService,
+              private snackBar: MatSnackBar,
+              private dialogRef: MatDialogRef<ReviewComponent>) { }
 
   ngOnInit() {
   }
 
+  submit() {
+    this.appService.openSnackBar(this.snackBar, 'Organization successfully submitted');
+    this.dialogRef.close();
+  }
 }

@@ -8,6 +8,7 @@
     margin: 4px 0;
     padding: $containerPadding;
     text-align: left;
+    min-height: 50px;
 
     h1 {
       text-align: left;
@@ -19,7 +20,6 @@
 
     .mat-divider {
       margin: 16px auto;
-      width: 50%;
     }
 
     .mat-button {

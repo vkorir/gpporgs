@@ -5,6 +5,7 @@ import { Apollo } from 'apollo-angular';
 import { ConfigService } from './config.service';
 import gql from 'graphql-tag';
 import { map } from 'rxjs/operators';
+import {MatSnackBar} from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +66,14 @@ export class AppService {
 
   applyFilter(filterValue: string): void {
     this.organizationsFilter.next(filterValue);
+  }
+
+  openSnackBar(snackBar: MatSnackBar, message: string) {
+    snackBar.open(message, '', {
+      duration: 2000,
+      horizontalPosition: 'start',
+      panelClass: ['snack-bar-custom']
+    });
   }
 
   queryService(query: string): Observable<any> {
