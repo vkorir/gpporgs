@@ -1,31 +1,31 @@
 type Affiliation {
     id: ID!
-    name: String!
+    value: String!
 }
 
 type Country {
     code: ID!
-    name: String!
+    value: String!
 }
 
 type Language {
     code: ID!
-    name: String!
+    value: String!
 }
 
 type Region {
     id: ID!
-    name: String!
+    value: String!
 }
 
 type Sector {
     id: ID!
-    name: String!
+    value: String!
 }
 
 type Type {
     id: ID!
-    name: String!
+    value: String!
 }
 
 enum Area {

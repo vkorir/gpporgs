@@ -18,5 +18,5 @@ import javax.persistence.Id;
 @Table(name = "sectors")
 public class Sector {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
-    private @NonNull String name;
+    private @NonNull String value;
 }

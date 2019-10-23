@@ -39,7 +39,7 @@ public class ReviewResolver implements GraphQLResolver<Review> {
     public Iterable<String> getLanguages(Review review) {
         Iterable<Language> languages = languageRepository.findAllById(Arrays.asList(review.getLanguageCodes().split(dataDelimiter)));
         List<String> result = new ArrayList<>();
-        languages.forEach(language -> result.add(language.getName()));
+        languages.forEach(language -> result.add(language.getValue()));
         return result;
     }
 
@@ -54,7 +54,7 @@ public class ReviewResolver implements GraphQLResolver<Review> {
         }
         Iterable<Sector> sectors = sectorRepository.findAllById(sectorIds);
         List<String> result = new ArrayList<>();
-        sectors.forEach(sector -> result.add(sector.getName()));
+        sectors.forEach(sector -> result.add(sector.getValue()));
         return result;
     }
 }

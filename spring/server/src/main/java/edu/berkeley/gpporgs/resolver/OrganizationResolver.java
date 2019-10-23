@@ -38,7 +38,7 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
     public Iterable<String> getAffiliations(Organization organization) {
         List<String> affiliations = new ArrayList<>();
         affiliationRepository.findAllById(getLongIds(organization.getAffiliationIds())).forEach(affiliation -> {
-            affiliations.add(affiliation.getName());
+            affiliations.add(affiliation.getValue());
         });
         return affiliations;
     }
@@ -50,7 +50,7 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
     public Iterable<String> getSectors(Organization organization) {
         List<String> sectors = new ArrayList<>();
         sectorRepository.findAllById(getLongIds(organization.getSectorIds())).forEach(sector -> {
-            sectors.add(sector.getName());
+            sectors.add(sector.getValue());
         });
         return sectors;
     }

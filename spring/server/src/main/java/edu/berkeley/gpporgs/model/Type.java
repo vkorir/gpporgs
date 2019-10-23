@@ -18,5 +18,5 @@ import javax.persistence.Table;
 @Table(name = "types")
 public class Type {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
-    private @NonNull String name;
+    private @NonNull String value;
 }

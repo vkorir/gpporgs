@@ -22,5 +22,5 @@ import javax.persistence.Table;
 @Table(name = "languages")
 public class Language {
     private @Id String code;
-    private @NonNull String name;
+    private @NonNull String value;
 }

@@ -16,5 +16,5 @@ import javax.persistence.Table;
 @Table(name = "countries")
 public class Country {
     private @Id String code;
-    private @NonNull String name;
+    private @NonNull String value;
 }
