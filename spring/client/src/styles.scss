@@ -57,6 +57,7 @@ strong, b {
 
 .container {
   height: calc(100% - #{$headerHeight});
+  min-height: 400px;
   padding: 4px 0;
 }
 
@@ -81,6 +82,25 @@ strong, b {
 .mat-button:active {
   background: $lightBlue;
   transition: .3s all linear;
+}
+
+.mat-header-cell {
+  color: #000;
+  font-weight: 500;
+}
+
+.mat-row {
+  border: none !important;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: .2s all linear;
+}
+
+.mat-cell {
+  border-bottom-color: transparent !important;
 }
 
 .warn:hover {
@@ -121,6 +141,4 @@ strong, b {
 
 .snack-bar-custom {
   background: $lightBlue;
-  position: absolute;
-  bottom: -5px;
 }

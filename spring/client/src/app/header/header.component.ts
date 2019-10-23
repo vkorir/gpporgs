@@ -19,6 +19,12 @@ export class HeaderComponent implements OnInit {
     this.user = this.appService.userState();
   }
 
+  updateFilter(searchString: string) {
+    const filter = this.appService.filterValue();
+    filter.updateSearchString(searchString);
+    this.appService.updateFilter(filter);
+  }
+
   login() {
     this.appService.login();
   }

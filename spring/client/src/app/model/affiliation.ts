@@ -1,4 +1,4 @@
 export class Affiliation {
   id: number;
-  name: string;
+  value: string;
 }

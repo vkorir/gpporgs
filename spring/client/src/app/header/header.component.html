@@ -1,8 +1,8 @@
 <mat-toolbar fxLayoutAlign="center">
-  <mat-toolbar-row fxFlex.lg="1140px" fxFlex.md="960px" fxFlex.lt-md="98%">
+  <mat-toolbar-row fxFlex.gt-md="1140px" fxFlex.md="960px" fxFlex.lt-md="98%">
     <form *ngIf="user | async" fxHide.lt-md="true">
       <mat-form-field>
-        <input matInput (keyup)="appService.applyFilter($event.target.value)" placeholder="Search" aria-label="Search">
+        <input matInput (keyup)="updateFilter($event.target.value)" placeholder="Search" aria-label="Search">
       </mat-form-field>
     </form>
     <span fxFlex="1 1 auto"></span>

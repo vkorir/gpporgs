@@ -1,4 +1,4 @@
-export class Sector {
+export class Region {
   id: number;
   value: string;
 }

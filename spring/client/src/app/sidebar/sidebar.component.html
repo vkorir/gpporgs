@@ -6,14 +6,14 @@
   <mat-divider></mat-divider>
   <h4>AREA</h4>
   <mat-radio-group aria-label="Select Area" fxLayout="column" fxLayoutGap="4px">
-    <mat-radio-button value="all" checked>all</mat-radio-button>
-    <mat-radio-button value="domestic">domestic</mat-radio-button>
-    <mat-radio-button value="international">international</mat-radio-button>
+    <mat-radio-button value="all" (click)="updateArea(area.ALL)" [checked]="isAreaChecked(area.ALL)">all</mat-radio-button>
+    <mat-radio-button value="domestic" (click)="updateArea(area.DOMESTIC)" [checked]="isAreaChecked(area.DOMESTIC)">domestic</mat-radio-button>
+    <mat-radio-button value="international" (click)="updateArea(area.INTERNATIONAL)" [checked]="isAreaChecked(area.INTERNATIONAL)">international</mat-radio-button>
   </mat-radio-group>
   <h4>SECTOR</h4>
   <div fxLayout="column" fxLayoutGap="8px" class="overflow-y" id="filter-sectors">
-    <ng-container *ngFor="let sector of sectors">
-      <mat-checkbox fxLayout="row" value="{{sector.id}}">{{sector.name}}</mat-checkbox>
+    <ng-container *ngFor="let sector of appService.sectors">
+      <mat-checkbox fxLayout="row" [checked]="isSectorChecked(sector.id)" (change)="updateSectors(sector.id)">{{sector.value}}</mat-checkbox>
     </ng-container>
   </div>
 </div>

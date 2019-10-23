@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AppService } from '../app.service';
-import { Observable } from 'rxjs';
-import { User } from '../model/user';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +7,7 @@ import { User } from '../model/user';
 })
 export class HomeComponent implements OnInit {
 
-  user: Observable<User>;
+  constructor() { }
 
-  constructor(private appService: AppService) { }
-
-  ngOnInit() {
-    this.user = this.appService.userState();
-  }
+  ngOnInit() {}
 }

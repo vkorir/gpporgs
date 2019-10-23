@@ -74,7 +74,8 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
   bootstrap: [AppComponent],
   entryComponents: [
     AdminComponent,
-    ReviewComponent
+    ReviewComponent,
+    DetailsComponent
   ]
 })
 export class AppModule { }

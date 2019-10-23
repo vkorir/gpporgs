@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
       this.appService.setToken(token);
     }
     if (this.appService.tokenExists()) {
-      this.appService.fetchUser();
+      this.appService.initializeState();
     }
   }
 

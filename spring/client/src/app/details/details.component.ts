@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AppService } from '../app.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-details',
@@ -7,7 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetailsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private appService: AppService,
+              private snackBar: MatSnackBar) { }
 
   ngOnInit() {
   }
