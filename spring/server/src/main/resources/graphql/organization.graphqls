@@ -7,7 +7,7 @@ type Organization {
     email: String
     website: String
     affiliations: [String]
-    type: Type!
+    type: String!
     region: String!
     sectors: [String]
     approved: Boolean!
@@ -30,9 +30,9 @@ input OrganizationInput {
 }
 
 extend type Query {
-    organization(organizationId: ID!): Organization
+    organization(id: ID!): Organization
     organizations: [Organization]
-    filterOrganizations(area: String!, sectorIds: [Int], offset: Int!, limit: Int!): [Organization]
+    filterOrganizations(area: Area!, sectorIds: [Int], offset: Int!, limit: Int!): [Organization]
 }
 
 extend type Mutation {

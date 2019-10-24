@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 
 @Entity
@@ -23,7 +22,5 @@ public class Address {
     private String city;
     private String state;
     private Integer zip;
-    private String countryCode;
-    @Transient
-    private Country country;
+    private String country;
 }

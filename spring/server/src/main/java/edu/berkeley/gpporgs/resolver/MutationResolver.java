@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
 
@@ -66,14 +68,18 @@ public class MutationResolver implements GraphQLMutationResolver {
         return delimitFields(review);
     }
 
+    public Contact updateContact(Long id, Contact contact) {
+        Optional oldContact = contactRepository.findById(id);
+        if (oldContact.isPresent()) {
+            contact.setId(id);
+            return contactRepository.save(contact);
+        }
+        return null;
+    }
+
     private Review delimitFields(Review review) {
         review.setLanguageCodes(String.join(dataDelimiter, review.getLanguages()));
         review.setSectorIds(String.join(dataDelimiter, review.getSectors()));
         return reviewRepository.save(review);
-    }
-
-    public Boolean logout() {
-
-        return true;
     }
 }

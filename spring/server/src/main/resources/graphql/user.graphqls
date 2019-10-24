@@ -10,19 +10,20 @@ type User {
 
 input UserInput {
     id: String!
-    firstName: String!
+    firstName: String
     lastName: String
-    isAdmin: Boolean!
-    creationTime: Int!
-    lastLogin: Int!
+    isAdmin: Boolean
+    creationTime: Int
+    numberOfLogin: Int
+    lastLogin: Int
 }
 
 extend type Query {
     currentUser: User
-    user(userId: ID!): User
+    user(id: ID!): User
 }
 
 extend type Mutation {
     createUser(details: UserInput!): User
-    updateUser(userId: ID!, details: UserInput!): User
+    updateUser(id: ID!, details: UserInput!): User
 }

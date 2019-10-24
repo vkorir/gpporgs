@@ -20,8 +20,8 @@ type Review {
 
 input ReviewInput {
     organizationId: Int!
-    region: String!
     address: AddressInput!
+    region: String!
     languages: [String]!
     difficulties: String
     sectors: [String]
@@ -44,5 +44,5 @@ extend type Query {
 
 extend type Mutation {
     createReview(review: ReviewInput!): Review
-    updateReview(reviewId: ID!, details: ReviewInput!): Review
+    updateReview(id: ID!, details: ReviewInput!): Review
 }

@@ -69,8 +69,8 @@ public class QueryResolver implements GraphQLQueryResolver {
         return languageRepository.findAll();
     }
 
-    public Organization organization(Long organizationId) throws GraphQLException {
-        return organizationRepository.findById(organizationId).orElse(null);
+    public Organization organization(Long id) throws GraphQLException {
+        return organizationRepository.findById(id).orElse(null);
     }
 
     public Iterable<Organization> organizations() {

@@ -3,7 +3,7 @@ type Address {
     city: String
     state: String
     zip: Int
-    country: Country
+    country: String
 }
 
 input AddressInput {
@@ -11,5 +11,5 @@ input AddressInput {
     city: String
     state: String
     zip: Int
-    countryCode: String
+    country: String
 }

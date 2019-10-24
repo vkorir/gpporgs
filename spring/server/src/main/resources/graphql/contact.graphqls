@@ -12,3 +12,7 @@ input ContactInput {
     email: String
     phone: String
 }
+
+extend type Mutation {
+    updateContact(id: ID!, details: ContactInput!): Contact
+}
