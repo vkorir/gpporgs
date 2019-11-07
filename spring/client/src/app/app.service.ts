@@ -7,11 +7,6 @@ import gql from 'graphql-tag';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Filter } from './model/filter';
-import { Type } from './model/type';
-import { Sector } from './model/sector';
-import { Country } from './model/country';
-import { Language } from './model/language';
-import { Region } from './model/region';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +15,14 @@ export class AppService {
   private readonly tokenKey = 'token';
   private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private organizationsFilter = new BehaviorSubject<Filter>(new Filter());
-  public types: [Type];
-  public sectors: [Sector];
-  public regions: [Region];
-  public countries: [Country];
-  public languages: [Language];
+  public regions = new Map<number, string>();
+  public countries = new Map<string, string>();
+  public affiliations = new Map<number, string>();
+  public types = new Map<number, string>();
+  public sectors = new Map<number, string>();
+  public languages = new Map<string, string>();
 
-  constructor(private apollo: Apollo, private configService: ConfigService) {}
+  constructor(private apollo: Apollo, private configService: ConfigService, private snackBar: MatSnackBar) {}
 
   login(): void {
     window.location.href = `${this.configService.getServerUrl()}/oauth2/authorize/google?redirect_uri=${window.location.origin}/login`;
@@ -55,26 +51,34 @@ export class AppService {
 
   initializeState(): void {
     const user = 'currentUser { id firstName isAdmin }';
+    const affiliations = 'affiliations { id value }';
     const types = 'types { id value }';
     const sectors = 'sectors { id value }';
     const regions = 'regions { id value }';
     const countries = 'countries { code value }';
     const languages = 'languages { code value }';
-    const query = `{ ${user} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
+    const query = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
     this.queryService(query).subscribe(data => {
-      if (!!data) {
+      if (!data.message) {
         this.user.next(data.currentUser as User);
-        this.types = data.types as [Type];
-        this.sectors = data.sectors as [Sector];
-        this.regions = data.regions as [Region];
-        this.countries = data.countries as [Country];
-        this.languages = data.languages as [Language];
+        this.__populateSources(data.regions, this.regions);
+        this.__populateSources(data.countries, this.countries);
+        this.__populateSources(data.affiliations, this.affiliations);
+        this.__populateSources(data.types, this.types);
+        this.__populateSources(data.sectors, this.sectors);
+        this.__populateSources(data.languages, this.languages);
 
         const filter = this.organizationsFilter.getValue();
-        filter.sectors = new Set<number>(this.sectors.map(sector => sector.id) as [number]);
+        filter.sectors = new Set<number>(this.sectors.keys());
         this.updateFilter(filter);
+      } else {
+        this.openSnackBar(this.snackBar, data.message);
       }
     });
+  }
+
+  __populateSources(data, source): void {
+    data.map(item => source.set(item.id || item.code, item.value));
   }
 
   userValue(): User {
@@ -90,7 +94,7 @@ export class AppService {
   }
 
   isAdmin(): boolean {
-    return this.isSignedIn() && this.user.getValue().isAdmin;
+    return this.isSignedIn() && this.user.getValue().isAdmin && false;
   }
 
   updateFilter(filter: Filter): void {
@@ -109,10 +113,9 @@ export class AppService {
     return this.apollo.watchQuery<any>({ query: gql(query) }).valueChanges.pipe(map(response => {
       if (response.errors) {
         this.clearToken();
-        alert('session timed out');
-        window.location.reload();
+        // window.location.reload();
       }
-      return response.data;
+      return response.data || response;
     }));
   }
 

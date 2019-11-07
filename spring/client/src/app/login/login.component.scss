@@ -1,17 +1,12 @@
-@import "../../styles";
-
 .container {
   height: 50%;
 
   .inner-container {
-    padding: $containerPadding;
+    height: auto;
+    min-height: 0;
 
-    h1 {
-      text-align: left;
-    }
-
-    p {
-      font-size: 16px;
+    .mat-divider {
+      margin-bottom: 8px !important;
     }
 
     .mat-button {

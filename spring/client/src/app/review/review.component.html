@@ -1,9 +1,172 @@
-<h3 class="mat-dialog-title">New Review</h3>
-<div mat-dialog-content>
-
+<div fxLayout="row" fxLayoutAlign="center">
+  <h3>Add Your Practice Experience</h3>
 </div>
-<mat-divider></mat-divider>
-<div mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
-  <button mat-button class="warn" mat-dialog-close>Cancel</button>
-  <button mat-button (click)="submit()">Submit</button>
-</div>
+<ng-container *ngIf="firstPage">
+  <h4 class="mat-dialog-title primary">Organization Information</h4>
+  <mat-dialog-content>
+    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="organizationFormGroup">
+      <ng-container *ngFor="let fieldName of orgInfoFieldNames">
+        <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="!['Region', 'Country'].includes(fieldName)">
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>{{fieldName}}</mat-label>
+            <input matInput name="{{fieldName.toLowerCase()}}" formControlName="{{fieldName.toLowerCase()}}">
+          </mat-form-field>
+        </div>
+        <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="['Region', 'Country'].includes(fieldName)">
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>{{fieldName}}</mat-label>
+            <mat-select formControlName="{{fieldName.toLowerCase()}}">
+              <ng-container *ngIf="fieldName === 'Region'">
+                <mat-option *ngFor="let region of regions" [value]="region.id">
+                  {{region.value}}
+                </mat-option>
+              </ng-container>
+              <ng-container *ngIf="fieldName === 'Country'">
+                <mat-option *ngFor="let country of countries" [value]="country.id">
+                  {{country.value}}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </ng-container>
+      <p>Affiliation: <i>Select all that may apply</i></p>
+      <p fxLayout="row wrap">
+        <ng-container *ngFor="let affiliation of affiliations">
+          <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
+            {{affiliation.value}}
+          </mat-checkbox>
+        </ng-container>
+      </p>
+      <p>Type: <i>Select one</i></p>
+      <p>
+        <mat-radio-group fxLayout="row wrap">
+          <ng-container *ngFor="let type of types">
+            <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary" [value]="type.id">
+              {{type.value}}
+            </mat-radio-button>
+          </ng-container>
+        </mat-radio-group>
+      </p>
+      <p>Sectors: <i>Select all that may apply</i></p>
+      <p fxLayout="row wrap">
+        <ng-container *ngFor="let sector of sectors">
+          <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
+            {{sector.value}}
+          </mat-checkbox>
+        </ng-container>
+      </p>
+    </form>
+    <h4 class="mat-dialog-title primary">Contact Information</h4>
+    <ng-container *ngFor="let index of [0, 1, 2]">
+      <div id="contact-{{index}}" fxLayout="row wrap">
+        <ng-container *ngFor="let fieldName of ['Name', 'Role', 'Phone', 'Email']">
+          <mat-form-field appearance="legacy" fxFlex="25">
+            <mat-label>{{fieldName}}</mat-label>
+            <input matInput name="{{fieldName.toLowerCase()}}">
+          </mat-form-field>
+        </ng-container>
+      </div>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+    <button mat-button class="warn" mat-dialog-close>Cancel</button>
+    <button mat-button (click)="firstPage = !firstPage">Next ></button>
+  </mat-dialog-actions>
+</ng-container>
+<ng-container *ngIf="!firstPage">
+  <h4 class="mat-dialog-title primary">Practice Experience Information</h4>
+  <mat-dialog-content>
+    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="reviewFormGroup">
+      <div fxLayout="row" fxLayoutGap="8px">
+        <p>Was your PE site different from your organization address?</p>
+        <mat-radio-group fxLayoutGap="8px">
+          <mat-radio-button color="primary" value="yes" [checked]="siteLocState" (click)="siteLocState = !siteLocState">Yes</mat-radio-button>
+          <mat-radio-button color="primary" value="no" [checked]="!siteLocState" (click)="siteLocState = !siteLocState">No</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <ng-container *ngIf="siteLocState">
+        <ng-container *ngFor="let fieldName of addressFields">
+          <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="!['Region', 'Country'].includes(fieldName)">
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>{{fieldName}}</mat-label>
+              <input matInput name="{{fieldName.toLowerCase()}}" formControlName="{{fieldName.toLowerCase()}}">
+            </mat-form-field>
+          </div>
+          <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="['Region', 'Country'].includes(fieldName)">
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>{{fieldName}}</mat-label>
+              <mat-select formControlName="{{fieldName.toLowerCase()}}">
+                <ng-container *ngIf="fieldName === 'Region'">
+                  <mat-option *ngFor="let region of regions" [value]="region.id">
+                    {{region.value}}
+                  </mat-option>
+                </ng-container>
+                <ng-container *ngIf="fieldName === 'Country'">
+                  <mat-option *ngFor="let country of countries" [value]="country.id">
+                    {{country.value}}
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </ng-container>
+      </ng-container>
+      <p fxFlexFill>
+        <mat-form-field fxFlexFill>
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let language of selectedLanguages"
+                      (removed)="removeLanguage(language)">
+              {{appService.languages.get(language)}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Please list the languages spoken at your PE location"
+                   #languageInput formControlName="language"
+                   [matAutocomplete]="auto"
+                   [matChipInputFor]="chipList"
+                   (matChipInputTokenEnd)="add($event)" fxFlex.gt-sm="50">
+          </mat-chip-list>
+        </mat-form-field>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addLanguage($event)">
+          <mat-option *ngFor="let language of filteredLanguages | async" [value]="language.id">
+            {{language.value}}
+          </mat-option>
+        </mat-autocomplete>
+      </p>
+      <ng-container *ngFor="let title of formFields">
+        <div fxLayout="column" fxFlex="100">
+          <mat-form-field appearance="legacy">
+            <textarea matInput placeholder="{{title}}" rows="4"></textarea>
+          </mat-form-field>
+        </div>
+      </ng-container>
+      <p>How safe did you feel?</p>
+      <p fxLayout="row" fxFlex="100">
+        <mat-radio-group fxFlexFill>
+          <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+            <mat-radio-button color="primary" fxFlex="25" [value]="i">
+              {{i}}{{i === 1 ? ' (very unsafe)': (i == 5 ? ' (very safe)': '')}}
+            </mat-radio-button>
+          </ng-container>
+        </mat-radio-group>
+      </p>
+      <p>How responsive was your organization?</p>
+      <p fxLayout="row" fxFlex="100">
+        <mat-radio-group fxFlexFill>
+          <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+            <mat-radio-button color="primary" fxFlex="25" [value]="i">
+              {{i}}{{i === 1 ? ' (rarely got back)': (i == 5 ? ' (right away)': '')}}
+            </mat-radio-button>
+          </ng-container>
+        </mat-radio-group>
+      </p>
+      <mat-slide-toggle labelPosition="before" checked>Post as anonymous?</mat-slide-toggle>
+    </form>
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+    <button mat-button (click)="firstPage = !firstPage">< Prev</button>
+    <button mat-button>Submit</button>
+  </mat-dialog-actions>
+</ng-container>

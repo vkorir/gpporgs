@@ -1,16 +1,21 @@
-<mat-toolbar fxLayoutAlign="center">
+<mat-toolbar fxLayoutAlign="center center">
   <mat-toolbar-row fxFlex.gt-md="1140px" fxFlex.md="960px" fxFlex.lt-md="98%">
-    <form *ngIf="user | async" fxHide.lt-md="true">
-      <mat-form-field>
-        <input matInput (keyup)="updateFilter($event.target.value)" placeholder="Search" aria-label="Search">
+      <mat-form-field *ngIf="user | async" fxHide.lt-md="true">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput type="text" [formControl]="searchControl" placeholder="Search" aria-label="Search">
+        <button mat-button mat-icon-button matSuffix
+                [ngClass]="{ invisible: !searchControl.value }"
+                (click)="searchControl.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
-    </form>
     <span fxFlex="1 1 auto"></span>
-    <ng-container *ngIf="user | async">
-      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Database</a>
-      <a *ngIf="(user | async).isAdmin" mat-button routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Admin</a>
+    <div *ngIf="user | async" fxLayoutGap="8px">
+      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Home</a>
+      <a *ngIf="(user | async).isAdmin" mat-button routerLink="/admin"
+         routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Admin</a>
       <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="logout()">Logout</a>
-    </ng-container>
+    </div>
     <ng-container *ngIf="!(user | async)">
       <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="login()">Login</a>
     </ng-container>

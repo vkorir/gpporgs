@@ -1,13 +1,7 @@
-@import "../../styles";
+.mat-dialog-content {
+  padding: 8px 20px;
 
-.mat-divider {
-  margin: 8px auto;
-}
-
-.warn {
-  background: #E74C3C !important;
-}
-
-.mat-button {
-  box-shadow: none;
+  .mat-radio-button, .mat-checkbox {
+    color: #7f7f7f;
+  }
 }

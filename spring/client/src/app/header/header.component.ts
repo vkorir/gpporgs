@@ -3,6 +3,7 @@ import { AppService } from '../app.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../model/user';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +13,7 @@ import { User } from '../model/user';
 export class HeaderComponent implements OnInit {
 
   user: Observable<User>;
+  searchControl = new FormControl();
 
   constructor(private appService: AppService, private router: Router) {}
 
@@ -21,7 +23,7 @@ export class HeaderComponent implements OnInit {
 
   updateFilter(searchString: string) {
     const filter = this.appService.filterValue();
-    filter.updateSearchString(searchString);
+    filter.searchString = searchString;
     this.appService.updateFilter(filter);
   }
 

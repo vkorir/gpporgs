@@ -1,43 +1,37 @@
-@import "../../styles";
-
 .mat-toolbar {
-  background: $midBlue;
-  color: #ffffff;
   padding: 0;
-  height: $headerHeight;
 
-  ::ng-deep .mat-form-field-underline {
-    display: none;
-  }
-
-  .mat-focused,
-  .cdk-focused {
-    background: $lightBlue !important;
-    transition: ease-in .4s;
-  }
-
-  mat-toolbar-row {
-    height: 100%;
+  .mat-toolbar-row {
     padding: 0;
 
-    form {
+    .mat-form-field {
       width: 50%;
+      color: #ffffff;
 
-      .mat-form-field {
-        font-size: 14px;
-        background: $darkBlue;
-        border-radius: $borderRadius;
-        box-shadow: 0 4px 6px #05365b;
-        padding-left: 8px;
-        padding-top: 2px;
-        width: 100%;
+      .mat-form-field-wrapper {
+        padding: 0 2px;
+      }
+
+      .mat-form-field-prefix .mat-icon,
+      .mat-form-field-suffix .mat-icon {
+        font-size: 200%;
+        background: transparent !important;
+      }
+
+      .mat-button {
+        box-shadow: none;
+        background: transparent !important;
+
+        .mat-icon {
+          color: rgba(0, 0, 0, 0.54);
+        }
       }
     }
 
     .mat-button {
+      box-shadow: 0 4px 6px #05365b;
+      color: #ffffff;
       padding: 8px;
-      margin-left: 8px;
-      width: 90px;
     }
   }
 }

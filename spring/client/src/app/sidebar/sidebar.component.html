@@ -1,19 +1,22 @@
-<div class="inner-container">
-  <h2>Hi {{fistName}},</h2>
-  <p>Done with your experience?</p>
-  <button mat-button (click)="openReviewDialog()">+ Add Review</button>
-  <h3 fxLayoutAlign="center center">FILTER BY</h3>
-  <mat-divider></mat-divider>
-  <h4>AREA</h4>
-  <mat-radio-group aria-label="Select Area" fxLayout="column" fxLayoutGap="4px">
-    <mat-radio-button value="all" (click)="updateArea(area.ALL)" [checked]="isAreaChecked(area.ALL)">all</mat-radio-button>
-    <mat-radio-button value="domestic" (click)="updateArea(area.DOMESTIC)" [checked]="isAreaChecked(area.DOMESTIC)">domestic</mat-radio-button>
-    <mat-radio-button value="international" (click)="updateArea(area.INTERNATIONAL)" [checked]="isAreaChecked(area.INTERNATIONAL)">international</mat-radio-button>
-  </mat-radio-group>
-  <h4>SECTOR</h4>
-  <div fxLayout="column" fxLayoutGap="8px" class="overflow-y" id="filter-sectors">
-    <ng-container *ngFor="let sector of appService.sectors">
-      <mat-checkbox fxLayout="row" [checked]="isSectorChecked(sector.id)" (change)="updateSectors(sector.id)">{{sector.value}}</mat-checkbox>
-    </ng-container>
-  </div>
-</div>
+<h2>Hi {{fistName}},</h2>
+<p>Done with your experience?</p>
+<button mat-button (click)="openLookUpDialog()">+ Add Review</button>
+<h2 class="mat-subheading-1" fxLayoutAlign="center center">FILTER BY</h2>
+<mat-divider></mat-divider>
+<h3 class="mat-subheading-1">AREA</h3>
+<mat-radio-group aria-label="Select Area" fxLayout="column" fxLayoutGap="4px">
+  <mat-radio-button color="primary" value="all" (click)="updateArea(area.ALL)" [checked]="isAreaChecked(area.ALL)">all</mat-radio-button>
+  <mat-radio-button color="primary" value="domestic" (click)="updateArea(area.DOMESTIC)" [checked]="isAreaChecked(area.DOMESTIC)">domestic</mat-radio-button>
+  <mat-radio-button color="primary" value="international" (click)="updateArea(area.INTERNATIONAL)" [checked]="isAreaChecked(area.INTERNATIONAL)">international</mat-radio-button>
+</mat-radio-group>
+<h3 class="mat-subheading-1">SECTOR</h3>
+<form [formGroup]="sectorsFormGroup" id="filter-sectors" class="overflow-y">
+  <ng-container *ngFor="let sector of sectors">
+    <mat-checkbox color="primary" fxLayout="row"
+                  [checked]="isSectorChecked(sector.id)"
+                  (click)="updateSectors(sector.value)"
+                  [formControlName]="sector.id">
+      {{sector.value}}
+    </mat-checkbox>
+  </ng-container>
+</form>

@@ -1,144 +1,22 @@
+@charset "UTF-8";
 
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
-@import '~@angular/material/theming';
-// Plus imports for other components in your app.
+@import
+"style/abstracts/functions",
+"style/abstracts/mixins",
+"style/abstracts/variables",
+"style/base/base",
+"style/base/fonts",
+"style/base/helpers",
+"style/base/typography",
+"style/components/button",
+"style/components/dialog",
+"style/components/form",
+"style/components/table",
+"style/components/toolbar",
+"style/layout/content";
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat-core();
+@import "style/themes/theme";
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$client-primary: mat-palette($mat-indigo);
-$client-accent: mat-palette($mat-pink, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$client-warn: mat-palette($mat-red);
-
-// Create the theme object (a Sass map containing all of the palettes).
-$client-theme: mat-light-theme($client-primary, $client-accent, $client-warn);
-
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include angular-material-theme($client-theme);
-
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
-// color codes
-$darkBlue: #084e83;
-$midBlue: #0c6099;
-$lightBlue: #4885af;
-$containerBackground: #eaecee;
-$containerBorder: #d9d9d9;
-
-// dimensions
-$headerHeight: 80px;
-$borderRadius: 4px;
-$containerPadding: 16px;
-
-html,
-body {
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-}
-
-strong, b {
-  font-weight: 500;
-}
-
-.heading, .mat-typography .heading {
-  margin-left: 16px;
-}
-
-.container {
-  height: calc(100% - #{$headerHeight});
-  min-height: 400px;
-  padding: 4px 0;
-}
-
-.inner-container {
-  border-radius: $borderRadius;
-  background: $containerBackground;
-  border: 1px solid $containerBorder;
-  padding: $containerPadding;
-}
-
-.overflow-y {
-  overflow-y: auto;
-}
-
-.mat-button {
-  background: $darkBlue;
-  box-shadow: 0 4px 6px #05365b;
-  color: #ffffff;
-}
-
-.mat-button:hover,
-.mat-button:active {
-  background: $lightBlue;
-  transition: .3s all linear;
-}
-
-.mat-header-cell {
-  color: #000;
-  font-weight: 500;
-}
-
-.mat-row {
-  border: none !important;
-}
-
-.mat-row:hover {
-  cursor: pointer;
-  opacity: 0.6;
-  transition: .2s all linear;
-}
-
-.mat-cell {
-  border-bottom-color: transparent !important;
-}
-
-.warn:hover {
-  opacity: 0.7;
-  transition: .3s all linear;
-}
-
-.mat-divider {
-  border-color: $containerBorder;
-}
-
-.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-  border-color: $darkBlue;
-}
-
-.mat-radio-button.mat-accent .mat-radio-inner-circle {
-  color: $darkBlue;
-  background-color: $darkBlue;
-}
-
-.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
-.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-  background-color: $darkBlue;
-}
-
-.mat-checkbox-layout {
-  display: block !important;
-  width: 100%;
-}
-
-.mat-ripple-element {
-  background: $darkBlue !important;
-}
-
-.mat-divider {
-  width: 50%;
-}
-
-.snack-bar-custom {
-  background: $lightBlue;
+.default-theme {
+  @include theme-setup($default-theme, $theme-colors);
 }

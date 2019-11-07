@@ -27,17 +27,26 @@ import {
   MatPaginatorModule,
   MatSortModule,
   MatDialogModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatIconModule,
+  MatAutocompleteModule,
+  MatSelectModule,
+  MatExpansionModule,
+  MatSlideToggleModule,
+  MatChipsModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
 import { TokenInterceptor } from './token.interceptor';
 import { AppService } from './app.service';
 import { ConfigService } from './config.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { LookUpComponent } from './look-up/look-up.component';
 
 const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
   MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
-  MatSortModule, MatDialogModule, MatSnackBarModule
+  MatSortModule, MatDialogModule, MatSnackBarModule, MatIconModule, MatAutocompleteModule, MatSelectModule,
+  MatExpansionModule, MatSlideToggleModule, MatChipsModule
 ];
 
 @NgModule({
@@ -50,7 +59,8 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     DetailsComponent,
     ReviewComponent,
     AdminComponent,
-    LoginComponent
+    LoginComponent,
+    LookUpComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +70,9 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     BrowserAnimationsModule,
     LayoutModule,
     FlexLayoutModule,
-    materialModules
+    materialModules,
+    ReactiveFormsModule,
+    MatSelectModule
   ],
   providers: [
     ConfigService,
@@ -75,6 +87,7 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
   entryComponents: [
     AdminComponent,
     ReviewComponent,
+    LookUpComponent,
     DetailsComponent
   ]
 })

@@ -16,7 +16,6 @@ export class TableComponent implements OnInit {
   private displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
   private dataSource: MatTableDataSource<Organization> = new MatTableDataSource();
   private filter: Observable<Filter>;
-  private sectorIds = [];
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -58,23 +57,31 @@ export class TableComponent implements OnInit {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     const query = `{ organizations { id name type { value } address { country { value } } sectors } }`;
-    this.appService.queryService(query).subscribe(({ organizations }) => {
-      // this.dataSource = new MatTableDataSource<Organization>(organizations as [Organization]);
-    });
+    // this.appService.queryService(query).subscribe(({ organizations }) => {
+    //   // this.dataSource = new MatTableDataSource<Organization>(organizations as [Organization]);
+    // });
     this.filter.subscribe(filter => {
       this.dataSource.filter = filter.searchString.trim().toLocaleLowerCase();
     });
   }
 
-  updatePagination() {
-    console.log(this.paginator.pageSize);
+  updatePagination($event) {
+    console.log({ offset: this.paginator.pageIndex * this.paginator.pageSize, limit: this.paginator.pageSize });
   }
 
   openDetailsModal(id: number) {
-    this.dialog.open(DetailsComponent, {
-      panelClass: 'mat-dialog--md'
+    const address = 'address { street city state zip country { name } }';
+    const details = 'name region phone email website affiliations type sectors';
+    const contacts = 'contact { name role email phone }';
+    const attributes = `{ ${details} ${address} ${contacts} }`;
+    const query = `{ organization(organizationId: ${id}) ${attributes} }`;
+    this.appService.queryService(query).subscribe(data => {
+      console.log(data);
     });
-    console.log(this.paginator.pageSize);
-    console.log(this.paginator.pageIndex);
+    // this.dialog.open(DetailsComponent, {
+    //   panelClass: 'mat-dialog--md'
+    // });
+    // console.log(this.paginator.pageSize);
+    // console.log(this.paginator.pageIndex);
   }
 }

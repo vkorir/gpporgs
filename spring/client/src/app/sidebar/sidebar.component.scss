@@ -1,33 +1,15 @@
-@import "../../styles";
+.mat-button {
+  width: 200px;
+}
 
-.inner-container {
-  border-radius: $borderRadius;
-  height: calc(100% - 34px);
-  background: $containerBackground;
-  border: 1px solid $containerBorder;
+.mat-divider {
+  width: 50%;
+  margin: 0 auto;
+}
 
-  .mat-button {
-    width: 50%;
-    min-width: 100px;
-  }
-
-  h3 {
-    margin: 16px 0 0 0;
-  }
-
-  h4 {
-    margin: 16px 0 8px;
-    color: $darkBlue;
-  }
-
-  .mat-divider {
-    width: 50%;
-    margin: 0 auto;
-  }
-
-  #filter-sectors {
-    height: calc(100% - 323px);
-    margin-left: -$containerPadding;
-    padding-left: $containerPadding;
-  }
+#filter-sectors {
+  height: calc(100% - 308px);
+  margin-left: -20px;
+  margin-right: -20px;
+  padding: 8px 20px 0;
 }

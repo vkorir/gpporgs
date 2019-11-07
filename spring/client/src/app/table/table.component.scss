@@ -1,43 +1,21 @@
-@import "../../styles";
+#container-table {
+  height: calc(100% - 100px);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom: none;
+  overflow: auto;
 
-.inner-container {
-  text-align: center;
-  border-radius: $borderRadius;
-  height: calc(100% - 34px);
-  background: $containerBackground;
-  border: 1px solid $containerBorder;
-  padding-left: 8px;
-  padding-right: 8px;
-
-  #container-table {
-    height: calc(100% - 100px);
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    border: 1px solid $containerBorder;
-    border-bottom: none;
-    overflow: auto;
-
-    table {
-      width: 100% !important;
-      text-align: left;
-      border-radius: 4px;
-      box-shadow: none;
-      max-height: 200px;
-    }
-
-    .mat-header-row {
-      position: sticky;
-    }
-
-    .mat-row:nth-child(odd) {
-      background-color: $containerBackground;
-    }
+  table {
+    width: 100% !important;
   }
 
-  .mat-paginator {
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border: 1px solid $containerBorder;
-    box-shadow: none;
+  .mat-header-row {
+    position: sticky;
   }
+}
+
+.mat-paginator {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: none;
 }

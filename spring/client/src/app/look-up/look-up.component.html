@@ -1,0 +1,24 @@
+<h4 class="mat-dialog-title">Look up organization</h4>
+<mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter organization name</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input id="organization-search" type="text" matInput
+           [formControl]="searchControl" [matAutocomplete]="auto" aria-label="Search">
+    <button mat-button matSuffix mat-icon-button
+            [ngClass]="{ invisible: !searchControl.value }" (click)="searchControl.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let organization of searchResults | async" (click)="fetchOrganization(organization.id)">
+        {{ organization.name }} ({{ getCountry(organization.address.country) }})
+      </mat-option>
+      <mat-option *ngIf="!!searchControl.value" (click)="openReviewDialog(null)">
+        Create New Organization
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>
