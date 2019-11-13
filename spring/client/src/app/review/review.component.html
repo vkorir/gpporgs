@@ -4,43 +4,43 @@
 <ng-container *ngIf="firstPage">
   <h4 class="mat-dialog-title primary">Organization Information</h4>
   <mat-dialog-content>
-    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="organizationFormGroup">
-      <ng-container *ngFor="let fieldName of orgInfoFieldNames">
-        <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="!['Region', 'Country'].includes(fieldName)">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>{{fieldName}}</mat-label>
-            <input matInput name="{{fieldName.toLowerCase()}}" formControlName="{{fieldName.toLowerCase()}}">
-          </mat-form-field>
-        </div>
-        <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="['Region', 'Country'].includes(fieldName)">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>{{fieldName}}</mat-label>
-            <mat-select formControlName="{{fieldName.toLowerCase()}}">
-              <ng-container *ngIf="fieldName === 'Region'">
-                <mat-option *ngFor="let region of regions" [value]="region.id">
-                  {{region.value}}
-                </mat-option>
-              </ng-container>
-              <ng-container *ngIf="fieldName === 'Country'">
-                <mat-option *ngFor="let country of countries" [value]="country.id">
-                  {{country.value}}
-                </mat-option>
-              </ng-container>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </ng-container>
-      <p>Affiliation: <i>Select all that may apply</i></p>
+    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="state.organization">
+      <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngFor="let fieldName of state.orgInputFields">
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>{{capitalizeFirst(fieldName)}}</mat-label>
+          <input matInput formControlName="{{fieldName}}">
+        </mat-form-field>
+      </div>
+      <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngFor="let fieldName of state.selectFields">
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>{{capitalizeFirst(fieldName)}}</mat-label>
+          <mat-select formControlName="{{fieldName}}">
+            <ng-container *ngIf="fieldName === 'region'">
+              <mat-option *ngFor="let region of regions" [value]="region.id">
+                {{region.value}}
+              </mat-option>
+            </ng-container>
+            <ng-container *ngIf="fieldName === 'country'">
+              <mat-option *ngFor="let country of countries" [value]="country.id">
+                {{country.value}}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <p>Affiliations: <i>Check all that may apply</i></p>
       <p fxLayout="row wrap">
-        <ng-container *ngFor="let affiliation of affiliations">
-          <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-            {{affiliation.value}}
+        <ng-container formArrayName="affiliations">
+          <mat-checkbox *ngFor="let control of getControls(state.organization, 'affiliations'); let i = index"
+                        [formControl]="control"
+                        fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
+            {{affiliations[i].value}}
           </mat-checkbox>
         </ng-container>
       </p>
       <p>Type: <i>Select one</i></p>
       <p>
-        <mat-radio-group fxLayout="row wrap">
+        <mat-radio-group fxLayout="row wrap" formControlName="type">
           <ng-container *ngFor="let type of types">
             <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary" [value]="type.id">
               {{type.value}}
@@ -48,26 +48,22 @@
           </ng-container>
         </mat-radio-group>
       </p>
-      <p>Sectors: <i>Select all that may apply</i></p>
+      <p>Sectors: <i>Check all that may apply</i></p>
       <p fxLayout="row wrap">
-        <ng-container *ngFor="let sector of sectors">
-          <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-            {{sector.value}}
-          </mat-checkbox>
-        </ng-container>
+        <mat-checkbox *ngFor="let control of getControls(state.organization, 'sectors'); let i = index"
+                      [formControl]="control"
+                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
+          {{sectors[i].value}}
+        </mat-checkbox>
       </p>
-    </form>
-    <h4 class="mat-dialog-title primary">Contact Information</h4>
-    <ng-container *ngFor="let index of [0, 1, 2]">
-      <div id="contact-{{index}}" fxLayout="row wrap">
-        <ng-container *ngFor="let fieldName of ['Name', 'Role', 'Phone', 'Email']">
-          <mat-form-field appearance="legacy" fxFlex="25">
-            <mat-label>{{fieldName}}</mat-label>
-            <input matInput name="{{fieldName.toLowerCase()}}">
-          </mat-form-field>
-        </ng-container>
+      <h4 class="mat-dialog-title primary">Contact Information</h4>
+      <div fxLayout="row wrap">
+        <mat-form-field *ngFor="let key of contactKeys" appearance="legacy" fxFlex="25">
+          <mat-label>{{capitalizeFirst(key.name)}}</mat-label>
+          <input matInput formControlName="{{key.control}}">
+        </mat-form-field>
       </div>
-    </ng-container>
+    </form>
   </mat-dialog-content>
   <mat-divider></mat-divider>
   <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
@@ -78,32 +74,32 @@
 <ng-container *ngIf="!firstPage">
   <h4 class="mat-dialog-title primary">Practice Experience Information</h4>
   <mat-dialog-content>
-    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="reviewFormGroup">
+    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="state.review">
       <div fxLayout="row" fxLayoutGap="8px">
         <p>Was your PE site different from your organization address?</p>
-        <mat-radio-group fxLayoutGap="8px">
+        <mat-radio-group fxLayoutGap="8px" formControlName="siteLocState">
           <mat-radio-button color="primary" value="yes" [checked]="siteLocState" (click)="siteLocState = !siteLocState">Yes</mat-radio-button>
           <mat-radio-button color="primary" value="no" [checked]="!siteLocState" (click)="siteLocState = !siteLocState">No</mat-radio-button>
         </mat-radio-group>
       </div>
       <ng-container *ngIf="siteLocState">
-        <ng-container *ngFor="let fieldName of addressFields">
-          <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="!['Region', 'Country'].includes(fieldName)">
+        <ng-container *ngFor="let fieldName of state.addressFields">
+          <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="!state.selectFields.includes(fieldName)">
             <mat-form-field appearance="outline" fxFlex>
-              <mat-label>{{fieldName}}</mat-label>
-              <input matInput name="{{fieldName.toLowerCase()}}" formControlName="{{fieldName.toLowerCase()}}">
+              <mat-label>{{capitalizeFirst(fieldName)}}</mat-label>
+              <input matInput formControlName="{{fieldName}}">
             </mat-form-field>
           </div>
-          <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="['Region', 'Country'].includes(fieldName)">
+          <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="state.selectFields.includes(fieldName)">
             <mat-form-field appearance="outline" fxFlex>
-              <mat-label>{{fieldName}}</mat-label>
+              <mat-label>{{capitalizeFirst(fieldName)}}</mat-label>
               <mat-select formControlName="{{fieldName.toLowerCase()}}">
-                <ng-container *ngIf="fieldName === 'Region'">
+                <ng-container *ngIf="fieldName === 'region'">
                   <mat-option *ngFor="let region of regions" [value]="region.id">
                     {{region.value}}
                   </mat-option>
                 </ng-container>
-                <ng-container *ngIf="fieldName === 'Country'">
+                <ng-container *ngIf="fieldName === 'country'">
                   <mat-option *ngFor="let country of countries" [value]="country.id">
                     {{country.value}}
                   </mat-option>
@@ -116,16 +112,18 @@
       <p fxFlexFill>
         <mat-form-field fxFlexFill>
           <mat-chip-list #chipList>
-            <mat-chip *ngFor="let language of selectedLanguages"
-                      (removed)="removeLanguage(language)">
-              {{appService.languages.get(language)}}
+            <mat-chip *ngFor="let code of selectedLanguages"
+                      (removed)="popFromList(code, selectedLanguages)">
+              {{getLanguage(code)}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input placeholder="Please list the languages spoken at your PE location"
-                   #languageInput formControlName="language"
+                   #languageInput
+                   formControlName="languages"
                    [matAutocomplete]="auto"
                    [matChipInputFor]="chipList"
-                   (matChipInputTokenEnd)="add($event)" fxFlex.gt-sm="50">
+                   (matChipInputTokenEnd)="add($event)"
+                   fxFlex.gt-sm="50">
           </mat-chip-list>
         </mat-form-field>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addLanguage($event)">
@@ -134,16 +132,37 @@
           </mat-option>
         </mat-autocomplete>
       </p>
-      <ng-container *ngFor="let title of formFields">
+      <p fxFlexFill>
+        <mat-form-field appearance="legacy" fxFlexFill>
+          <textarea matInput formControlName="difficulties" placeholder="Did you have any language difficulties?" rows="4"></textarea>
+        </mat-form-field>
+      </p>
+      <p>What were the sectors of your PE? <i>Check all that may apply</i></p>
+      <p fxLayout="row wrap">
+        <mat-checkbox *ngFor="let control of getControls(state.review, 'sectors'); let i = index"
+                      [formControl]="control"
+                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
+          {{sectors[i].value}}
+        </mat-checkbox>
+      </p>
+      <p>What was the duration of your PE?</p>
+      <p fxFlexFill>
+        <mat-radio-group fxFlexFill formControlName="duration">
+          <mat-radio-button color="primary" fxFlex="25" [value]="duration" *ngFor="let duration of durations">
+            {{duration}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </p>
+      <ng-container *ngFor="let textField of state.reviewTextFields">
         <div fxLayout="column" fxFlex="100">
           <mat-form-field appearance="legacy">
-            <textarea matInput placeholder="{{title}}" rows="4"></textarea>
+            <textarea matInput formControlName="{{textField.control}}" placeholder="{{textField.placeholder}}" rows="4"></textarea>
           </mat-form-field>
         </div>
       </ng-container>
       <p>How safe did you feel?</p>
       <p fxLayout="row" fxFlex="100">
-        <mat-radio-group fxFlexFill>
+        <mat-radio-group fxFlexFill formControlName="safety">
           <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
             <mat-radio-button color="primary" fxFlex="25" [value]="i">
               {{i}}{{i === 1 ? ' (very unsafe)': (i == 5 ? ' (very safe)': '')}}
@@ -153,7 +172,7 @@
       </p>
       <p>How responsive was your organization?</p>
       <p fxLayout="row" fxFlex="100">
-        <mat-radio-group fxFlexFill>
+        <mat-radio-group fxFlexFill formControlName="responsiveness">
           <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
             <mat-radio-button color="primary" fxFlex="25" [value]="i">
               {{i}}{{i === 1 ? ' (rarely got back)': (i == 5 ? ' (right away)': '')}}
@@ -161,12 +180,12 @@
           </ng-container>
         </mat-radio-group>
       </p>
-      <mat-slide-toggle labelPosition="before" checked>Post as anonymous?</mat-slide-toggle>
+      <mat-slide-toggle labelPosition="before" formControlName="anonymous" checked>Post as anonymous?</mat-slide-toggle>
     </form>
   </mat-dialog-content>
   <mat-divider></mat-divider>
   <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
     <button mat-button (click)="firstPage = !firstPage">< Prev</button>
-    <button mat-button>Submit</button>
+    <button mat-button (click)="submit()">Submit</button>
   </mat-dialog-actions>
 </ng-container>

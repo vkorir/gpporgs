@@ -77,9 +77,4 @@ export class LookUpComponent implements OnInit {
       data
     });
   }
-
-  submit() {
-    this.appService.openSnackBar(this.snackBar, 'Organization successfully submitted');
-    this.dialogRef.close();
-  }
 }

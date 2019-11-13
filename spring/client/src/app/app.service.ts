@@ -45,7 +45,7 @@ export class AppService {
     return localStorage.getItem(this.tokenKey);
   }
 
-  clearToken() {
+  clearToken(): void {
     localStorage.removeItem(this.tokenKey);
   }
 
@@ -77,7 +77,7 @@ export class AppService {
     });
   }
 
-  __populateSources(data, source): void {
+  private __populateSources(data, source): void {
     data.map(item => source.set(item.id || item.code, item.value));
   }
 

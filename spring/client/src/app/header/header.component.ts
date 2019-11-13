@@ -19,12 +19,11 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.appService.userState();
-  }
-
-  updateFilter(searchString: string) {
-    const filter = this.appService.filterValue();
-    filter.searchString = searchString;
-    this.appService.updateFilter(filter);
+    this.searchControl.valueChanges.subscribe(value => {
+      const filter = this.appService.filterValue();
+      filter.searchString = value;
+      this.appService.updateFilter(filter);
+    });
   }
 
   login() {

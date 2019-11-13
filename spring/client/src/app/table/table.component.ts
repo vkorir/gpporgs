@@ -13,8 +13,8 @@ import { DetailsComponent } from '../details/details.component';
 })
 export class TableComponent implements OnInit {
 
-  private displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
-  private dataSource: MatTableDataSource<Organization> = new MatTableDataSource();
+  displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
+  dataSource: MatTableDataSource<Organization> = new MatTableDataSource();
   private filter: Observable<Filter>;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -47,7 +47,7 @@ export class TableComponent implements OnInit {
     const org3121 = {id: 111, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
     const org15 = {id: 39, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
     const org67 = {id: 10, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org39 = {id: 111, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
+    const org39 = {id: 111, type: 'Marc Arthur', name: 'Bins', location: 'Canada', sectors: ['Research', 'Industry']};
     this.dataSource = new MatTableDataSource<Organization>([org1, org2, org3, org4, org5, org6, org7, org8, org9, org10, org11, org12,
     org121, org21, org31, org41, org51, org71, org91, org1011, org3121, org111, org61, org81, org15, org67, org39]);
     this.filter = this.appService.filterState();
@@ -70,17 +70,17 @@ export class TableComponent implements OnInit {
   }
 
   openDetailsModal(id: number) {
-    const address = 'address { street city state zip country { name } }';
+    const address = 'address { street city state zip country }';
     const details = 'name region phone email website affiliations type sectors';
-    const contacts = 'contact { name role email phone }';
+    const contacts = 'contacts { name role email phone }';
     const attributes = `{ ${details} ${address} ${contacts} }`;
-    const query = `{ organization(organizationId: ${id}) ${attributes} }`;
+    const query = `{ organization(id: ${id}) ${attributes} }`;
     this.appService.queryService(query).subscribe(data => {
-      console.log(data);
+      this.dialog.open(DetailsComponent, {
+        panelClass: 'mat-dialog--md',
+        data
+      });
     });
-    // this.dialog.open(DetailsComponent, {
-    //   panelClass: 'mat-dialog--md'
-    // });
     // console.log(this.paginator.pageSize);
     // console.log(this.paginator.pageIndex);
   }

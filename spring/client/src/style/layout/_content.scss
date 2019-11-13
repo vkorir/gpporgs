@@ -53,7 +53,15 @@
   }
 }
 
-.spacer {
-  margin: 12px auto;
-  width: 100%;
+.mat-radio-button, .mat-checkbox {
+  color: #777777;
+}
+
+#filter-subheading {
+  border-bottom: 1px solid $container-border-color;
+}
+
+p i {
+  font-size: 0.9rem;
+  opacity: 0.8;
 }

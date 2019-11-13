@@ -13,15 +13,13 @@ import { LookUpComponent } from '../look-up/look-up.component';
 
 export class SidebarComponent implements OnInit {
 
-  private fistName: string;
-  private area = Area;
-  private sectors: any[] = [];
-  private sectorsFormGroup: FormGroup = this.fb.group({ });
+  area = Area;
+  sectors: any[] = [];
+  sectorsFormGroup: FormGroup = this.fb.group({ });
 
   constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.fistName = this.appService.userValue().firstName;
     this.appService.sectors.forEach((value, key) => {
       const sector = { id: key, value };
       if (sector.value.toLowerCase().startsWith('other')) {
@@ -30,6 +28,10 @@ export class SidebarComponent implements OnInit {
       this.sectorsFormGroup.addControl(sector.id.toString(), new FormControl());
       this.sectors.push(sector);
     });
+  }
+
+  getFistName(): string {
+    return this.appService.userValue().firstName;
   }
 
   isAreaChecked(area: Area) {
