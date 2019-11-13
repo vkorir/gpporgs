@@ -33,7 +33,8 @@ import {
   MatSelectModule,
   MatExpansionModule,
   MatSlideToggleModule,
-  MatChipsModule
+  MatChipsModule,
+  MatSliderModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -46,7 +47,7 @@ import { LookUpComponent } from './look-up/look-up.component';
 const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
   MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
   MatSortModule, MatDialogModule, MatSnackBarModule, MatIconModule, MatAutocompleteModule, MatSelectModule,
-  MatExpansionModule, MatSlideToggleModule, MatChipsModule
+  MatExpansionModule, MatSlideToggleModule, MatChipsModule, MatSliderModule
 ];
 
 @NgModule({

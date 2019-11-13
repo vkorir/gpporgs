@@ -9,8 +9,8 @@ export class SubmissionState {
 
   orgInputFields = ['name', 'street', 'phone', 'city', 'email', 'state', 'website', 'zip'];
   orgOtherFields = ['type'];
-  reviewInputFields = ['siteLocState', 'languages', 'difficulties', 'type', 'cost', 'stipend', 'duration', 'safety',
-    'responsiveness', 'anonymous'];
+  reviewInputFields = ['siteLocState', 'languages', 'difficulties', 'type', 'duration', 'safety', 'responsiveness', 'anonymous'];
+  currencyFields = ['cost', 'stipend'];
   reviewTextFields = [
     {
       control: 'workDone',
@@ -29,6 +29,7 @@ export class SubmissionState {
       placeholder: 'Is there anything else you would like to share with other students who may work with this organization?'
     }
   ];
+  languages: string[] = [];
   addressFields = ['street', 'city', 'state', 'zip', 'country'];
   contactFields = ['name', 'role', 'email', 'phone'];
   selectFields = ['region', 'country'];
@@ -45,28 +46,47 @@ export class SubmissionState {
     const orgControls = this.orgInputFields.concat(this.orgOtherFields, this.selectFields);
     this.buildControls(this.organization, orgControls);
     const reviewTextControls = this.reviewTextFields.map(field => field.control);
-    const reviewControls = this.reviewInputFields.concat(reviewTextControls, this.addressFields, this.selectFields);
+    const reviewControls = this.reviewInputFields.concat(reviewTextControls, this.addressFields, this.selectFields, this.currencyFields);
     this.buildControls(this.review, reviewControls);
     this.buildCheckboxControls(this.organization);
     this.buildCheckboxControls(this.review);
     this.buildContactControls();
   }
 
+  static roundCurrency(amount: number): number {
+    if (amount > 900) {
+      return (Math.round(amount / 500) * 500);
+    }
+    if (amount > 100) {
+      return Math.round(amount / 100) * 100;
+    }
+    return amount;
+  }
+
   private buildControls(group: FormGroup, fieldNames: string[]): void {
     fieldNames.forEach(fieldName => {
-      group.setControl(fieldName, new FormControl());
+      let control: FormControl;
+      if (this.currencyFields.includes(fieldName)) {
+        control = new FormControl(0);
+      } else {
+        control = new FormControl();
+      }
+      group.setControl(fieldName, control);
     });
   }
 
   private readControls(group: FormGroup, target: any): void {
-    const contactFields = new Set<string>(this.getContactKeys().map(key => key.control));
-    Object.keys(group.controls).forEach(controlKey => {
+    const excludeFields = new Set<string>(this.getContactKeys().map(key => key.control));
+    excludeFields.add('languages');
+    for (const controlKey of Object.keys(group.controls)) {
       if (this.addressFields.includes(controlKey)) {
         target.address[controlKey] = group.get(controlKey).value;
-      } else if (contactFields.has(controlKey)) {  // read contacts later
+      } else if (this.currencyFields.includes(controlKey)) {
+        target[controlKey] = SubmissionState.roundCurrency(group.get(controlKey).value);
+      } else if (!excludeFields.has(controlKey)) {  // read contacts & languages later
         target[controlKey] = group.get(controlKey).value;
       }
-    });
+    }
   }
 
   private buildCheckboxControls(group: FormGroup): void {
@@ -85,10 +105,10 @@ export class SubmissionState {
     for (const key of Array.from(this.checkboxFields.keys())) {
       if (!!group.controls[key]) {
         target[key] = [];
-        const formArray = group.controls[key];
+        const formArray = group.controls[key] as FormArray;
         const numControls = this.checkboxFields.get(key);
         for (let i = 0; i < numControls; i++) {
-          if (formArray[i].value) {
+          if (formArray.controls[i].value) {
             target[key].push(i + 1); // checkbox id = (index + 1)
           }
         }
@@ -130,7 +150,7 @@ export class SubmissionState {
 
   public submission(): any {
     const organization = { address: {}};
-    const review = { address: {}};
+    const review = { address: {}, languages: this.languages };
 
     this.readControls(this.organization, organization);
     this.readControls(this.review, review);
@@ -138,7 +158,7 @@ export class SubmissionState {
     this.readCheckboxControls(this.review, review);
     this.readContacts(organization);
 
-    if (this.review.controls.isSameAddr.value) {
+    if (this.review.controls.siteLocState.value) {
       review.address = organization.address;
     }
 

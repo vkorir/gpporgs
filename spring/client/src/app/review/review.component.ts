@@ -21,7 +21,6 @@ export class ReviewComponent implements OnInit {
   types: any[] = [];
   sectors: any[] = [];
   languages: any[] = [];
-  selectedLanguages: string[] = [];
   filteredLanguages: Observable<any[]>;
   contactKeys: any[];
 
@@ -39,6 +38,7 @@ export class ReviewComponent implements OnInit {
               private dialogRef: MatDialogRef<ReviewComponent>,
               private fb: FormBuilder) {
     this.state = new SubmissionState(fb, appService);
+    this.state.review.controls.anonymous.setValue(true);
   }
 
   ngOnInit() {
@@ -63,10 +63,21 @@ export class ReviewComponent implements OnInit {
   }
 
   private __filterLanguages(value: string): any[] {
+    if (!value) {
+      return [];
+    }
     const filterValue = value.toLowerCase();
     return this.languages.filter(language => {
-      return language.value.toLowerCase().indexOf(filterValue) === 0 && !this.selectedLanguages.includes(language.id);
+      return language.value.toLowerCase().indexOf(filterValue) === 0 && !this.state.languages.includes(language.id);
     });
+  }
+
+  formatSliderLabel(value: number): string | number {
+    const rounded = SubmissionState.roundCurrency(value);
+    if (value > 900) {
+      return parseFloat(`${rounded / 1000}`).toFixed(1) + 'k';
+    }
+    return rounded;
   }
 
   getControls(group: FormGroup, controlKey: string): FormControl[] {
@@ -80,7 +91,7 @@ export class ReviewComponent implements OnInit {
       const value = event.value;
 
       if (this.appService.languages.has(value)) {
-        this.selectedLanguages.push(value);
+        this.state.languages.push(value);
       }
       if (input) {
         input.value = '';
@@ -96,9 +107,9 @@ export class ReviewComponent implements OnInit {
 
   addLanguage(event: MatAutocompleteSelectedEvent): void {
     if (event.option.value) {
-      this.selectedLanguages.push(event.option.value);
-      this.languageInput.nativeElement.value = '';
-      this.state.review.controls.language.setValue(null);
+      this.state.languages.push(event.option.value);
+      this.languageInput.nativeElement.value = null;
+      this.state.review.controls.languages.setValue(null);
     }
   }
 

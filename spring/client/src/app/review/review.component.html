@@ -83,7 +83,7 @@
         </mat-radio-group>
       </div>
       <ng-container *ngIf="siteLocState">
-        <ng-container *ngFor="let fieldName of state.addressFields">
+        <ng-container *ngFor="let fieldName of state.addressFields.concat(['region'])">
           <div fxFlex.lt-md="100" fxFlex.gt-sm="49" *ngIf="!state.selectFields.includes(fieldName)">
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>{{capitalizeFirst(fieldName)}}</mat-label>
@@ -110,10 +110,10 @@
         </ng-container>
       </ng-container>
       <p fxFlexFill>
-        <mat-form-field fxFlexFill>
+        <mat-form-field fxFlex.gt-sm="50">
           <mat-chip-list #chipList>
-            <mat-chip *ngFor="let code of selectedLanguages"
-                      (removed)="popFromList(code, selectedLanguages)">
+            <mat-chip *ngFor="let code of state.languages"
+                      (removed)="popFromList(code, state.languages)">
               {{getLanguage(code)}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
@@ -122,8 +122,7 @@
                    formControlName="languages"
                    [matAutocomplete]="auto"
                    [matChipInputFor]="chipList"
-                   (matChipInputTokenEnd)="add($event)"
-                   fxFlex.gt-sm="50">
+                   (matChipInputTokenEnd)="add($event)">
           </mat-chip-list>
         </mat-form-field>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addLanguage($event)">
@@ -145,6 +144,19 @@
           {{sectors[i].value}}
         </mat-checkbox>
       </p>
+      <p fxFlexFill>
+        What was the cost of your PE? <i> All incurred costs (i.e. transportation, housing, etc)</i><br>
+      </p>
+      <div fxFlexFill>
+        <div fxLayout="column" fxFlex.gt-sm="50">
+          <span fxFlex>Cost of PE</span>
+          <mat-slider formControlName="cost" color="primary" min="0" max="10000" step="100" thumbLabel [displayWith]="formatSliderLabel"></mat-slider>
+        </div>
+        <div fxLayout="column" fxFlex.gt-sm="50">
+          <span>Stipend paid by organization</span>
+          <mat-slider formControlName="stipend" color="primary" min="0" max="10000" thumbLabel [displayWith]="formatSliderLabel"></mat-slider>
+        </div>
+      </div>
       <p>What was the duration of your PE?</p>
       <p fxFlexFill>
         <mat-radio-group fxFlexFill formControlName="duration">
@@ -180,7 +192,7 @@
           </ng-container>
         </mat-radio-group>
       </p>
-      <mat-slide-toggle labelPosition="before" formControlName="anonymous" checked>Post as anonymous?</mat-slide-toggle>
+      <mat-slide-toggle labelPosition="before" formControlName="anonymous" [checked]>Post as anonymous?</mat-slide-toggle>
     </form>
   </mat-dialog-content>
   <mat-divider></mat-divider>
