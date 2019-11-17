@@ -15,9 +15,9 @@
 <span class="mat-subheading-1">SECTORS</span>
 <p class="overflow-y" id="filter-sectors">
   <mat-checkbox color="primary" fxLayout="row"
-                *ngFor="let sector of sectors"
+                *ngFor="let sector of sectors(); let i = index"
                 [checked]="isSectorChecked(sector.id)"
                 (click)="updateSectors(sector.value)">
-    {{sector.value}}
+    {{ i == sectors().length ? 'Other' : sector.value }}
   </mat-checkbox>
 </p>

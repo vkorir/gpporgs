@@ -43,6 +43,8 @@ import { AppService } from './app.service';
 import { ConfigService } from './config.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LookUpComponent } from './look-up/look-up.component';
+import { SubmissionState } from './model/submission.state';
+// import { ValidateFormDirective } from './validate-form.directive';
 
 const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
   MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
@@ -61,7 +63,8 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     ReviewComponent,
     AdminComponent,
     LoginComponent,
-    LookUpComponent
+    LookUpComponent,
+    // ValidateFormDirective
   ],
   imports: [
     BrowserModule,
@@ -78,6 +81,7 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
   providers: [
     ConfigService,
     AppService,
+    SubmissionState,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

@@ -61,7 +61,11 @@
   border-bottom: 1px solid $container-border-color;
 }
 
-p i {
+p i, span i {
   font-size: 0.9rem;
   opacity: 0.8;
+}
+
+.mat-button:disabled {
+  opacity: 0.3;
 }

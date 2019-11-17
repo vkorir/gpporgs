@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import {ReviewComponent} from '../review/review.component';
+import { ReviewComponent } from '../review/review.component';
 
 @Component({
   selector: 'app-look-up',
@@ -46,8 +46,12 @@ export class LookUpComponent implements OnInit {
     return this.organizations.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
-  getCountry(code) {
-    return this.appService.countries.get(code);
+  getCountry(code: string): string {
+    for (const country of this.appService.countries) {
+      if (country.code === code) {
+        return country.value;
+      }
+    }
   }
 
   notFound(name) {

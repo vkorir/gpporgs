@@ -1,10 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatDialogRef, MatSnackBar } from '@angular/material';
+import { MatAutocomplete, MatAutocompleteSelectedEvent, MatDialogRef, MatSnackBar } from '@angular/material';
 import { AppService } from '../app.service';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { FormArray, FormControl, FormGroup} from '@angular/forms';
 import { SubmissionState } from '../model/submission.state';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-review',
@@ -13,62 +12,91 @@ import { SubmissionState } from '../model/submission.state';
 })
 export class ReviewComponent implements OnInit {
 
-  state: SubmissionState;
   firstPage = true;
-  regions: any[] = [];
-  countries: any[] = [];
-  affiliations: any[] = [];
-  types: any[] = [];
-  sectors: any[] = [];
-  languages: any[] = [];
-  filteredLanguages: Observable<any[]>;
-  contactKeys: any[];
-
-  // status
   siteLocState = true;
   private submitting = false;
-
+  readonly numContacts = this.state.numContacts;
   durations = ['<2 months', '2-4 months', '4-6 months', '6-12 months', '>1 year'];
 
+  filteredLanguages: any[];
+  languagesPtr = this.state.review.controls.languages;
   @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(private appService: AppService,
               private snackBar: MatSnackBar,
               private dialogRef: MatDialogRef<ReviewComponent>,
-              private fb: FormBuilder) {
-    this.state = new SubmissionState(fb, appService);
-    this.state.review.controls.anonymous.setValue(true);
-  }
+              private state: SubmissionState) { }
 
   ngOnInit() {
-    this.__populateItems(this.appService.regions, this.regions);
-    this.__populateItems(this.appService.countries, this.countries);
-    this.__populateItems(this.appService.affiliations, this.affiliations);
-    this.__populateItems(this.appService.types, this.types);
-    this.__populateItems(this.appService.sectors, this.sectors);
-    this.__populateItems(this.appService.languages, this.languages);
-    this.contactKeys = this.state.getContactKeys();
-
-    this.filteredLanguages = this.state.review.controls.languages.valueChanges.pipe(
-      startWith(null),
-      map((language: string | null) => language ? this.__filterLanguages(language) : this.languages.slice())
-    );
-  }
-
-  private __populateItems(source: Map<any, string>, target: any[]): void {
-    source.forEach((value, key) => {
-      target.push({ id: key, value });
+    this.filteredLanguages = this.appService.languages.filter(language => {
+      return !this.state.review.controls.languages.value.includes(language);
     });
   }
 
-  private __filterLanguages(value: string): any[] {
-    if (!value) {
-      return [];
-    }
+  organizationFG(): FormGroup {
+    return this.state.organization;
+  }
+
+  reviewFG(): FormGroup {
+    return this.state.review;
+  }
+
+  regions(): any[] {
+    return this.appService.regions;
+  }
+
+  countries(): any[] {
+    return this.appService.countries;
+  }
+
+  affiliations(): any[] {
+    return this.appService.affiliations;
+  }
+
+  types(): any[] {
+    return this.appService.types;
+  }
+
+  sectors(): any[] {
+    return this.appService.sectors;
+  }
+
+  languages(): any[] {
+    return this.appService.languages;
+  }
+
+  languagesSelected(): any[] {
+    return this.state.review.controls.languages.value;
+  }
+
+  affiliationControls(formGroup: FormGroup): FormControl[] {
+    return (formGroup.controls.affiliations as FormArray).controls as FormControl[];
+  }
+
+  sectorControls(formGroup: FormGroup): FormControl[] {
+    return (formGroup.controls.sectors as FormArray).controls as FormControl[];
+  }
+
+  contactControl(index: number, field: string): FormControl {
+    const contacts = this.organizationFG().controls.contacts as FormArray;
+    const contact = contacts.controls[index] as FormGroup;
+    return contact.controls[field] as FormControl;
+  }
+
+  contactsIterator(): number[] {
+    return [...Array(this.numContacts).keys()];
+  }
+
+  filterLanguages(): void {
+    this.filteredLanguages = this.filter(this.languageInput.nativeElement.value);
+  }
+
+  private filter(value: string): any[] {
     const filterValue = value.toLowerCase();
-    return this.languages.filter(language => {
-      return language.value.toLowerCase().indexOf(filterValue) === 0 && !this.state.languages.includes(language.id);
+    return this.appService.languages.filter(language => {
+      return language.value.toLowerCase().indexOf(filterValue) === 0 &&
+        !this.state.review.controls.languages.value.includes(language);
     });
   }
 
@@ -80,43 +108,18 @@ export class ReviewComponent implements OnInit {
     return rounded;
   }
 
-  getControls(group: FormGroup, controlKey: string): FormControl[] {
-    const formArray = group.controls[controlKey] as FormArray;
-    return formArray.controls as FormControl[];
-  }
-
-  add(event: MatChipInputEvent): void {
-    if (!this.matAutocomplete.isOpen) {
-      const input = event.input;
-      const value = event.value;
-
-      if (this.appService.languages.has(value)) {
-        this.state.languages.push(value);
-      }
-      if (input) {
-        input.value = '';
-      }
-
-      this.state.review.controls.language.setValue(null);
-    }
-  }
-
-  getLanguage(code: string): string {
-    return this.appService.languages.get(code);
-  }
-
   addLanguage(event: MatAutocompleteSelectedEvent): void {
     if (event.option.value) {
-      this.state.languages.push(event.option.value);
-      this.languageInput.nativeElement.value = null;
-      this.state.review.controls.languages.setValue(null);
+      this.languageInput.nativeElement.value = '';
+      this.state.review.controls.languages.value.push(event.option.value);
     }
   }
 
-  popFromList(item: any, list: any[]): void {
-    const index = list.indexOf(item);
-    if (index >= 0) {
-      list.splice(index, 1);
+  removeLanguage(language: any): void {
+    const languages = this.reviewFG().controls.languages.value;
+    const index = languages.indexOf(language);
+    if (index !== -1) {
+      languages.splice(index, 1);
     }
   }
 
@@ -131,9 +134,5 @@ export class ReviewComponent implements OnInit {
     //   this.dialogRef.close();
     // });
     console.log(organization, review);
-  }
-
-  capitalizeFirst(s: string): string {
-    return s.charAt(0).toUpperCase() + s.slice(1);
   }
 }

@@ -15,12 +15,12 @@ export class AppService {
   private readonly tokenKey = 'token';
   private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private organizationsFilter = new BehaviorSubject<Filter>(new Filter());
-  public regions = new Map<number, string>();
-  public countries = new Map<string, string>();
-  public affiliations = new Map<number, string>();
-  public types = new Map<number, string>();
-  public sectors = new Map<number, string>();
-  public languages = new Map<string, string>();
+  public regions = [];
+  public countries = [];
+  public affiliations = [];
+  public types = [];
+  public sectors = [];
+  public languages = [];
 
   constructor(private apollo: Apollo, private configService: ConfigService, private snackBar: MatSnackBar) {}
 
@@ -78,7 +78,7 @@ export class AppService {
   }
 
   private __populateSources(data, source): void {
-    data.map(item => source.set(item.id || item.code, item.value));
+    data.map(item => source.push({ id: item.id || item.code, value: item.value }));
   }
 
   userValue(): User {

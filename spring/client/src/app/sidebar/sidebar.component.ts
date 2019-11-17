@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
 import { MatDialog } from '@angular/material';
 import { Area } from '../model/area';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import { LookUpComponent } from '../look-up/look-up.component';
 
 @Component({
@@ -14,21 +14,25 @@ import { LookUpComponent } from '../look-up/look-up.component';
 export class SidebarComponent implements OnInit {
 
   area = Area;
-  sectors: any[] = [];
-  sectorsFormGroup: FormGroup = this.fb.group({ });
+  // formGroup = this.fb.group({
+  //   sectors: this.buildControls(this.appService.sectors.length)
+  // });
 
   constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) { }
 
-  ngOnInit() {
-    this.appService.sectors.forEach((value, key) => {
-      const sector = { id: key, value };
-      if (sector.value.toLowerCase().startsWith('other')) {
-        sector.value = 'Other';
-      }
-      this.sectorsFormGroup.addControl(sector.id.toString(), new FormControl());
-      this.sectors.push(sector);
-    });
+  ngOnInit() { }
+
+  sectors(): any[] {
+    return this.appService.sectors;
   }
+
+  // private buildControls(size: number): FormArray {
+  //   const checkboxControls = new FormArray([]);
+  //   for (const _ of [...Array(size).keys()]) {
+  //     checkboxControls.push(this.fb.control(false));
+  //   }
+  //   return checkboxControls;
+  // }
 
   getFistName(): string {
     return this.appService.userValue().firstName;
