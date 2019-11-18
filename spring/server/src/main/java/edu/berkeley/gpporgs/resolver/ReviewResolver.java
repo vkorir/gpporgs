@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class ReviewResolver implements GraphQLResolver<Review> {
@@ -34,7 +36,11 @@ public class ReviewResolver implements GraphQLResolver<Review> {
         return userRepository.findById(review.getReviewerId()).orElse(null);
     }
 
-    public Iterable<String> sectors(Review review) {
-        return Arrays.asList(review.getSectorIds().split(dataDelimiter));
+    public Iterable<Long> sectors(Review review) {
+        List<Long> sectorIds = new ArrayList<>();
+        for (String sectorId: review.getSectorIds().split(dataDelimiter)) {
+            sectorIds.add(Long.parseLong(sectorId));
+        }
+        return sectorIds;
     }
 }

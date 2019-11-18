@@ -29,12 +29,13 @@ public class Organization {
     private String website;
     private String affiliationIds;
     @Transient
-    private Iterable<String> affiliations;
+    private Iterable<Long> affiliations;
     private @NonNull Long type;
     private @NonNull String region;
     private String sectorIds;
     @Transient
-    private Iterable<String> sectors;
+    private Iterable<Long> sectors;
+    private String sectorOther;
     private @NonNull Boolean approved;
     @Transient
     private Iterable<Contact> contacts;

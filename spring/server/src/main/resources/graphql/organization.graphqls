@@ -6,10 +6,11 @@ type Organization {
     phone: String
     email: String
     website: String
-    affiliations: [String]
+    affiliations: [Int]
     type: String!
     region: String!
-    sectors: [String]
+    sectors: [Int]
+    sectorOther: String
     approved: Boolean!
     contacts: [Contact]
 }
@@ -21,10 +22,11 @@ input OrganizationInput {
     phone: String
     email: String
     website: String
-    affiliations: [String]
-    typeId: Int!
+    affiliations: [Int]
+    type: String!
     region: String
-    sectors: [String]
+    sectors: [Int]
+    sectorOther: String
     approved: Boolean
     contacts: [ContactInput]
 }

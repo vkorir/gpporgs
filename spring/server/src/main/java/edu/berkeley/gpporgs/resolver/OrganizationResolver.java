@@ -37,12 +37,20 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
         return addressRepository.findById(organization.getAddressId()).orElse(null);
     }
 
-    public Iterable<String> affiliations(Organization organization) {
-        return Arrays.asList(organization.getAffiliationIds().split(dataDelimiter));
+    public Iterable<Long> affiliations(Organization organization) {
+        List<Long> affiliationIds = new ArrayList<>();
+        for (String sectorId: organization.getAffiliationIds().split(dataDelimiter)) {
+            affiliationIds.add(Long.parseLong(sectorId));
+        }
+        return affiliationIds;
     }
 
-    public Iterable<String> sectors(Organization organization) {
-        return Arrays.asList(organization.getSectorIds().split(dataDelimiter));
+    public Iterable<Long> sectors(Organization organization) {
+        List<Long> sectorIds = new ArrayList<>();
+        for (String sectorId: organization.getSectorIds().split(dataDelimiter)) {
+            sectorIds.add(Long.parseLong(sectorId));
+        }
+        return sectorIds;
     }
 
     public Iterable<Contact> getContacts(Organization organization) {

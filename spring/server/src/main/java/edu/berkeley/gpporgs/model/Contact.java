@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Table(name = "contacts")
 public class Contact {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
-    private @NonNull Long organizationId;
+    private Long organizationId;
     private String name;
     private String role;
     private String email;

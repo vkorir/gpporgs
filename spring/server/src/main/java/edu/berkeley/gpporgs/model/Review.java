@@ -20,7 +20,7 @@ import javax.persistence.Transient;
 @Table(name = "reviews")
 public class Review {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
-    private @NonNull Long organizationId;
+    private Long organizationId;
     private @NonNull Long addressId;
     @Transient
     private @NonNull Address address;
@@ -31,7 +31,8 @@ public class Review {
     private String difficulties;
     private String sectorIds;
     @Transient
-    private @NonNull Iterable<String> sectors;
+    private @NonNull Iterable<Long> sectors;
+    private String sectorOther;
     private Integer stipend;
     private Integer cost;
     private String duration;

@@ -1,12 +1,15 @@
 package edu.berkeley.gpporgs.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import com.google.common.collect.Lists;
 import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -39,11 +42,19 @@ public class MutationResolver implements GraphQLMutationResolver {
         return delimitFields(organization);
     }
 
+    private Iterable<String> longsToStrings(Iterable<Long> longs) {
+        List<String> strings = new ArrayList<>();
+        for (Long value: longs) {
+            strings.add(value.toString());
+        }
+        return strings;
+    }
+
     private Organization delimitFields(Organization organization) {
         Long addressId = addressRepository.save(organization.getAddress()).getId();
         organization.setAddressId(addressId);
-        organization.setAffiliationIds(String.join(dataDelimiter, organization.getAffiliations()));
-        organization.setSectorIds(String.join(dataDelimiter, organization.getSectors()));
+        organization.setAffiliationIds(String.join(dataDelimiter, longsToStrings(organization.getAffiliations())));
+        organization.setSectorIds(String.join(dataDelimiter, longsToStrings(organization.getSectors())));
         contactRepository.saveAll(organization.getContacts());
         return organizationRepository.save(organization);
     }
@@ -59,7 +70,9 @@ public class MutationResolver implements GraphQLMutationResolver {
         return user;
     }
 
-    public Review createReview(Review review) {
+    public Review createReview(Organization organization, Review review) {
+        Long orgId = delimitFields(organization).getId();
+        review.setOrganizationId(orgId);
         return delimitFields(review);
     }
 
@@ -78,8 +91,10 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     private Review delimitFields(Review review) {
+        Long addressId = addressRepository.save(review.getAddress()).getId();
+        review.setAddressId(addressId);
         review.setLanguageCodes(String.join(dataDelimiter, review.getLanguages()));
-        review.setSectorIds(String.join(dataDelimiter, review.getSectors()));
+        review.setSectorIds(String.join(dataDelimiter, longsToStrings(review.getSectors())));
         return reviewRepository.save(review);
     }
 }

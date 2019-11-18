@@ -21,6 +21,6 @@ public class Address {
     private String street;
     private String city;
     private String state;
-    private Integer zip;
+    private String zip;
     private String country;
 }
