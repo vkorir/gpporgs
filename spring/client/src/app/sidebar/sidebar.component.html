@@ -18,6 +18,6 @@
                 *ngFor="let sector of sectors(); let i = index"
                 [checked]="isSectorChecked(sector.id)"
                 (click)="updateSectors(sector.value)">
-    {{ i == sectors().length ? 'Other' : sector.value }}
+    {{ i == sectors().length - 1 ? 'Other' : sector.value }}
   </mat-checkbox>
 </p>

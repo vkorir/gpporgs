@@ -21,10 +21,11 @@ export class SubmissionState {
     email: this.fb.control(''),
     phone: this.fb.control(''),
     website: this.fb.control(''),
-    type: this.fb.control(''),
+    type: this.fb.control(null),
     description: this.fb.control(''),
     affiliations: this.buildCheckboxControls(this.appService.affiliations.length),
     sectors: this.buildCheckboxControls(this.appService.sectors.length),
+    sectorOther: this.fb.control(''),
     approved: this.fb.control(false),
     contacts: this.buildContactControls()
   });
@@ -38,9 +39,10 @@ export class SubmissionState {
       country: this.fb.control('', [Validators.required])
     }),
     region: this.fb.control('', [Validators.required]),
-    languages: this.fb.array([]),
+    languages: this.fb.control([]),
     difficulties: this.fb.control(''),
     sectors: this.buildCheckboxControls(this.appService.sectors.length),
+    sectorOther: this.fb.control(''),
     cost: this.fb.control(0),
     stipend: this.fb.control(0),
     duration: this.fb.control(''),
@@ -51,19 +53,48 @@ export class SubmissionState {
     safety: this.fb.control('', [Validators.required]),
     responsiveness: this.fb.control(''),
     anonymous: this.fb.control(true),
-    reviewerId: this.fb.control('')
+    reviewerId: this.fb.control(this.appService.userValue().id)
   });
 
   constructor(private fb: FormBuilder, private appService: AppService) { }
 
   static roundCurrency(amount: number): number {
-    if (amount > 900) {
+    if (amount && amount > 900) {
       return (Math.round(amount / 500) * 500);
     }
-    if (amount > 100) {
+    if (amount && amount > 100) {
       return Math.round(amount / 100) * 100;
     }
     return amount;
+  }
+
+  static readCheckboxIds(states: boolean[]): number[] {
+    const ids = [];
+    for (let i = 0; i < states.length; i++) {
+      if (states[i]) {
+        ids.push(i + 1); // id = index + 1
+      }
+    }
+    return ids;
+  }
+
+  static queryFy(object: any): any {
+    if (!object && typeof object !== 'boolean') {
+      return 'null';
+    }
+    if (typeof object === 'number') {
+      return object;
+    }
+    if (Array.isArray(object)) {
+      return `[${object.map(value => `${this.queryFy(value)}`).join()}]`;
+    }
+    if (typeof object === 'object') {
+      const props = Object.keys(object)
+        .map(key => `${key}: ${this.queryFy(object[key])}`)
+        .join();
+      return `{${props}}`;
+    }
+    return JSON.stringify(object);
   }
 
   private buildCheckboxControls(size: number): FormArray {
@@ -91,11 +122,17 @@ export class SubmissionState {
   public submission(): any {
     const organization = this.organization.value;
     const review = this.review.value;
-    // review.languages = this.languages;
 
+    organization.affiliations = SubmissionState.readCheckboxIds(organization.affiliations);
+    organization.sectors = SubmissionState.readCheckboxIds(organization.sectors);
+    review.sectors = SubmissionState.readCheckboxIds(review.sectors);
     if (this.review.controls.siteLocState.value) {
       review.address = organization.address;
     }
+    review.cost = SubmissionState.roundCurrency(review.cost);
+    review.stipend = SubmissionState.roundCurrency(review.stipend);
+
+    delete review.siteLocState;
 
     return { organization, review };
   }

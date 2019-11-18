@@ -1,5 +1,5 @@
 export class User {
-  username: string;
+  id: string;
   firstName: string;
   lastName: string;
   isAdmin: boolean;
