@@ -31,6 +31,7 @@ public class Organization {
     @Transient
     private Iterable<Long> affiliations;
     private @NonNull Long type;
+    private String typeOther;
     private @NonNull String region;
     private String sectorIds;
     @Transient

@@ -71,7 +71,7 @@
         </mat-checkbox>
       </p>
       <p>Type: <i>Select one</i></p>
-      <p>
+      <div>
         <mat-radio-group fxLayout="row wrap" formControlName="type">
           <ng-container *ngFor="let type of types()">
             <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary" [value]="type.id">
@@ -79,6 +79,11 @@
             </mat-radio-button>
           </ng-container>
         </mat-radio-group>
+      </div>
+      <p fxFlexFill>
+        <mat-form-field fxFlex="60" *ngIf="organizationFG().controls.type.value == types().length">
+          <input matInput placeholder="Describe here" formControlName="typeOther">
+        </mat-form-field>
       </p>
       <p>Sectors: <i>Check all that may apply</i></p>
       <p fxLayout="row wrap">

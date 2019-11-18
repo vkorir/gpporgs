@@ -22,6 +22,7 @@ export class SubmissionState {
     phone: this.fb.control(''),
     website: this.fb.control(''),
     type: this.fb.control(null),
+    typeOther: this.fb.control(''),
     description: this.fb.control(''),
     affiliations: this.buildCheckboxControls(this.appService.affiliations.length),
     sectors: this.buildCheckboxControls(this.appService.sectors.length),

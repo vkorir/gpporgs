@@ -8,6 +8,7 @@ type Organization {
     website: String
     affiliations: [Int]
     type: String!
+    typeOther: String
     region: String!
     sectors: [Int]
     sectorOther: String
@@ -24,6 +25,7 @@ input OrganizationInput {
     website: String
     affiliations: [Int]
     type: String!
+    typeOther: String
     region: String
     sectors: [Int]
     sectorOther: String
