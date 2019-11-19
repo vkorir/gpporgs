@@ -1,5 +1,5 @@
 type Organization {
-    id: ID!
+    id: Int!
     name: String!
     description: String
     address: Address
@@ -7,7 +7,7 @@ type Organization {
     email: String
     website: String
     affiliations: [Int]
-    type: String!
+    type: Int!
     typeOther: String
     region: String!
     sectors: [Int]
@@ -24,9 +24,9 @@ input OrganizationInput {
     email: String
     website: String
     affiliations: [Int]
-    type: String!
+    type: Int!
     typeOther: String
-    region: String
+    region: Int
     sectors: [Int]
     sectorOther: String
     approved: Boolean

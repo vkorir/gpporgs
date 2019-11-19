@@ -29,7 +29,7 @@ public class ReviewResolver implements GraphQLResolver<Review> {
     }
 
     public Iterable<String> languages(Review review) {
-        return Arrays.asList(review.getLanguageCodes().split(dataDelimiter));
+        return Arrays.asList(review.getLanguageCodes().split("\\^"));
     }
 
     public User reviewer(Review review) {
@@ -38,7 +38,7 @@ public class ReviewResolver implements GraphQLResolver<Review> {
 
     public Iterable<Long> sectors(Review review) {
         List<Long> sectorIds = new ArrayList<>();
-        for (String sectorId: review.getSectorIds().split(dataDelimiter)) {
+        for (String sectorId: review.getSectorIds().split("\\^")) {
             sectorIds.add(Long.parseLong(sectorId));
         }
         return sectorIds;

@@ -55,7 +55,12 @@ public class MutationResolver implements GraphQLMutationResolver {
         organization.setAddressId(addressId);
         organization.setAffiliationIds(String.join(dataDelimiter, longsToStrings(organization.getAffiliations())));
         organization.setSectorIds(String.join(dataDelimiter, longsToStrings(organization.getSectors())));
-        contactRepository.saveAll(organization.getContacts());
+        Iterable<Contact> contacts = organization.getContacts();
+        organization = organizationRepository.save(organization);
+        for (Contact contact: contacts) {
+            contact.setOrganizationId(organization.getId());
+        }
+        contactRepository.saveAll(contacts);
         return organizationRepository.save(organization);
     }
 

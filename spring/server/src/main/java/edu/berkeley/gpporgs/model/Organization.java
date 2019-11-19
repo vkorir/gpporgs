@@ -32,7 +32,7 @@ public class Organization {
     private Iterable<Long> affiliations;
     private @NonNull Long type;
     private String typeOther;
-    private @NonNull String region;
+    private @NonNull Long region;
     private String sectorIds;
     @Transient
     private Iterable<Long> sectors;

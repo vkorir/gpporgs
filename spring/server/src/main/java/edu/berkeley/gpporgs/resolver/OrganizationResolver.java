@@ -31,7 +31,7 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
     private ContactRepository contactRepository;
 
     @Value("${mysql_data_delimiter}")
-    private String dataDelimiter;
+    private String dataDelimiter; // ( ^ )
 
     public Address address(Organization organization) {
         return addressRepository.findById(organization.getAddressId()).orElse(null);
@@ -39,7 +39,7 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
 
     public Iterable<Long> affiliations(Organization organization) {
         List<Long> affiliationIds = new ArrayList<>();
-        for (String sectorId: organization.getAffiliationIds().split(dataDelimiter)) {
+        for (String sectorId: organization.getAffiliationIds().split("\\^")) {
             affiliationIds.add(Long.parseLong(sectorId));
         }
         return affiliationIds;
@@ -47,13 +47,13 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
 
     public Iterable<Long> sectors(Organization organization) {
         List<Long> sectorIds = new ArrayList<>();
-        for (String sectorId: organization.getSectorIds().split(dataDelimiter)) {
+        for (String sectorId: organization.getSectorIds().split("\\^")) {
             sectorIds.add(Long.parseLong(sectorId));
         }
         return sectorIds;
     }
 
-    public Iterable<Contact> getContacts(Organization organization) {
+    public Iterable<Contact> contacts(Organization organization) {
         return contactRepository.findContactByOrganizationId(organization.getId());
     }
 }
