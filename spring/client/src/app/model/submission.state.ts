@@ -1,4 +1,4 @@
-import { FormArray, FormBuilder, Validators } from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { AppService } from '../app.service';
 import { Injectable } from '@angular/core';
 
@@ -9,6 +9,7 @@ export class SubmissionState {
 
   readonly numContacts = 3;
   organization = this.fb.group({
+    id: this.fb.control(null),
     name: this.fb.control('', [Validators.required]),
     address: this.fb.group({
       street: this.fb.control(''),
@@ -24,8 +25,8 @@ export class SubmissionState {
     type: this.fb.control(null),
     typeOther: this.fb.control(''),
     description: this.fb.control(''),
-    affiliations: this.buildCheckboxControls(this.appService.affiliations.length),
-    sectors: this.buildCheckboxControls(this.appService.sectors.length),
+    affiliations: this.buildCheckboxControls(this.appService.affiliations.size),
+    sectors: this.buildCheckboxControls(this.appService.sectors.size),
     sectorOther: this.fb.control(''),
     approved: this.fb.control(false),
     contacts: this.buildContactControls()
@@ -42,7 +43,7 @@ export class SubmissionState {
     region: this.fb.control('', [Validators.required]),
     languages: this.fb.control([]),
     difficulties: this.fb.control(''),
-    sectors: this.buildCheckboxControls(this.appService.sectors.length),
+    sectors: this.buildCheckboxControls(this.appService.sectors.size),
     sectorOther: this.fb.control(''),
     cost: this.fb.control(0),
     stipend: this.fb.control(0),
@@ -98,6 +99,28 @@ export class SubmissionState {
     return JSON.stringify(object);
   }
 
+  static populateFields(source: any, target: AbstractControl): void {
+    if (Array.isArray(source)) {
+      for (let i = 0; i < source.length; i++) {
+        SubmissionState.populateFields(source[i], (target as FormArray).controls[i]);
+      }
+    } else if (!!source && typeof source === 'object') {
+      Object.keys(source).forEach(key => {
+        if (key === 'languages') {
+          (target as FormGroup).controls[key].setValue(source[key]);
+        } else if (['affiliations', 'sectors'].includes(key)) {
+          for (const id of source[key]) {
+            (target as FormArray).controls[key].controls[id - 1].setValue(true);
+          }
+        } else {
+          SubmissionState.populateFields(source[key], (target as FormGroup).controls[key]);
+        }
+      });
+    }  else if (!!target) {
+      (target as FormControl).setValue(source);
+    }
+  }
+
   private buildCheckboxControls(size: number): FormArray {
     const checkboxControls = new FormArray([]);
     for (const _ of [...Array(size).keys()]) {
@@ -126,10 +149,13 @@ export class SubmissionState {
 
     organization.affiliations = SubmissionState.readCheckboxIds(organization.affiliations);
     organization.sectors = SubmissionState.readCheckboxIds(organization.sectors);
+    organization.region = Number(organization.region);
+    organization.type = Number(organization.type);
     review.sectors = SubmissionState.readCheckboxIds(review.sectors);
     if (this.review.controls.siteLocState.value) {
       review.address = organization.address;
     }
+    review.region = Number(review.region);
     review.cost = SubmissionState.roundCurrency(review.cost);
     review.stipend = SubmissionState.roundCurrency(review.stipend);
 

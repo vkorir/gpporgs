@@ -25,8 +25,8 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Region</mat-label>
           <mat-select formControlName="region" required>
-            <mat-option *ngFor="let region of regions()" [value]="region.id">
-              {{region.value}}
+            <mat-option *ngFor="let id of regions()" [value]="id">
+              {{region(id)}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -51,8 +51,8 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Country</mat-label>
           <mat-select formControlName="country" required>
-            <mat-option *ngFor="let country of countries()" [value]="country.id">
-              {{country.value}}
+            <mat-option *ngFor="let id of countries()" [value]="id">
+              {{country(id)}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -64,33 +64,33 @@
       </p>
       <p>Affiliations: <i>Check all that may apply</i></p>
       <p fxLayout="row wrap">
-        <mat-checkbox *ngFor="let control of affiliationControls(organizationFG()); let i = index"
-                      [formControl]="control"
+        <mat-checkbox *ngFor="let id of affiliations(); let i = index"
+                      [formControl]="affiliationControls(organizationFG(), i)"
                       fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-          {{affiliations()[i].value}}
+          {{affiliation(id)}}
         </mat-checkbox>
       </p>
       <p>Type: <i>Select one</i></p>
       <div>
         <mat-radio-group fxLayout="row wrap" formControlName="type">
-          <ng-container *ngFor="let type of types()">
-            <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary" [value]="type.id">
-              {{type.value}}
+          <ng-container *ngFor="let id of types()">
+            <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary" [value]="id">
+              {{type(id)}}
             </mat-radio-button>
           </ng-container>
         </mat-radio-group>
       </div>
       <p fxFlexFill>
-        <mat-form-field fxFlex="60" *ngIf="organizationFG().controls.type.value == types().length">
+        <mat-form-field fxFlex="60" *ngIf="organizationFG().controls.type.value == numTypes">
           <input matInput placeholder="Describe here" formControlName="typeOther">
         </mat-form-field>
       </p>
       <p>Sectors: <i>Check all that may apply</i></p>
       <p fxLayout="row wrap">
-        <mat-checkbox *ngFor="let control of sectorControls(organizationFG()); let i = index"
-                      [formControl]="control"
+        <mat-checkbox *ngFor="let id of sectors(); let i = index"
+                      [formControl]="sectorControls(organizationFG(), i)"
                       fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-          {{sectors()[i].value}}
+          {{sector(id)}}
         </mat-checkbox>
         <mat-form-field fxFlex="60" *ngIf="organizationFG().controls.sectors.value[organizationFG().controls.sectors.value.length - 1]">
           <input matInput placeholder="Describe here" formControlName="sectorOther">
@@ -98,7 +98,7 @@
       </p>
       <h4 class="mat-dialog-title primary">Contact Information</h4>
       <div fxLayout="row wrap">
-        <ng-container *ngFor="let i of contactsIterator()">
+        <ng-container *ngFor="let i of contacts()">
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Name</mat-label>
             <input matInput [formControl]="contactControl(i, 'name')">
@@ -125,7 +125,7 @@
     <button mat-button (click)="firstPage = !firstPage">Next ></button>
   </mat-dialog-actions>
 </ng-container>
-<ng-container *ngIf="!firstPage">
+<ng-container *ngIf="!firstPage && isNewReview">
   <h4 class="mat-dialog-title primary">Practice Experience Information</h4>
   <mat-dialog-content>
     <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="reviewFG()">
@@ -158,16 +158,16 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Region</mat-label>
           <mat-select [formControl]="reviewFG().controls.region" required>
-            <mat-option *ngFor="let region of regions()" [value]="region.id">
-              {{region.value}}
+            <mat-option *ngFor="let id of regions()" [value]="id">
+              {{region(id)}}
             </mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Country</mat-label>
           <mat-select formControlName="country" required>
-            <mat-option *ngFor="let country of countries()" [value]="country.id">
-              {{country.value}}
+            <mat-option *ngFor="let id of countries()" [value]="id">
+              {{country(id)}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -176,7 +176,7 @@
         <mat-form-field fxFlex.gt-sm="70">
           <mat-chip-list #chipList>
             <mat-chip *ngFor="let id of languages" [selectable]="true" [removable]="true" (removed)="removeLanguage(id)">
-              {{getLanguage(id)}}
+              {{language(id)}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input placeholder="Please list the languages spoken at your PE location"
@@ -188,7 +188,7 @@
         </mat-form-field>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addLanguage($event)">
           <mat-option *ngFor="let id of filteredLanguages | async" [value]="id">
-            {{getLanguage(id)}}
+            {{language(id)}}
           </mat-option>
         </mat-autocomplete>
       </p>
@@ -199,10 +199,10 @@
       </p>
       <p>What were the sectors of your PE? <i>Check all that may apply</i></p>
       <p fxLayout="row wrap">
-        <mat-checkbox *ngFor="let control of sectorControls(reviewFG()); let i = index"
-                      [formControl]="control"
+        <mat-checkbox *ngFor="let id of sectors(); let i = index"
+                      [formControl]="sectorControls(reviewFG(), i)"
                       fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-          {{sectors()[i].value}}
+          {{sector(id)}}
         </mat-checkbox>
         <mat-form-field fxFlex="60" *ngIf="reviewFG().controls.sectors.value[reviewFG().controls.sectors.value.length - 1]">
           <input matInput placeholder="Describe here" formControlName="sectorOther">
@@ -287,6 +287,9 @@
   <mat-divider></mat-divider>
   <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
     <button mat-button (click)="firstPage = !firstPage">< Prev</button>
-    <button mat-button (click)="submit()">Submit</button>
+    <button mat-button (click)="submit()" style="background: green !important;">Submit</button>
   </mat-dialog-actions>
+</ng-container>
+<ng-container *ngIf="!firstPage && !isNewReview">
+
 </ng-container>

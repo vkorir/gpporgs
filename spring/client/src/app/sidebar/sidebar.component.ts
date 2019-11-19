@@ -14,36 +14,41 @@ import { LookUpComponent } from '../look-up/look-up.component';
 export class SidebarComponent implements OnInit {
 
   area = Area;
-  // formGroup = this.fb.group({
-  //   sectors: this.buildControls(this.appService.sectors.length)
-  // });
+  areaControl = this.fb.control(this.area.ALL);
+  sectorControls = this.buildSectorControls();
 
-  constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) { }
+  constructor(private appService: AppService,
+              private dialog: MatDialog,
+              private fb: FormBuilder) { }
 
-  ngOnInit() { }
-
-  sectors(): any[] {
-    return this.appService.sectors;
+  ngOnInit() {
+    this.areaControl.valueChanges.subscribe(value => console.log(value));
   }
 
-  // private buildControls(size: number): FormArray {
-  //   const checkboxControls = new FormArray([]);
-  //   for (const _ of [...Array(size).keys()]) {
-  //     checkboxControls.push(this.fb.control(false));
-  //   }
-  //   return checkboxControls;
-  // }
+  buildSectorControls(): FormArray {
+    const formArray = this.fb.array([]);
+    for (const _ of this.appService.sectors) {
+      const control = this.fb.control(true);
+      control.valueChanges.subscribe(value => console.log(value));
+      formArray.push(control);
+    }
+    return formArray;
+  }
+
+  control(index: number): FormControl {
+    return this.sectorControls.controls[index] as FormControl;
+  }
+
+  sectors(): Iterable<number> {
+    return [...this.appService.sectors.keys()];
+  }
+
+  sector(id: number): string {
+    return this.appService.sectors.get(id);
+  }
 
   getFistName(): string {
     return this.appService.userValue().firstName;
-  }
-
-  isAreaChecked(area: Area) {
-    return area === this.appService.filterValue().area;
-  }
-
-  isSectorChecked(id: number): boolean {
-    return this.appService.filterValue().sectors.has(id);
   }
 
   updateArea(area: Area) {
@@ -63,8 +68,12 @@ export class SidebarComponent implements OnInit {
   }
 
   openLookUpDialog() {
-    this.dialog.open(LookUpComponent, {
-      panelClass: 'mat-dialog--sm'
+    const query = '{ organizations { id name address { country }} }';
+    this.appService.queryService(query).subscribe(data => {
+      this.dialog.open(LookUpComponent, {
+        panelClass: 'mat-dialog--sm',
+        data
+      });
     });
   }
 }

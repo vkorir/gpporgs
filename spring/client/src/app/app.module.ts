@@ -44,6 +44,8 @@ import { ConfigService } from './config.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LookUpComponent } from './look-up/look-up.component';
 import { SubmissionState } from './model/submission.state';
+import { RouteReuseStrategy } from '@angular/router';
+import { CacheRouteReuseStrategy } from './cache-route-reuse.strategy';
 // import { ValidateFormDirective } from './validate-form.directive';
 
 const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
@@ -86,6 +88,10 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
+    },
+    {
+      provide: RouteReuseStrategy,
+      useClass: CacheRouteReuseStrategy
     }
   ],
   bootstrap: [AppComponent],

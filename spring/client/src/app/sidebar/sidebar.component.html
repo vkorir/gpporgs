@@ -6,18 +6,17 @@
 <h2 class="mat-subheading-1" fxLayoutAlign="center center" id="filter-subheading">FILTER BY</h2>
 <span class="mat-subheading-1">AREA</span>
 <p>
-  <mat-radio-group aria-label="Select Area" fxLayout="column" fxLayoutGap="4px">
-    <mat-radio-button color="primary" value="all" (click)="updateArea(area.ALL)" [checked]="isAreaChecked(area.ALL)">all</mat-radio-button>
-    <mat-radio-button color="primary" value="domestic" (click)="updateArea(area.DOMESTIC)" [checked]="isAreaChecked(area.DOMESTIC)">domestic</mat-radio-button>
-    <mat-radio-button color="primary" value="international" (click)="updateArea(area.INTERNATIONAL)" [checked]="isAreaChecked(area.INTERNATIONAL)">international</mat-radio-button>
+  <mat-radio-group aria-label="Select Area" fxLayout="column" fxLayoutGap="4px" [formControl]="areaControl">
+    <mat-radio-button color="primary" [value]="area.ALL">all</mat-radio-button>
+    <mat-radio-button color="primary" [value]="area.DOMESTIC">domestic</mat-radio-button>
+    <mat-radio-button color="primary" [value]="area.INTERNATIONAL">international</mat-radio-button>
   </mat-radio-group>
 </p>
 <span class="mat-subheading-1">SECTORS</span>
 <p class="overflow-y" id="filter-sectors">
   <mat-checkbox color="primary" fxLayout="row"
-                *ngFor="let sector of sectors(); let i = index"
-                [checked]="isSectorChecked(sector.id)"
-                (click)="updateSectors(sector.value)">
-    {{ i == sectors().length - 1 ? 'Other' : sector.value }}
+                *ngFor="let id of sectors(); let i = index"
+                [formControl]="control(i)">
+    {{ sector(id).toLowerCase().startsWith('other') ? 'Other' : sector(id) }}
   </mat-checkbox>
 </p>

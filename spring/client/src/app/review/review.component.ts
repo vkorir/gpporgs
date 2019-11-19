@@ -1,11 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatAutocomplete, MatAutocompleteSelectedEvent, MatDialogRef, MatSnackBar } from '@angular/material';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatAutocomplete, MatAutocompleteSelectedEvent, MatDialogRef, MatSnackBar } from '@angular/material';
 import { AppService } from '../app.service';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { SubmissionState } from '../model/submission.state';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import gql from 'graphql-tag';
 
 @Component({
   selector: 'app-review',
@@ -14,10 +13,12 @@ import gql from 'graphql-tag';
 })
 export class ReviewComponent implements OnInit {
 
+  isNewReview: boolean;
   firstPage = true;
   siteLocState = true;
   private submitting = false;
   readonly numContacts = this.state.numContacts;
+  readonly numTypes = this.appService.types.size;
   durations = ['<2 months', '2-4 months', '4-6 months', '6-12 months', '>1 year'];
 
   languageControl = new FormControl();
@@ -31,13 +32,18 @@ export class ReviewComponent implements OnInit {
   constructor(private appService: AppService,
               private snackBar: MatSnackBar,
               private dialogRef: MatDialogRef<ReviewComponent>,
-              private state: SubmissionState) {
+              private state: SubmissionState,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.isNewReview = data.isNewReview;
     this.languages = state.review.controls.languages.value;
-    this.allLanguages = appService.languages.map(language => language.id);
+    this.allLanguages = [...appService.languages.keys()];
     this.filteredLanguages = this.languageControl.valueChanges.pipe(
       startWith(null),
-      map(language => language ? this.filter(language) : this.allLanguages.slice())
+      map(value => value ? this.filter(value) : this.allLanguages.slice())
     );
+    if (!!data.organization) {
+      SubmissionState.populateFields(data.organization, state.organization);
+    }
   }
 
   ngOnInit() { }
@@ -50,40 +56,56 @@ export class ReviewComponent implements OnInit {
     return this.state.review;
   }
 
-  regions(): any[] {
-    return this.appService.regions;
+  regions(): Iterable<number> {
+    return [...this.appService.regions.keys()];
   }
 
-  countries(): any[] {
-    return this.appService.countries;
+  region(id: number): string {
+    return this.appService.regions.get(id);
   }
 
-  affiliations(): any[] {
-    return this.appService.affiliations;
+  countries(): Iterable<string> {
+    return [...this.appService.countries.keys()];
   }
 
-  types(): any[] {
-    return this.appService.types;
+  country(id: string): string {
+    return this.appService.countries.get(id);
   }
 
-  sectors(): any[] {
-    return this.appService.sectors;
+  affiliations(): Iterable<number> {
+    return [...this.appService.affiliations.keys()];
   }
 
-  getLanguage(id: string): string {
-    for (const language of this.appService.languages) {
-      if (language.id === id) {
-        return language.value;
-      }
-    }
+  affiliation(id: number): string {
+    return this.appService.affiliations.get(id);
   }
 
-  affiliationControls(formGroup: FormGroup): FormControl[] {
-    return (formGroup.controls.affiliations as FormArray).controls as FormControl[];
+  types(): Iterable<number> {
+    return [...this.appService.types.keys()];
   }
 
-  sectorControls(formGroup: FormGroup): FormControl[] {
-    return (formGroup.controls.sectors as FormArray).controls as FormControl[];
+  type(id: number): string {
+    return this.appService.types.get(id);
+  }
+
+  sectors(): Iterable<number> {
+    return [...this.appService.sectors.keys()];
+  }
+
+  sector(id: number): string {
+    return this.appService.sectors.get(id);
+  }
+
+  language(id: string): string {
+    return this.appService.languages.get(id);
+  }
+
+  affiliationControls(formGroup: FormGroup, index: number): FormControl {
+    return (formGroup.controls.affiliations as FormArray).controls[index] as FormControl;
+  }
+
+  sectorControls(formGroup: FormGroup, index: number): FormControl {
+    return (formGroup.controls.sectors as FormArray).controls[index] as FormControl;
   }
 
   contactControl(index: number, field: string): FormControl {
@@ -92,15 +114,18 @@ export class ReviewComponent implements OnInit {
     return contact.controls[field] as FormControl;
   }
 
-  contactsIterator(): number[] {
+  contacts(): number[] {
     return [...Array(this.numContacts).keys()];
   }
 
-  private filter(value: string): string[] {
-    return this.appService.languages.filter(language => {
-      return language.value.toLowerCase().indexOf(value.toLowerCase()) === 0 &&
-        !this.languages.includes(language.id);
-    }).map(language => language.id);
+  private filter(filterValue: string): string[] {
+    const filtered = [];
+    this.appService.languages.forEach((value, key, _) => {
+      if (value.toLowerCase().indexOf(filterValue.toLowerCase()) === 0 && !this.languages.includes(key)) {
+        filtered.push(key);
+      }
+    });
+    return filtered;
   }
 
   formatSliderLabel(value: number): string | number {

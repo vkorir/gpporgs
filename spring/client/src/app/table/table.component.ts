@@ -14,59 +14,50 @@ import { DetailsComponent } from '../details/details.component';
 export class TableComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
-  dataSource: MatTableDataSource<Organization> = new MatTableDataSource();
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  organizations: any[] = [];
   private filter: Observable<Filter>;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private appService: AppService, private dialog: MatDialog) {
-    const org1 = {id: 0, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org2 = {id: 1, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org3 = {id: 2, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org4 = {id: 3, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org5 = {id: 4, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org6 = {id: 5, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org7 = {id: 6, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org8 = {id: 7, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org9 = {id: 8, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org10 = {id: 9, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org11 = {id: 10, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org12 = {id: 11, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org121 = {id: 11, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org21 = {id: 11, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org31 = {id: 25, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org41 = {id: 31, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org51 = {id: 47, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org61 = {id: 85, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org71 = {id: 26, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org81 = {id: 76, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org91 = {id: 89, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org1011 = {id: 39, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org111 = {id: 10, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org3121 = {id: 111, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org15 = {id: 39, type: 'Type B', name: 'Exam', location: 'US', sectors: ['Policy', 'Politics']};
-    const org67 = {id: 10, type: 'Test Type', name: 'Test', location: 'Kenya', sectors: ['Education', 'Tourism']};
-    const org39 = {id: 111, type: 'Marc Arthur', name: 'Bins', location: 'Canada', sectors: ['Research', 'Industry']};
-    this.dataSource = new MatTableDataSource<Organization>([org1, org2, org3, org4, org5, org6, org7, org8, org9, org10, org11, org12,
-    org121, org21, org31, org41, org51, org71, org91, org1011, org3121, org111, org61, org81, org15, org67, org39]);
     this.filter = this.appService.filterState();
   }
 
   ngOnInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    const query = `{ organizations { id name type { value } address { country { value } } sectors } }`;
-    // this.appService.queryService(query).subscribe(({ organizations }) => {
-    //   // this.dataSource = new MatTableDataSource<Organization>(organizations as [Organization]);
-    // });
+    const query = '{ organizations { id name type address { country } sectors } }';
+    this.appService.queryService(query).subscribe(data => {
+      this.organizations = data.organizations.map(organization => this.organization(organization));
+      this.dataSource = new MatTableDataSource<any>(this.organizations);
+    });
     this.filter.subscribe(filter => {
       this.dataSource.filter = filter.searchString.trim().toLocaleLowerCase();
     });
   }
 
-  updatePagination($event) {
-    console.log({ offset: this.paginator.pageIndex * this.paginator.pageSize, limit: this.paginator.pageSize });
+  type(id: number): string {
+    return this.appService.types.get(id);
+  }
+
+  country(id: string): string {
+    return this.appService.countries.get(id);
+  }
+
+  sectors(ids: number[]): string {
+    return ids.map(id => this.appService.sectors.get(id)).join('\n\t');
+  }
+
+  private organization(data: any): any {
+    return {
+      id: data.id,
+      name: data.name,
+      type: this.type(data.type),
+      country: this.country(data.address.country),
+      sectors: this.sectors(data.sectors)
+    };
   }
 
   openDetailsModal(id: number) {
@@ -74,7 +65,9 @@ export class TableComponent implements OnInit {
     const details = 'name region phone email website affiliations type sectors';
     const contacts = 'contacts { name role email phone }';
     const attributes = `{ ${details} ${address} ${contacts} }`;
-    const query = `{ organization(id: ${id}) ${attributes} }`;
+    const reviewInfo = 'id region languages sectors cost stipend workDone evaluation';
+    const reviews = `reviews (organizationId: ${id}) { address { city country } ${reviewInfo} }`;
+    const query = `{ organization(id: ${id}) ${attributes} ${reviews} }`;
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(DetailsComponent, {
         panelClass: 'mat-dialog--md',

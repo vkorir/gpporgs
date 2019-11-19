@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
-import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { ReviewComponent } from '../review/review.component';
 
 @Component({
@@ -13,61 +13,38 @@ import { ReviewComponent } from '../review/review.component';
 })
 export class LookUpComponent implements OnInit {
 
-  searchControl = new FormControl();
   organizations: any[] = [];
-  searchResults: Observable<any[]>;
+  lookUpControl = new FormControl();
+  lookUpResults: Observable<any[]>;
 
   constructor(private appService: AppService,
               private snackBar: MatSnackBar,
               private dialogRef: MatDialogRef<LookUpComponent>,
-              private dialog: MatDialog) {
-    const query = '{ organizations { id name address { country }} }';
-    this.appService.queryService(query).subscribe(data => {
-      if (data.message) {
-        this.appService.openSnackBar(this.snackBar, data.message);
-      } else if (!!data) {
-        this.organizations = data.organizations;
-      }
-    });
-  }
-
-  ngOnInit() {
-    this.searchResults = this.searchControl.valueChanges.pipe(
-      debounceTime(1000),
-      map(value => this._filter(value))
+              private dialog: MatDialog,
+              @Inject(MAT_DIALOG_DATA) private data: any) {
+    this.organizations = data.organizations;
+    this.lookUpResults = this.lookUpControl.valueChanges.pipe(
+      startWith(null),
+      map(value => {
+        if (!value || value.length < 2) {
+          return [];
+        }
+        return this.organizations.filter(organization => organization.name.toLowerCase().startsWith(value.toLowerCase()));
+      })
     );
   }
 
-  _filter(organization) {
-    const filterValue = organization.name;
-    if (filterValue === '') {
-      return [];
-    }
-    return this.organizations.filter(option => option.name.toLowerCase().includes(filterValue));
-  }
+  ngOnInit() { }
 
-  getCountry(code: string): string {
-    for (const country of this.appService.countries) {
-      if (country.code === code) {
-        return country.value;
-      }
-    }
-  }
-
-  notFound(name) {
-    if (!!name) {
-      for (const organization of this.organizations) {
-        if (organization.name.toLowerCase() === name.toLowerCase()) {
-          return false;
-        }
-      }
-    }
-    return true;
+  country(id: string): string {
+    return this.appService.countries.get(id);
   }
 
   fetchOrganization(id: number) {
-    const info = '{ id name region phone email address { street city state zip country } contacts { name role phone email }}';
-    const query = `{ organization(id: ${id}) ${info}`;
+    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved';
+    const address = 'address { street city state zip country }';
+    const contacts = 'contacts { name role phone email }';
+    const query = `{ organization(id: ${id}) { ${info} ${address} ${contacts} }}`;
     this.appService.queryService(query).subscribe(data => {
       this.openReviewDialog(data);
     });
@@ -78,7 +55,7 @@ export class LookUpComponent implements OnInit {
     this.dialog.open(ReviewComponent, {
       panelClass: 'mat-dialog--md',
       disableClose: true,
-      data
+      data: { ...data, isNewReview: true }
     });
   }
 }
