@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar } from '@angular/
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ReviewComponent } from '../review/review.component';
+import { MainModalComponent } from '../main-modal/main-modal.component';
 
 @Component({
   selector: 'app-look-up',
@@ -41,9 +41,9 @@ export class LookUpComponent implements OnInit {
   }
 
   fetchOrganization(id: number) {
-    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved';
-    const address = 'address { street city state zip country }';
-    const contacts = 'contacts { name role phone email }';
+    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved lastEdited';
+    const address = 'address { id street city state zip country }';
+    const contacts = 'contacts { id name role phone email }';
     const query = `{ organization(id: ${id}) { ${info} ${address} ${contacts} }}`;
     this.appService.queryService(query).subscribe(data => {
       this.openReviewDialog(data);
@@ -52,10 +52,10 @@ export class LookUpComponent implements OnInit {
 
   openReviewDialog(data: any) {
     this.dialogRef.close();
-    this.dialog.open(ReviewComponent, {
+    this.dialog.open(MainModalComponent, {
       panelClass: 'mat-dialog--md',
       disableClose: true,
-      data: { ...data, isNewReview: true }
+      data: { ...data, disableControl: false }
     });
   }
 }

@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Organization } from '../model/organization';
 import { AppService } from '../app.service';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Filter } from '../model/filter';
-import { DetailsComponent } from '../details/details.component';
+import { Organization } from '../model/organization';
+import { MainModalComponent } from '../main-modal/main-modal.component';
 
 @Component({
   selector: 'app-table',
@@ -14,8 +14,8 @@ import { DetailsComponent } from '../details/details.component';
 export class TableComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource();
-  organizations: any[] = [];
+  dataSource: MatTableDataSource<Organization> = new MatTableDataSource();
+  organizations: Organization[] = [];
   private filter: Observable<Filter>;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -30,51 +30,45 @@ export class TableComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     const query = '{ organizations { id name type address { country } sectors } }';
     this.appService.queryService(query).subscribe(data => {
-      this.organizations = data.organizations.map(organization => this.organization(organization));
-      this.dataSource = new MatTableDataSource<any>(this.organizations);
+      this.organizations = data.organizations.map(organization => new Organization(organization));
+      this.dataSource = new MatTableDataSource<Organization>(this.organizations);
     });
-    this.filter.subscribe(filter => {
-      this.dataSource.filter = filter.searchString.trim().toLocaleLowerCase();
-    });
+    this.filter.subscribe(() => this._filter());
   }
 
-  type(id: number): string {
-    return this.appService.types.get(id);
+  type(organization: Organization): string {
+    return this.appService.types.get(organization.type);
   }
 
-  country(id: string): string {
-    return this.appService.countries.get(id);
+  country(organization: Organization): string {
+    return this.appService.countries.get(organization.address.country);
   }
 
-  sectors(ids: number[]): string {
-    return ids.map(id => this.appService.sectors.get(id)).join('\n\t');
+  private sectors(organization: Organization): string {
+    const sectors = organization.sectors.map(id => this.appService.sectors.get(id));
+    if (!!organization.sectorOther) {
+      sectors.push(organization.sectorOther);
+    }
+    return sectors.join('\n');
   }
 
-  private organization(data: any): any {
-    return {
-      id: data.id,
-      name: data.name,
-      type: this.type(data.type),
-      country: this.country(data.address.country),
-      sectors: this.sectors(data.sectors)
-    };
+  private _filter(): void {
+    const filter = this.appService.filterValue();
+    const filtered = this.organizations.filter(organization => organization.applyFilter(filter, this.appService));
+    this.dataSource = new MatTableDataSource<any>(filtered);
   }
 
   openDetailsModal(id: number) {
-    const address = 'address { street city state zip country }';
-    const details = 'name region phone email website affiliations type sectors';
-    const contacts = 'contacts { name role email phone }';
-    const attributes = `{ ${details} ${address} ${contacts} }`;
-    const reviewInfo = 'id region languages sectors cost stipend workDone evaluation';
-    const reviews = `reviews (organizationId: ${id}) { address { city country } ${reviewInfo} }`;
-    const query = `{ organization(id: ${id}) ${attributes} ${reviews} }`;
+    const organization = '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved ' +
+      'contacts { name role email phone } address { street city state zip country } lastEdited }';
+    const review = '{ id submitted region languages address { city country } sectors cost stipend workDone evaluation ' +
+      'difficulties safety responsiveness duration other reviewer { id firstName } anonymous lastEdited }';
+    const query = `{ organization(id: ${id}) ${organization} reviews (organizationId: ${id}) ${review} }`;
     this.appService.queryService(query).subscribe(data => {
-      this.dialog.open(DetailsComponent, {
+      this.dialog.open(MainModalComponent, {
         panelClass: 'mat-dialog--md',
-        data
+        data: { ...data, disableControl: true }
       });
     });
-    // console.log(this.paginator.pageSize);
-    // console.log(this.paginator.pageIndex);
   }
 }

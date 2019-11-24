@@ -10,7 +10,6 @@ import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { TableComponent } from './table/table.component';
 import { DetailsComponent } from './details/details.component';
-import { ReviewComponent } from './review/review.component';
 import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,7 +45,7 @@ import { LookUpComponent } from './look-up/look-up.component';
 import { SubmissionState } from './model/submission.state';
 import { RouteReuseStrategy } from '@angular/router';
 import { CacheRouteReuseStrategy } from './cache-route-reuse.strategy';
-// import { ValidateFormDirective } from './validate-form.directive';
+import { MainModalComponent } from './main-modal/main-modal.component';
 
 const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
   MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
@@ -62,11 +61,10 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     SidebarComponent,
     TableComponent,
     DetailsComponent,
-    ReviewComponent,
     AdminComponent,
     LoginComponent,
     LookUpComponent,
-    // ValidateFormDirective
+    MainModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,7 +95,7 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
   bootstrap: [AppComponent],
   entryComponents: [
     AdminComponent,
-    ReviewComponent,
+    MainModalComponent,
     LookUpComponent,
     DetailsComponent
   ]

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
 import { MatDialog } from '@angular/material';
 import { Area } from '../model/area';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { LookUpComponent } from '../look-up/look-up.component';
 
 @Component({
@@ -14,29 +14,16 @@ import { LookUpComponent } from '../look-up/look-up.component';
 export class SidebarComponent implements OnInit {
 
   area = Area;
-  areaControl = this.fb.control(this.area.ALL);
-  sectorControls = this.buildSectorControls();
+  areaControl = this.fb.control(Area.ALL);
+  checked = new Set<number>(this.appService.sectors.keys());
+  private _ = this.fb.control(this.checked);
 
   constructor(private appService: AppService,
               private dialog: MatDialog,
               private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.areaControl.valueChanges.subscribe(value => console.log(value));
-  }
-
-  buildSectorControls(): FormArray {
-    const formArray = this.fb.array([]);
-    for (const _ of this.appService.sectors) {
-      const control = this.fb.control(true);
-      control.valueChanges.subscribe(value => console.log(value));
-      formArray.push(control);
-    }
-    return formArray;
-  }
-
-  control(index: number): FormControl {
-    return this.sectorControls.controls[index] as FormControl;
+    this.areaControl.valueChanges.subscribe(() => this.updateArea());
   }
 
   sectors(): Iterable<number> {
@@ -51,23 +38,28 @@ export class SidebarComponent implements OnInit {
     return this.appService.userValue().firstName;
   }
 
-  updateArea(area: Area) {
+  private updateArea(): void {
     const filter = this.appService.filterValue();
-    filter.area = area;
+    filter.area = this.areaControl.value;
     this.appService.updateFilter(filter);
   }
 
-  updateSectors(id: number) {
-    const filter = this.appService.filterValue();
-    if (filter.sectors.has(id)) {
-      filter.sectors.delete(id);
+  onSectorChange(id: number): void {
+    if (this.checked.has(id)) {
+      this.checked.delete(id);
     } else {
-      filter.sectors.add(id);
+      this.checked.add(id);
     }
+    this.updateSectors();
+  }
+
+  private updateSectors(): void {
+    const filter = this.appService.filterValue();
+    filter.sectors = new Set<number>(this.checked);
     this.appService.updateFilter(filter);
   }
 
-  openLookUpDialog() {
+  openLookUpDialog(): void {
     const query = '{ organizations { id name address { country }} }';
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(LookUpComponent, {

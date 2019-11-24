@@ -1,6 +1,8 @@
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { AppService } from '../app.service';
 import { Injectable } from '@angular/core';
+import {Organization} from './organization';
+import {Review} from './review';
 
 @Injectable({
   providedIn: 'root'
@@ -8,57 +10,58 @@ import { Injectable } from '@angular/core';
 export class SubmissionState {
 
   readonly numContacts = 3;
-  organization = this.fb.group({
+  private organization = this.fb.group({
     id: this.fb.control(null),
-    name: this.fb.control('', [Validators.required]),
+    name: this.fb.control(null, [Validators.required]),
     address: this.fb.group({
-      street: this.fb.control(''),
-      city: this.fb.control(''),
-      state: this.fb.control(''),
-      zip: this.fb.control(''),
-      country: this.fb.control('', [Validators.required])
+      street: this.fb.control(null),
+      city: this.fb.control(null),
+      state: this.fb.control(null),
+      zip: this.fb.control(null),
+      country: this.fb.control(null, [Validators.required])
     }),
-    region: this.fb.control('', [Validators.required]),
-    email: this.fb.control(''),
-    phone: this.fb.control(''),
-    website: this.fb.control(''),
+    region: this.fb.control(null, [Validators.required]),
+    email: this.fb.control(null),
+    phone: this.fb.control(null),
+    website: this.fb.control(null),
     type: this.fb.control(null),
-    typeOther: this.fb.control(''),
-    description: this.fb.control(''),
-    affiliations: this.buildCheckboxControls(this.appService.affiliations.size),
-    sectors: this.buildCheckboxControls(this.appService.sectors.size),
-    sectorOther: this.fb.control(''),
+    typeOther: this.fb.control(null),
+    description: this.fb.control(null),
+    affiliations: this.fb.control([]),
+    sectors: this.fb.control([]),
+    sectorOther: this.fb.control(null),
     approved: this.fb.control(false),
     contacts: this.buildContactControls()
   });
-  review = this.fb.group({
+  private review = this.fb.group({
     siteLocState: this.fb.control(true),
+    timestamp: this.fb.control(new Date().toUTCString()),
     address: this.fb.group({
-      street: this.fb.control(''),
-      city: this.fb.control(''),
-      state: this.fb.control(''),
-      zip: this.fb.control(''),
-      country: this.fb.control('', [Validators.required])
+      street: this.fb.control(null),
+      city: this.fb.control(null),
+      state: this.fb.control(null),
+      zip: this.fb.control(null),
+      country: this.fb.control(null, [Validators.required])
     }),
-    region: this.fb.control('', [Validators.required]),
+    region: this.fb.control(null, [Validators.required]),
     languages: this.fb.control([]),
-    difficulties: this.fb.control(''),
-    sectors: this.buildCheckboxControls(this.appService.sectors.size),
-    sectorOther: this.fb.control(''),
+    difficulties: this.fb.control(null),
+    sectors: this.fb.control([]),
+    sectorOther: this.fb.control(null),
     cost: this.fb.control(0),
     stipend: this.fb.control(0),
-    duration: this.fb.control(''),
-    workDone: this.fb.control('', [Validators.required]),
-    typicalDay: this.fb.control(''),
-    evaluation: this.fb.control('', [Validators.required]),
-    other: this.fb.control(''),
-    safety: this.fb.control('', [Validators.required]),
-    responsiveness: this.fb.control(''),
+    duration: this.fb.control(null),
+    workDone: this.fb.control(null, [Validators.required]),
+    typicalDay: this.fb.control(null),
+    evaluation: this.fb.control(null, [Validators.required]),
+    other: this.fb.control(null),
+    safety: this.fb.control(null, [Validators.required]),
+    responsiveness: this.fb.control(null),
     anonymous: this.fb.control(true),
     reviewerId: this.fb.control(this.appService.userValue().id)
   });
 
-  constructor(private fb: FormBuilder, private appService: AppService) { }
+  constructor(private fb: FormBuilder, private appService: AppService) {}
 
   static roundCurrency(amount: number): number {
     if (amount && amount > 900) {
@@ -68,16 +71,6 @@ export class SubmissionState {
       return Math.round(amount / 100) * 100;
     }
     return amount;
-  }
-
-  static readCheckboxIds(states: boolean[]): number[] {
-    const ids = [];
-    for (let i = 0; i < states.length; i++) {
-      if (states[i]) {
-        ids.push(i + 1); // id = index + 1
-      }
-    }
-    return ids;
   }
 
   static queryFy(object: any): any {
@@ -100,33 +93,38 @@ export class SubmissionState {
   }
 
   static populateFields(source: any, target: AbstractControl): void {
-    if (Array.isArray(source)) {
-      for (let i = 0; i < source.length; i++) {
-        SubmissionState.populateFields(source[i], (target as FormArray).controls[i]);
-      }
-    } else if (!!source && typeof source === 'object') {
-      Object.keys(source).forEach(key => {
+    if (target instanceof FormGroup) {
+      Object.keys(target.controls).forEach(key => {
         if (key === 'languages') {
-          (target as FormGroup).controls[key].setValue(source[key]);
-        } else if (['affiliations', 'sectors'].includes(key)) {
-          for (const id of source[key]) {
-            (target as FormArray).controls[key].controls[id - 1].setValue(true);
+          target.controls.languages.setValue(source[key]);
+        } else if (key === 'affiliations' || key === 'sectors') {
+          for (let i = 0; i < (target.controls[key] as FormArray).controls.length; i++) {
+            SubmissionState.populateFields(source[key].includes(i + 1), (target.controls[key] as FormArray).controls[i]);
           }
-        } else {
-          SubmissionState.populateFields(source[key], (target as FormGroup).controls[key]);
         }
+        SubmissionState.populateFields(source[key], target.controls[key]);
       });
-    }  else if (!!target) {
-      (target as FormControl).setValue(source);
+    } else if (target instanceof FormArray) {
+      for (let i = 0; i < source.length; i++) {
+        SubmissionState.populateFields(source[i], target.controls[i]);
+      }
+    } else if (!!target) {
+      target.setValue(source);
     }
   }
 
-  private buildCheckboxControls(size: number): FormArray {
-    const checkboxControls = new FormArray([]);
-    for (const _ of [...Array(size).keys()]) {
-      checkboxControls.push(this.fb.control(false));
+  static enableDisableControls(control: AbstractControl, flag: boolean): void {
+    if (control instanceof FormGroup) {
+      Object.keys(control.controls).forEach(key => {
+        SubmissionState.enableDisableControls(control.controls[key], flag);
+      });
+    } else if (control instanceof FormArray) {
+      for (const ctrl of control.controls) {
+        SubmissionState.enableDisableControls(ctrl, flag);
+      }
+    } else {
+      flag ? control.enable() : control.disable();
     }
-    return checkboxControls;
   }
 
   private buildContactControls(): FormArray {
@@ -147,15 +145,9 @@ export class SubmissionState {
     const organization = this.organization.value;
     const review = this.review.value;
 
-    organization.affiliations = SubmissionState.readCheckboxIds(organization.affiliations);
-    organization.sectors = SubmissionState.readCheckboxIds(organization.sectors);
-    organization.region = Number(organization.region);
-    organization.type = Number(organization.type);
-    review.sectors = SubmissionState.readCheckboxIds(review.sectors);
     if (this.review.controls.siteLocState.value) {
       review.address = organization.address;
     }
-    review.region = Number(review.region);
     review.cost = SubmissionState.roundCurrency(review.cost);
     review.stipend = SubmissionState.roundCurrency(review.stipend);
 
