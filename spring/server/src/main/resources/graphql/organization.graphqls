@@ -9,14 +9,16 @@ type Organization {
     affiliations: [Int]
     type: Int!
     typeOther: String
-    region: String!
+    region: Int!
     sectors: [Int]
     sectorOther: String
     approved: Boolean!
     contacts: [Contact]
+    lastEdited: Float
 }
 
 input OrganizationInput {
+    id: Int
     name: String!
     description: String
     address: AddressInput
@@ -31,6 +33,7 @@ input OrganizationInput {
     sectorOther: String
     approved: Boolean
     contacts: [ContactInput]
+    lastEdited: Float
 }
 
 extend type Query {

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewRepository extends CrudRepository<Review, Long> {
-    Iterable<Review> findAllByOrganizationId(Long organizationId);
+    Iterable<Review> findAllByOrganizationIdOrderBySubmittedDesc(Long organizationId);
 }

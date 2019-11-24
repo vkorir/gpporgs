@@ -1,7 +1,8 @@
 type Review {
-    id: ID
+    id: Int
+    submitted: Float
     address: Address
-    region: String
+    region: Int
     languages: [String]
     difficulties: String
     sectors: [Int]
@@ -17,12 +18,15 @@ type Review {
     responsiveness: Int
     anonymous: Boolean
     reviewer: User
+    lastEdited: Float
 }
 
 input ReviewInput {
+    id: Int
+    submitted: Float!
     organizationId: Int
     address: AddressInput!
-    region: String!
+    region: Int!
     languages: [String]!
     difficulties: String
     sectors: [Int]
@@ -38,6 +42,8 @@ input ReviewInput {
     responsiveness: Int
     anonymous: Boolean!
     reviewerId: String!
+    reviewer: UserInput
+    lastEdited: Float!
 }
 
 extend type Query {

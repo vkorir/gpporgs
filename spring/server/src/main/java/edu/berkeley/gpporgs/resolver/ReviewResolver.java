@@ -4,10 +4,14 @@ import com.coxautodev.graphql.tools.GraphQLResolver;
 import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.AddressRepository;
 import edu.berkeley.gpporgs.repository.UserRepository;
+import edu.berkeley.gpporgs.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +37,11 @@ public class ReviewResolver implements GraphQLResolver<Review> {
     }
 
     public User reviewer(Review review) {
-        return userRepository.findById(review.getReviewerId()).orElse(null);
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            return userRepository.findById(review.getReviewerId()).orElse(null);
+        }
+        return null;
     }
 
     public Iterable<Long> sectors(Review review) {

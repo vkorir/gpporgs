@@ -20,11 +20,12 @@ import javax.persistence.Transient;
 @Table(name = "reviews")
 public class Review {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    private @NonNull Long submitted;
     private Long organizationId;
     private @NonNull Long addressId;
     @Transient
     private @NonNull Address address;
-    private @NonNull String region;
+    private @NonNull Long region;
     private @NonNull String languageCodes;
     @Transient
     private @NonNull Iterable<String> languages;
@@ -46,4 +47,5 @@ public class Review {
     private @NonNull String reviewerId;
     @Transient
     private User reviewer;
+    private @NonNull Long lastEdited;
 }

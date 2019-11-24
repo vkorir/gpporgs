@@ -1,4 +1,5 @@
 type Address {
+    id: Int
     street: String
     city: String
     state: String
@@ -7,6 +8,7 @@ type Address {
 }
 
 input AddressInput {
+    id: Int
     street: String
     city: String
     state: String

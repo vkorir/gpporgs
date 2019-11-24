@@ -1,4 +1,5 @@
 type Contact {
+    id: Int
     name: String
     role: String
     email: String
@@ -6,7 +7,7 @@ type Contact {
 }
 
 input ContactInput {
-    organizationId: Int
+    id: Int
     name: String
     role: String
     email: String
