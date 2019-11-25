@@ -6,30 +6,27 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
     private String username;
-    private String firstName;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
+    public static final String USER = "ROLE_USER";
+    public static final String ADMIN = "ROLE_ADMIN";
 
-    private UserPrincipal(String username, String firstName, Collection<? extends GrantedAuthority> authorities) {
+    private UserPrincipal(String username, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
-        this.firstName = firstName;
         this.authorities = authorities;
     }
 
     static UserPrincipal create(User user) {
-        String role = "ROLE_USER";
+        List<GrantedAuthority> authorities = new ArrayList<>();
         if (user.getIsAdmin()) {
-            role = "ROLE_ADMIN";
+            authorities.add(new SimpleGrantedAuthority(ADMIN));
         }
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
-        return new UserPrincipal(user.getId(), user.getFirstName(), authorities);
+        authorities.add(new SimpleGrantedAuthority(USER));
+        return new UserPrincipal(user.getId(), authorities);
     }
 
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
@@ -50,7 +47,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     @Override
     public String getName() {
-        return firstName;
+        return getUsername();
     }
 
     @Override

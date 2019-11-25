@@ -33,7 +33,9 @@ import {
   MatExpansionModule,
   MatSlideToggleModule,
   MatChipsModule,
-  MatSliderModule
+  MatSliderModule,
+  MatProgressBarModule,
+  MatCardModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -46,11 +48,14 @@ import { SubmissionState } from './model/submission.state';
 import { RouteReuseStrategy } from '@angular/router';
 import { CacheRouteReuseStrategy } from './cache-route-reuse.strategy';
 import { MainModalComponent } from './main-modal/main-modal.component';
+import { AddUserComponent } from './admin/add-user/add-user.component';
+import { AllUsersComponent } from './admin/all-users/all-users.component';
+import { OrganizationsComponent } from './admin/organizations/organizations.component';
 
 const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
   MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
   MatSortModule, MatDialogModule, MatSnackBarModule, MatIconModule, MatAutocompleteModule, MatSelectModule,
-  MatExpansionModule, MatSlideToggleModule, MatChipsModule, MatSliderModule
+  MatExpansionModule, MatSlideToggleModule, MatChipsModule, MatSliderModule, MatProgressBarModule, MatCardModule
 ];
 
 @NgModule({
@@ -65,6 +70,9 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     LoginComponent,
     LookUpComponent,
     MainModalComponent,
+    AddUserComponent,
+    AllUsersComponent,
+    OrganizationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,7 +105,10 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     AdminComponent,
     MainModalComponent,
     LookUpComponent,
-    DetailsComponent
+    DetailsComponent,
+    AddUserComponent,
+    AllUsersComponent,
+    OrganizationsComponent
   ]
 })
 export class AppModule { }

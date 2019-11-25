@@ -8,10 +8,13 @@ import edu.berkeley.gpporgs.security.UserPrincipal;
 import graphql.GraphQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,5 +102,13 @@ public class QueryResolver implements GraphQLQueryResolver {
 
     public User user(String username) {
         return userRepository.findById(username).orElse(null);
+    }
+
+    public Iterable<User> users() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority(UserPrincipal.ADMIN))) {
+            return userRepository.findAll();
+        }
+        return new ArrayList<>();
     }
 }

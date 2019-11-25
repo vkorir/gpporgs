@@ -29,13 +29,15 @@ export class MainModalComponent implements OnInit {
   contacts: number[];
   disableControl: boolean;
 
-  siteLocState = this.fb.control(true);
+  isAddrDiffControl = this.fb.control(true);
   languageControl = this.fb.control(null);
   selectedLanguages: string[];
   filteredLanguages: Observable<string[]>;
   organizationView = true;
   numTypes = this.appService.types.size;
   numSectors = this.appService.sectors.size;
+
+  isSubmitting = false;
 
   @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
@@ -222,28 +224,33 @@ export class MainModalComponent implements OnInit {
   }
 
   segue(formGroup: FormGroup, flag: boolean): void {
-    let allValid = true;
-    if (!this.disableControl && this.siteLocState.value) {
-      Object.keys(formGroup.controls).forEach(key => {
-        allValid = allValid && formGroup.controls[key].valid;
-      });
+    if (this.disableControl || formGroup.valid || (flag && !this.isAddrDiffControl.value && formGroup.controls.workDone.valid
+      && formGroup.controls.evaluation.valid)) {
+      this.organizationView = flag;
+    } else {
       formGroup.markAllAsTouched();
     }
-    if (allValid) {
-      this.organizationView = flag;
-    }
+  }
+
+  editReview(review: Review): void {
+
+  }
+
+  saveReview(): void {
+
   }
 
   submit(): void {
     const organization = this.organization.value;
     const review = this.review.value;
-    if (!this.siteLocState.value) {
+    if (!this.isAddrDiffControl.value) {
       review.address = organization.address;
       review.region = organization.region;
     }
     const variables = `organization: ${SubmissionState.queryFy(organization)}, review: ${SubmissionState.queryFy(review)}`;
     const mutation = `mutation { createReview(${variables}) { id } }`;
     this.appService.mutationService(mutation).subscribe(data => {
+      this.isSubmitting = data.loading;
       this.appService.openSnackBar(this.snackBar, 'Organization successfully submitted');
       this.dialogRef.close();
     });

@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>All Users</h2>
+<mat-dialog-content>
+  <table mat-table [dataSource]="users" fxFlexFill>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let user">{{user.firstName}}</td>
+    </ng-container>
+    <ng-container matColumnDef="accessLevel">
+      <th mat-header-cell *matHeaderCellDef>Access Level</th>
+      <td mat-cell *matCellDef="let user">{{user.isAdmin ? 'Admin, Student' : 'Student'}}</td>
+    </ng-container>
+    <ng-container matColumnDef="lastAccess">
+      <th mat-header-cell *matHeaderCellDef>Last Access</th>
+      <td mat-cell *matCellDef="let user">{{date(user.lastLogin)}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+  </table>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayoutAlign="center center">
+  <button mat-button class="warn" mat-dialog-close>Close</button>
+</mat-dialog-actions>

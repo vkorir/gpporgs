@@ -22,7 +22,7 @@ public class User {
     private @NonNull String firstName;
     private String lastName;
     private @NonNull Boolean isAdmin;
-    private @NonNull Timestamp creationTime;
+    private @NonNull Long creationTime;
     private @NonNull Integer numberOfLogin;
-    private @NonNull Timestamp lastLogin;
+    private @NonNull Long lastLogin;
 }

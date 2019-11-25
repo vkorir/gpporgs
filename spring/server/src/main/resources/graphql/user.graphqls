@@ -1,29 +1,30 @@
 type User {
-    id: String!
-    firstName: String!
-    lastName: String
-    isAdmin: Boolean!
-    creationTime: Int!
-    numberOfLogin: Int!
-    lastLogin: Int!
-}
-
-input UserInput {
-    id: String!
+    id: String
     firstName: String
     lastName: String
     isAdmin: Boolean
-    creationTime: Int
+    creationTime: Float
     numberOfLogin: Int
-    lastLogin: Int
+    lastLogin: Float
+}
+
+input UserInput {
+    id: String
+    firstName: String
+    lastName: String
+    isAdmin: Boolean
+    creationTime: Float
+    numberOfLogin: Int
+    lastLogin: Float
 }
 
 extend type Query {
     currentUser: User
     user(id: ID!): User
+    users: [User]
 }
 
 extend type Mutation {
     createUser(details: UserInput!): User
-    updateUser(id: ID!, details: UserInput!): User
+    updateUser(id: String!, details: UserInput!): User
 }

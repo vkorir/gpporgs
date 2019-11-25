@@ -58,8 +58,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         User user = new User();
         user.setIsAdmin(false);
         Date now = new Date();
-        Timestamp timestamp = new Timestamp(now.getTime());
-        user.setCreationTime(timestamp);
+        user.setCreationTime(now.getTime());
         user.setNumberOfLogin(0);
         return updateAndSaveUser(user, oAuth2UserInfo);
     }
@@ -69,8 +68,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         user.setFirstName(oAuth2UserInfo.getFirstName());
         user.setLastName(oAuth2UserInfo.getLastName());
         Date now = new Date();
-        Timestamp timestamp = new Timestamp(now.getTime());
-        user.setLastLogin(timestamp);
+        user.setLastLogin(now.getTime());
         user.setNumberOfLogin(user.getNumberOfLogin() + 1);
         return userRepository.save(user);
     }
