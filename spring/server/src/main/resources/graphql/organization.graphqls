@@ -14,7 +14,7 @@ type Organization {
     sectorOther: String
     approved: Boolean!
     contacts: [Contact]
-    lastEdited: Float
+    dateAdded: Float
 }
 
 input OrganizationInput {
@@ -33,7 +33,7 @@ input OrganizationInput {
     sectorOther: String
     approved: Boolean
     contacts: [ContactInput]
-    lastEdited: Float
+    dateAdded: Float
 }
 
 extend type Query {

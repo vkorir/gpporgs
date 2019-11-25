@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './model/user';
 import { Apollo } from 'apollo-angular';
-import { ConfigService } from './config.service';
 import gql from 'graphql-tag';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Filter } from './model/filter';
+import { baseUrl } from './baseUrl';
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +22,10 @@ export class AppService {
   public sectors = new Map<number, string>();
   public languages = new Map<string, string>();
 
-  constructor(private apollo: Apollo, private configService: ConfigService, private snackBar: MatSnackBar) {}
+  constructor(private apollo: Apollo, private snackBar: MatSnackBar) {}
 
   login(): void {
-    window.location.href = `${this.configService.getServerUrl()}/oauth2/authorize/google?redirect_uri=${window.location.origin}/login`;
+    window.location.href = `${baseUrl}/oauth2/authorize/google?redirect_uri=${baseUrl}/login`;
   }
 
   logout(): void {

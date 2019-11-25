@@ -41,7 +41,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from '@angular/cdk/layout';
 import { TokenInterceptor } from './token.interceptor';
 import { AppService } from './app.service';
-import { ConfigService } from './config.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LookUpComponent } from './look-up/look-up.component';
 import { SubmissionState } from './model/submission.state';
@@ -87,7 +86,6 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     MatSelectModule
   ],
   providers: [
-    ConfigService,
     AppService,
     SubmissionState,
     {

@@ -4,7 +4,7 @@ mysql_data_delimiter: ^
 ##### Database Properties #####
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/rateandreview_dev?driver=com.mysql.jdbc.Driver&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/rateandreview_dev?driver=com.mysql.jdbc.Driver
     username: rarudev
     password: Rr8&RevGPPwebbz
   jpa:
@@ -28,4 +28,4 @@ app:
     jwt-expiration-ms: 84000000
   oauth2:
     domain: berkeley.edu
-    authorized-redirect-uris: http://localhost:8080/login, http://localhost:4200/login, https://gpporgs-dev.berkeley.edu, http://gpporgs-dev.berkeley.edu, https://gpporgs.berkeley.edu, http://gpporgs.berkeley.edu
+    authorized-redirect-uris: http://localhost:8080/login, http://localhost:4200/login, http://gpporgs-dev.berkeley.edu, https://gpporgs.berkeley.edu, http://gpporgs.berkeley.edu

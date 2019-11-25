@@ -23,7 +23,7 @@ type Review {
 
 input ReviewInput {
     id: Int
-    submitted: Float!
+    dateAdded: Float!
     organizationId: Int
     address: AddressInput!
     region: Int!

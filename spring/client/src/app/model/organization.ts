@@ -22,7 +22,7 @@ export class Organization {
     website: null,
     approved: false,
     contacts: [],
-    lastEdited: new Date().getTime()
+    dateAdded: new Date().getTime()
   };
   id: number;
   name: string;
@@ -39,7 +39,7 @@ export class Organization {
   website: string;
   approved: boolean;
   contacts: Contact[] = [];
-  lastEdited: number;
+  dateAdded: number;
 
   constructor(object: any = {}) {
     for (const [key, value] of Object.entries(Organization.default)) {

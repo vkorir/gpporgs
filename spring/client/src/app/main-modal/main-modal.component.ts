@@ -113,8 +113,8 @@ export class MainModalComponent implements OnInit {
     return this.appService.languages.get(id);
   }
 
-  orgLastEdited(): string {
-    return this.date(this.organization.controls.lastEdited.value);
+  orgDateAdded(): string {
+    return this.date(this.organization.controls.dateAdded.value);
   }
 
   date(timestamp: number): string {

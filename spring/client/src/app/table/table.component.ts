@@ -44,7 +44,7 @@ export class TableComponent implements OnInit {
     return this.appService.countries.get(organization.address.country);
   }
 
-  private sectors(organization: Organization): string {
+  sectors(organization: Organization): string {
     const sectors = organization.sectors.map(id => this.appService.sectors.get(id));
     if (!!organization.sectorOther) {
       sectors.push(organization.sectorOther);
@@ -60,7 +60,7 @@ export class TableComponent implements OnInit {
 
   openDetailsModal(id: number) {
     const organization = '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved ' +
-      'contacts { name role email phone } address { street city state zip country } lastEdited }';
+      'contacts { name role email phone } address { street city state zip country } dateAdded }';
     const review = '{ id submitted region languages address { city country } sectors cost stipend workDone evaluation ' +
       'difficulties safety responsiveness duration other reviewer { id firstName } anonymous lastEdited }';
     const query = `{ organization(id: ${id}) ${organization} reviews (organizationId: ${id}) ${review} }`;

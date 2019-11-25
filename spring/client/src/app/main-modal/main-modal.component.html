@@ -6,7 +6,7 @@
   <h4 class="mat-dialog-title primary">
     Organization Information
     <span fxFlex="1 1 auto"></span>
-    <span *ngIf="disableControl" style="color: grey; font-size: 0.9rem;">Last edited: {{orgLastEdited()}}</span>
+    <span *ngIf="disableControl" style="color: grey; font-size: 0.9rem;">Created on: {{orgDateAdded()}}</span>
   </h4>
   <mat-dialog-content>
     <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="organization">
