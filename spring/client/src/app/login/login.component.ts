@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  login() {
-    this.appService.login();
+  login(): void {
+    window.location.assign(this.appService.loginUrl());
   }
 }

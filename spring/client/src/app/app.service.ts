@@ -24,8 +24,8 @@ export class AppService {
 
   constructor(private apollo: Apollo, private snackBar: MatSnackBar) {}
 
-  login(): void {
-    window.location.href = `${baseUrl}/oauth2/authorize/google?redirect_uri=${baseUrl}/login`;
+  loginUrl(): string {
+    return`${baseUrl}/oauth2/authorize/google?redirect_uri=${window.origin}/login`;
   }
 
   logout(): void {

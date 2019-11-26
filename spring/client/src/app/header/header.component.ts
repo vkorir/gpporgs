@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../model/user';
 import { FormControl } from '@angular/forms';
+import { baseUrl } from '../baseUrl';
 
 @Component({
   selector: 'app-header',
@@ -28,8 +29,8 @@ export class HeaderComponent implements OnInit {
     this.appService.updateFilter(filter);
   }
 
-  login() {
-    this.appService.login();
+  login(): void {
+    window.location.assign(this.appService.loginUrl());
   }
 
   logout() {

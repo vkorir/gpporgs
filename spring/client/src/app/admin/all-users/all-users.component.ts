@@ -20,7 +20,12 @@ export class AllUsersComponent implements OnInit {
   }
 
   date(timestamp: number): string {
-    const date = new Date(timestamp);
-    return `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+    const lastAccess = new Date(timestamp);
+    const month = lastAccess.getMonth() + 1;
+    const date = lastAccess.getDate() + 1;
+    const year = lastAccess.getFullYear();
+    const hours = lastAccess.getHours();
+    const minutes = lastAccess.getMinutes();
+    return `${month}/${date}/${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
   }
 }

@@ -29,3 +29,5 @@ app:
   oauth2:
     domain: berkeley.edu
     authorized-redirect-uris: http://localhost:8080/login, http://localhost:4200/login, http://gpporgs-dev.berkeley.edu, https://gpporgs.berkeley.edu, http://gpporgs.berkeley.edu
+server:
+  port: 8080

@@ -41,7 +41,7 @@ export class LookUpComponent implements OnInit {
   }
 
   fetchOrganization(id: number) {
-    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved lastEdited';
+    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved dateAdded';
     const address = 'address { id street city state zip country }';
     const contacts = 'contacts { id name role phone email }';
     const query = `{ organization(id: ${id}) { ${info} ${address} ${contacts} }}`;

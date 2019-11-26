@@ -232,6 +232,13 @@ export class MainModalComponent implements OnInit {
     }
   }
 
+  reviewValid(): boolean {
+    if (this.review.valid) {
+      return true;
+    }
+    return !this.isAddrDiffControl.value && this.review.controls.workDone.valid && this.review.controls.evaluation.valid;
+  }
+
   editReview(review: Review): void {
 
   }
