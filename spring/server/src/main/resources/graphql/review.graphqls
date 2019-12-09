@@ -17,13 +17,14 @@ type Review {
     safety: Int
     responsiveness: Int
     anonymous: Boolean
+    reviewerId: String
     reviewer: User
     lastEdited: Float
 }
 
 input ReviewInput {
     id: Int
-    dateAdded: Float!
+    submitted: Float!
     organizationId: Int
     address: AddressInput!
     region: Int!
@@ -52,5 +53,5 @@ extend type Query {
 
 extend type Mutation {
     createReview(organization: OrganizationInput!, review: ReviewInput!): Review
-    updateReview(id: ID!, details: ReviewInput!): Review
+    updateReview(review: ReviewInput!): Review
 }

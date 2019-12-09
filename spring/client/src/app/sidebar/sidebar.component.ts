@@ -15,12 +15,14 @@ export class SidebarComponent implements OnInit {
 
   area = Area;
   areaControl = this.fb.control(Area.ALL);
-  checked = new Set<number>(this.appService.sectors.keys());
-  private _ = this.fb.control(this.checked);
+  checkedRegions: Set<number>;
+  checkedSectors: Set<number>;
 
-  constructor(private appService: AppService,
-              private dialog: MatDialog,
-              private fb: FormBuilder) { }
+  constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) {
+    const filter = appService.filterValue();
+    this.checkedRegions = new Set(filter.regions);
+    this.checkedSectors = new Set(filter.sectors);
+  }
 
   ngOnInit() {
     this.areaControl.valueChanges.subscribe(() => this.updateArea());
@@ -34,6 +36,14 @@ export class SidebarComponent implements OnInit {
     return this.appService.sectors.get(id);
   }
 
+  regions(): Iterable<number> {
+    return [...this.appService.regions.keys()];
+  }
+
+  region(id: number): string {
+    return this.appService.regions.get(id);
+  }
+
   getFistName(): string {
     return this.appService.userValue().firstName;
   }
@@ -44,18 +54,29 @@ export class SidebarComponent implements OnInit {
     this.appService.updateFilter(filter);
   }
 
-  onSectorChange(id: number): void {
-    if (this.checked.has(id)) {
-      this.checked.delete(id);
+  onRegionChange(id: number): void {
+    if (this.checkedRegions.has(id)) {
+      this.checkedRegions.delete(id);
     } else {
-      this.checked.add(id);
+      this.checkedRegions.add(id);
+    }
+    const filter = this.appService.filterValue();
+    filter.regions = new Set(this.checkedRegions);
+    this.appService.updateFilter(filter);
+  }
+
+  onSectorChange(id: number): void {
+    if (this.checkedSectors.has(id)) {
+      this.checkedSectors.delete(id);
+    } else {
+      this.checkedSectors.add(id);
     }
     this.updateSectors();
   }
 
   private updateSectors(): void {
     const filter = this.appService.filterValue();
-    filter.sectors = new Set<number>(this.checked);
+    filter.sectors = new Set<number>(this.checkedSectors);
     this.appService.updateFilter(filter);
   }
 

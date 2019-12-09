@@ -6,7 +6,6 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 /**
  * @author Victor Korir

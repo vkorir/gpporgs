@@ -6,11 +6,16 @@
   padding-left: 0;
 }
 
-.review-btn {
+.save {
+  background: #88b14b !important;
+}
+
+.edit-btn {
+  width: 100px;
   opacity: 0.2;
 }
 
-.review-btn:hover {
+.edit-btn:hover {
   opacity: 0.9;
   transition: .3s all linear;
 }

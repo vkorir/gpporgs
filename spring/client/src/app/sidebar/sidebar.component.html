@@ -12,11 +12,20 @@
     <mat-radio-button color="primary" [value]="area.INTERNATIONAL">international</mat-radio-button>
   </mat-radio-group>
 </p>
+<span class="mat-subheading-1">REGIONS</span>
+<p class="overflow-y" id="filter-regions">
+  <mat-checkbox color="primary" fxLayout="row"
+                *ngFor="let id of regions()"
+                [checked]="checkedRegions.has(id)"
+                (change)="onRegionChange(id)">
+    {{ region(id) }}
+  </mat-checkbox>
+</p>
 <span class="mat-subheading-1">SECTORS</span>
 <p class="overflow-y" id="filter-sectors">
   <mat-checkbox color="primary" fxLayout="row"
                 *ngFor="let id of sectors()"
-                [checked]="checked.has(id)"
+                [checked]="checkedSectors.has(id)"
                 (change)="onSectorChange(id)">
     {{ sector(id).toLowerCase().startsWith('other') ? 'Other' : sector(id) }}
   </mat-checkbox>

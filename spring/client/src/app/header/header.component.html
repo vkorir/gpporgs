@@ -1,6 +1,6 @@
 <mat-toolbar fxLayoutAlign="center center">
   <mat-toolbar-row fxFlex.gt-md="1140px" fxFlex.md="960px" fxFlex.lt-md="98%">
-      <mat-form-field *ngIf="user | async" fxHide.lt-md="true">
+      <mat-form-field *ngIf="user | async" fxHide.lt-md="true" id="main-search-bar">
         <mat-icon matPrefix>search</mat-icon>
         <input matInput type="text" [formControl]="searchControl" placeholder="Search" aria-label="Search">
         <button mat-button mat-icon-button matSuffix
@@ -11,9 +11,9 @@
       </mat-form-field>
     <span fxFlex="1 1 auto"></span>
     <div *ngIf="user | async" fxLayoutGap="8px">
-      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Home</a>
+      <a mat-button routerLink="/" routerLinkActive="active" (click)="showSearchBar()">Home</a>
       <a *ngIf="(user | async).isAdmin" mat-button routerLink="/admin"
-         routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Admin</a>
+         routerLinkActive="active" (click)="hideSearchBar()">Admin</a>
       <a mat-button routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="logout()">Logout</a>
     </div>
     <ng-container *ngIf="!(user | async)">

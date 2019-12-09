@@ -33,6 +33,10 @@ public class OAuth2UserInfo {
     }
 
     public static String getCalNetId(String email) {
-        return email.substring(0, email.indexOf('@'));
+        int index = email.indexOf('@');
+        if (index >= 0) {
+            return email.substring(0, index);
+        }
+        return email;
     }
 }

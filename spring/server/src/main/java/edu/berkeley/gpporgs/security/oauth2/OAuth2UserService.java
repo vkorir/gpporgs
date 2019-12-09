@@ -37,30 +37,17 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
-    private OAuth2User processOAuth2User(OAuth2User oAuth2User) {
+    private OAuth2User processOAuth2User(OAuth2User oAuth2User) throws Exception {
         OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(oAuth2User.getAttributes());
         if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
         Optional<User> userOptional = userRepository.findById(OAuth2UserInfo.getCalNetId(oAuth2UserInfo.getEmail()));
-        User user;
-        if(userOptional.isPresent()) {
-            user = userOptional.get();
-            user = updateAndSaveUser(user, oAuth2UserInfo);
-        } else {
-            user = registerNewUser(oAuth2UserInfo);
+        if (!userOptional.isPresent()) {
+            throw new Exception("You are not authorized to access this site.");
         }
-
+        User user = updateAndSaveUser(userOptional.get(), oAuth2UserInfo);
         return UserPrincipal.create(user, oAuth2User.getAttributes());
-    }
-
-    private User registerNewUser(OAuth2UserInfo oAuth2UserInfo) {
-        User user = new User();
-        user.setIsAdmin(false);
-        Date now = new Date();
-        user.setCreationTime(now.getTime());
-        user.setNumberOfLogin(0);
-        return updateAndSaveUser(user, oAuth2UserInfo);
     }
 
     private User updateAndSaveUser(User user, OAuth2UserInfo oAuth2UserInfo) {

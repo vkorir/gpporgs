@@ -1,9 +1,8 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, Inject, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Organization } from '../model/organization';
 import { AppService } from '../app.service';
 import { MAT_DIALOG_DATA, MatAutocomplete, MatAutocompleteSelectedEvent, MatDialogRef, MatSnackBar } from '@angular/material';
-import { SubmissionState } from '../model/submission.state';
 import { Contact } from '../model/contact';
 import { Review } from '../model/review';
 import { Observable } from 'rxjs';
@@ -14,11 +13,12 @@ import { map, startWith } from 'rxjs/operators';
   templateUrl: './main-modal.component.html',
   styleUrls: ['./main-modal.component.scss']
 })
-export class MainModalComponent implements OnInit {
+export class MainModalComponent implements OnInit, OnChanges {
 
   organization: FormGroup;
   review: FormGroup;
   reviews: Review[] = [];
+  reviewControls: FormArray = new FormArray([]);
 
   regions: number[];
   countries: string[];
@@ -38,6 +38,11 @@ export class MainModalComponent implements OnInit {
   numSectors = this.appService.sectors.size;
 
   isSubmitting = false;
+  isEditOrganization = false;
+  isEditReview = false;
+
+  // tslint:disable-next-line:max-line-length
+  reviewEditableFields = ['country', 'city', 'region', 'languages', 'sectors', 'sectorOther', 'cost', 'stipend', 'workDone', 'evaluation', 'typicalDay', 'difficulties', 'safety', 'responsiveness', 'duration', 'other', 'lastEdited'];
 
   @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
@@ -45,7 +50,6 @@ export class MainModalComponent implements OnInit {
   constructor(private appService: AppService,
               private snackBar: MatSnackBar,
               private dialogRef: MatDialogRef<MainModalComponent>,
-              private state: SubmissionState,
               private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.disableControl = data.disableControl;
@@ -60,7 +64,11 @@ export class MainModalComponent implements OnInit {
     this.languages = [...this.appService.languages.keys()];
     this.contacts = [...Array(Organization.numContacts).keys()];
     if (data.reviews) {
-      this.reviews = data.reviews.map(review => new Review(review));
+      this.reviews = data.reviews.map(detail => {
+        const review = new Review(detail);
+        this.reviewControls.push(this.buildFormGroup(review, true));
+        return review;
+      });
     }
   }
 
@@ -81,6 +89,14 @@ export class MainModalComponent implements OnInit {
       startWith(null),
       map(value => value ? this.filter(value) : this.languages.slice())
     );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('changed');
+  }
+
+  isAdmin(): boolean {
+    return this.appService.userValue().isAdmin;
   }
 
   region(id: number): string {
@@ -118,15 +134,15 @@ export class MainModalComponent implements OnInit {
   }
 
   date(timestamp: number): string {
-    const postingDate = new Date(timestamp);
+    const fullDate = new Date(timestamp);
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const day = days[postingDate.getDay()];
-    const month = months[postingDate.getMonth()];
-    const date = postingDate.getDate();
-    const year = postingDate.getFullYear();
-    const hours = postingDate.getHours();
-    const minutes = postingDate.getMinutes();
+    const day = days[fullDate.getDay()];
+    const month = months[fullDate.getMonth()];
+    const date = fullDate.getDate();
+    const year = fullDate.getFullYear();
+    const hours = fullDate.getHours();
+    const minutes = fullDate.getMinutes();
     return `${day}, ${month} ${date}, ${year} ${hours}:${minutes}`;
   }
 
@@ -157,6 +173,9 @@ export class MainModalComponent implements OnInit {
     } else {
       formControl.value.push(id);
     }
+    if (this.isEditOrganization || this.isEditReview) {
+      formControl.markAsDirty();
+    }
   }
 
   onSliderChange(formControl: AbstractControl, amount: number): void {
@@ -185,12 +204,18 @@ export class MainModalComponent implements OnInit {
     this.review.controls.languages.value.push(event.option.value);
     this.languageInput.nativeElement.value = '';
     this.languageControl.setValue(null);
+    if (this.isEditReview) {
+      this.review.markAsDirty();
+    }
   }
 
   removeLanguage(language: any): void {
     const index = this.review.controls.languages.value.indexOf(language);
     if (index >= 0) {
       this.review.controls.languages.value.splice(index, 1);
+      if (this.isEditReview) {
+        this.review.markAsDirty();
+      }
     }
   }
 
@@ -239,12 +264,104 @@ export class MainModalComponent implements OnInit {
     return !this.isAddrDiffControl.value && this.review.controls.workDone.valid && this.review.controls.evaluation.valid;
   }
 
-  editReview(review: Review): void {
+  editOrganization(): void {
+    this.isEditOrganization = true;
+    this.disableControl = false;
+    this.organization.enable();
+  }
 
+  saveOrganization(): void {
+    this.organization.markAsUntouched();
+    const mutation = `mutation { updateOrganization(organization: ${this.appService.queryFy(this.organization.value)}) { id name }}`;
+    this.appService.mutationService(mutation).subscribe(response => {
+      if (response.updateOrganization.id) {
+        this.appService.openSnackBar(this.snackBar, `${response.updateOrganization.name} successfully updated.`);
+      } else {
+        this.appService.openSnackBar(this.snackBar, `Error. ${response.updateOrganization.name} could not be updated.`);
+      }
+      this.closeEditOrganization();
+    });
+  }
+
+  closeEditOrganization(): void {
+    this.isEditOrganization = false;
+    this.disableControl = true;
+    this.organization.disable();
+  }
+
+  canEditReview(review: Review): boolean {
+    return this.appService.userValue().isAdmin || this.appService.userValue().id === review.reviewerId;
+  }
+
+  editReview(review: Review): void {
+    this.review = this.buildFormGroup(review, false) as FormGroup;
+    this.selectedLanguages = review.languages;
+    this.disableControl = false;
+    this.isEditReview = true;
   }
 
   saveReview(): void {
+    this.review.markAsUntouched();
+    this.disableControl = true;
+    this.isEditReview = false;
+    setTimeout(() => this.updateReviewFields(), 1000);
+    const mutation = `mutation { updateReview(review: ${this.appService.queryFy(this.review.value)}) { id }}`;
+    this.appService.mutationService(mutation).subscribe(response => {
+      if (response.updateReview.id) {
+        this.appService.openSnackBar(this.snackBar, 'Review successfully updated.');
+      } else {
+        this.appService.openSnackBar(this.snackBar, 'Error. Review could not be updated.');
+      }
+    });
+    this.closeEditReview();
+  }
 
+  private updateReviewFields(): void {
+    const review = this.review.value;
+    let index = -1;
+    for (let i = 0; i < this.reviews.length; i++) {
+      if (this.reviews[i].id === review.id) {
+        index = i;
+      }
+    }
+    if (index >= 0) {
+      this.reviews.splice(index, 1, review);
+    }
+    for (const field of this.reviewEditableFields) {
+      let value = review[field];
+      switch (field) {
+        case 'country':
+          value = this.country(review.address.country);
+          break;
+        case 'city':
+          value = review.address.city;
+          break;
+        case 'region':
+          value = this.region(review.region);
+          break;
+        case 'languages':
+          value = this.reviewLanguages(review.languages);
+          break;
+        case 'sectors':
+          value = review.sectors.map(id => {
+            if (id === this.numSectors) {
+              return review.sectorOther;
+            }
+            return this.sector(id);
+          });
+          break;
+      }
+      document.querySelector(`#review-${review.id} #${field}`).innerHTML = value;
+    }
+  }
+
+  closeEditReview(): void {
+    this.disableControl = true;
+    this.isEditReview = false;
+    setTimeout(() => {
+      document.querySelector(`#review-${this.review.controls.id.value}`)
+        .scrollIntoView({ behavior: 'smooth' });
+    }, 700);
   }
 
   submit(): void {
@@ -254,10 +371,10 @@ export class MainModalComponent implements OnInit {
       review.address = organization.address;
       review.region = organization.region;
     }
-    const variables = `organization: ${SubmissionState.queryFy(organization)}, review: ${SubmissionState.queryFy(review)}`;
+    const variables = `organization: ${this.appService.queryFy(organization)}, review: ${this.appService.queryFy(review)}`;
     const mutation = `mutation { createReview(${variables}) { id } }`;
-    this.appService.mutationService(mutation).subscribe(data => {
-      this.isSubmitting = data.loading;
+    this.appService.mutationService(mutation).subscribe(response => {
+      this.isSubmitting = response.loading;
       this.appService.openSnackBar(this.snackBar, 'Organization successfully submitted');
       this.dialogRef.close();
     });

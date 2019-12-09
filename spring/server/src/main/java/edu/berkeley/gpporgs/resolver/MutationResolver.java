@@ -1,13 +1,18 @@
 package edu.berkeley.gpporgs.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.google.common.collect.Lists;
 import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
+import edu.berkeley.gpporgs.security.UserPrincipal;
+import edu.berkeley.gpporgs.security.oauth2.OAuth2UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,12 +38,25 @@ public class MutationResolver implements GraphQLMutationResolver {
     @Value("${mysql_data_delimiter}")
     private String dataDelimiter;
 
+    private boolean isAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null &&
+                authentication.getAuthorities().contains(new SimpleGrantedAuthority(UserPrincipal.ADMIN));
+    }
+
     public Organization createOrganization(Organization organization) {
         return delimitFields(organization);
     }
 
-    public Organization updateOrganization(Long organizationId, Organization organization) {
-        organization.setId(organizationId);
+    public Organization updateOrganization(Organization organization) {
+        if (!isAdmin()) {
+            return null;
+        }
+        Optional<Organization> optional = organizationRepository.findById(organization.getId());
+        if (!optional.isPresent()) {
+            return null;
+        }
+        organization = (Organization) updateObject(organization, optional.get());
         return delimitFields(organization);
     }
 
@@ -51,38 +69,62 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     private Organization delimitFields(Organization organization) {
-        Long addressId = addressRepository.save(organization.getAddress()).getId();
-        organization.setAddressId(addressId);
-        organization.setAffiliationIds(String.join(dataDelimiter, longsToStrings(organization.getAffiliations())));
-        organization.setSectorIds(String.join(dataDelimiter, longsToStrings(organization.getSectors())));
-        Iterable<Contact> contacts = organization.getContacts();
-        organization = organizationRepository.save(organization);
-        for (Contact contact: contacts) {
-            contact.setOrganizationId(organization.getId());
+        if (organization.getAddress() != null) {
+            Long addressId = addressRepository.save(organization.getAddress()).getId();
+            organization.setAddressId(addressId);
         }
-        contactRepository.saveAll(contacts);
-        return organizationRepository.save(organization);
+        if (organization.getAffiliations() != null) {
+            organization.setAffiliationIds(String.join(dataDelimiter, longsToStrings(organization.getAffiliations())));
+        }
+        if (organization.getSectors() != null) {
+            organization.setSectorIds(String.join(dataDelimiter, longsToStrings(organization.getSectors())));
+        }
+        Iterable<Contact> contacts = null;
+        if (organization.getContacts() != null) {
+            contacts = organization.getContacts();
+        }
+        organization = organizationRepository.save(organization);
+        if (contacts != null) {
+            for (Contact contact: contacts) {
+                contact.setOrganizationId(organization.getId());
+            }
+            contactRepository.saveAll(contacts);
+        }
+        return organization;
     }
 
     public User createUser(User user) {
+        user.setId(OAuth2UserInfo.getCalNetId(user.getId()));
+        user.setIsAdmin(false);
+        user.setNumberOfLogin(0);
         return userRepository.save(user);
     }
 
-    public User updateUser(String username, User user) {
-        if (username.equals(user.getId())) {
-            userRepository.save(user);
+    public User updateUser(String id, User user) {
+        if (!isAdmin()) {
+            return null;
         }
-        return user;
+        Optional<User> optional = userRepository.findById(id);
+        if (!optional.isPresent()) {
+            return null;
+        }
+        user = (User) updateObject(user, optional.get());
+        return userRepository.save(user);
     }
 
     public Review createReview(Organization organization, Review review) {
+        organization.setNumReviews(organization.getNumReviews() + 1);
         Long orgId = delimitFields(organization).getId();
         review.setOrganizationId(orgId);
         return delimitFields(review);
     }
 
-    public Review updateReview(Long reviewId, Review review) {
-        review.setId(reviewId);
+    public Review updateReview(Review review) {
+        Optional<Review> optional = reviewRepository.findById(review.getId());
+        if (!optional.isPresent()) {
+            return null;
+        }
+        review = (Review) updateObject(review, optional.get());
         return delimitFields(review);
     }
 
@@ -96,10 +138,30 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     private Review delimitFields(Review review) {
-        Long addressId = addressRepository.save(review.getAddress()).getId();
-        review.setAddressId(addressId);
-        review.setLanguageCodes(String.join(dataDelimiter, review.getLanguages()));
-        review.setSectorIds(String.join(dataDelimiter, longsToStrings(review.getSectors())));
+        if (review.getAddress() != null) {
+            Long addressId = addressRepository.save(review.getAddress()).getId();
+            review.setAddressId(addressId);
+        }
+        if (review.getLanguages() != null) {
+            review.setLanguageCodes(String.join(dataDelimiter, review.getLanguages()));
+        }
+        if (review.getSectors() != null) {
+            review.setSectorIds(String.join(dataDelimiter, longsToStrings(review.getSectors())));
+        }
         return reviewRepository.save(review);
+    }
+
+    private Object updateObject(Object source, Object target) {
+        for (Field field: source.getClass().getDeclaredFields()) {
+            try {
+                field.setAccessible(true);
+                if (field.get(source) != null) {
+                    field.set(target, field.get(source));
+                }
+            } catch (IllegalAccessException e) {
+                // ignore
+            }
+        }
+        return target;
     }
 }

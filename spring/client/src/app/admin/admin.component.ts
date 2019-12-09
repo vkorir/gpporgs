@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
 import { MatDialog } from '@angular/material';
 import { AddUserComponent } from './add-user/add-user.component';
-import { AllUsersComponent } from './all-users/all-users.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { OrganizationsComponent } from './organizations/organizations.component';
 
 @Component({
@@ -19,8 +19,8 @@ export class AdminComponent implements OnInit {
       icon: 'person_add',
       description: 'Add a new user from CAS. A user will not be able to access this site before they are added.'
     }, {
-      title: 'All Users',
-      action: () => this.allUsers(),
+      title: 'Manage Users',
+      action: () => this.manageUsers(),
       icon: 'group',
       description: 'View and manage roles for all the current GPPORGS users (student & admin roles)'
     }, {
@@ -36,14 +36,15 @@ export class AdminComponent implements OnInit {
 
   addUser(): void {
     this.dialog.open(AddUserComponent, {
-      panelClass: 'mat-dialog--sm'
+      panelClass: 'mat-dialog--sm',
+      disableClose: true
     });
   }
 
-  allUsers(): void {
-    const query = '{ users { id firstName isAdmin lastLogin } }';
+  manageUsers(): void {
+    const query = '{ users { id firstName lastName isAdmin creationTime numberOfLogin lastLogin } }';
     this.appService.queryService(query).subscribe(data => {
-      this.dialog.open(AllUsersComponent, {
+      this.dialog.open(ManageUsersComponent, {
         panelClass: 'mat-dialog--sm',
         data
       });
@@ -51,7 +52,7 @@ export class AdminComponent implements OnInit {
   }
 
   organizations(): void {
-    const query = '{ organizations { id name dateAdded addedBy }}';
+    const query = '{ organizations { id name address { country } dateAdded numReviews approved }}';
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(OrganizationsComponent, {
         panelClass: 'mat-dialog--sm',

@@ -1,32 +1,33 @@
 type Organization {
     id: Int!
-    name: String!
+    name: String
     description: String
     address: Address
     phone: String
     email: String
     website: String
     affiliations: [Int]
-    type: Int!
+    type: Int
     typeOther: String
-    region: Int!
+    region: Int
     sectors: [Int]
     sectorOther: String
-    approved: Boolean!
+    approved: Boolean
     contacts: [Contact]
     dateAdded: Float
+    numReviews: Int
 }
 
 input OrganizationInput {
     id: Int
-    name: String!
+    name: String
     description: String
     address: AddressInput
     phone: String
     email: String
     website: String
     affiliations: [Int]
-    type: Int!
+    type: Int
     typeOther: String
     region: Int
     sectors: [Int]
@@ -34,15 +35,15 @@ input OrganizationInput {
     approved: Boolean
     contacts: [ContactInput]
     dateAdded: Float
+    numReviews: Int
 }
 
 extend type Query {
     organization(id: ID!): Organization
     organizations: [Organization]
-    filterOrganizations(area: Area!, sectorIds: [Int], offset: Int!, limit: Int!): [Organization]
 }
 
 extend type Mutation {
-    createOrganization(details: OrganizationInput!): Organization
-    updateOrganization(organizationId: ID!, details: OrganizationInput!): Organization
+    createOrganization(organization: OrganizationInput!): Organization
+    updateOrganization(organization: OrganizationInput!): Organization
 }

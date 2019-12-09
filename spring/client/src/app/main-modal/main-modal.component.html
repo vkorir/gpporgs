@@ -74,8 +74,9 @@
         <mat-checkbox *ngFor="let id of affiliations"
                       [checked]="checked(organization.controls.affiliations, id)"
                       [hidden]="disableControl && !checked(organization.controls.affiliations, id)"
-                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
-                      [disabled]="disableControl">
+                      (change)="onCheckboxChange(organization.controls.affiliations, id)"
+                      [disabled]="disableControl"
+                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
           {{affiliation(id)}}
         </mat-checkbox>
       </p>
@@ -100,8 +101,8 @@
                       [checked]="checked(organization.controls.sectors, id)"
                       [hidden]="disableControl && !checked(organization.controls.sectors, id)"
                       (change)="onCheckboxChange(organization.controls.sectors, id)"
-                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
-                      [disabled]="disableControl">
+                      [disabled]="disableControl"
+                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
           {{sector(id)}}
         </mat-checkbox>
         <mat-form-field fxFlex="60" *ngIf="checked(organization.controls.sectors, numSectors)">
@@ -132,16 +133,21 @@
     </form>
   </mat-dialog-content>
   <mat-divider></mat-divider>
-  <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2px">
-    <button mat-button class="warn" mat-dialog-close>Cancel</button>
-    <button mat-button (click)="segue(organization, false)">Next <mat-icon>navigate_next</mat-icon></button>
+  <mat-dialog-actions fxLayout="row" style="padding-right: 100px">
+    <button mat-button class="edit-btn warn" *ngIf="disableControl && isAdmin()" (click)="editOrganization()">Edit</button>
+    <button mat-button class="save" *ngIf="isEditOrganization" (click)="saveOrganization()" [disabled]="!organization.dirty">Save</button>
+    <button mat-button class="warn" *ngIf="isEditOrganization" (click)="closeEditOrganization()">Cancel</button>
+    <span fxFlex="1 1 auto"></span>
+    <button mat-button class="warn" mat-dialog-close *ngIf="!isEditOrganization">Cancel</button>
+    <button mat-button (click)="segue(organization, false)" *ngIf="!isEditOrganization">Next <mat-icon>navigate_next</mat-icon></button>
+    <span fxFlex="1 1 auto"></span>
   </mat-dialog-actions>
 </ng-container>
 <ng-container *ngIf="!organizationView && !disableControl">
   <h4 class="mat-dialog-title primary">Practice Experience Information</h4>
   <mat-dialog-content>
     <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="review">
-      <div fxLayout="row" fxLayoutGap="8px">
+      <div fxLayout="row" fxLayoutGap="8px" *ngIf="!isEditReview">
         <p>Was your PE site different from your organization address?</p>
         <mat-radio-group fxLayoutGap="8px" [formControl]="isAddrDiffControl">
           <mat-radio-button color="primary" [value]="true">Yes</mat-radio-button>
@@ -227,12 +233,12 @@
       <div fxFlexFill>
         <div fxLayout="column" fxFlex.gt-sm="50">
           <span fxFlex>Cost of PE <i>(drag the slider)</i></span>
-          <mat-slider color="primary" min="0" max="10000" step="100" thumbLabel [displayWith]="formatSliderLabel"
+          <mat-slider color="primary" min="0" max="10000" step="100" [value]="review.controls.cost.value" thumbLabel [displayWith]="formatSliderLabel"
                       (valueChange)="onSliderChange(review.controls.cost, $event)"></mat-slider>
         </div>
         <div fxLayout="column" fxFlex.gt-sm="50">
           <span>Stipend paid by organization<i>(drag the slider)</i></span>
-          <mat-slider color="primary" min="0" max="10000" thumbLabel [displayWith]="formatSliderLabel"
+          <mat-slider color="primary" min="0" max="10000" [value]="review.controls.stipend.value" thumbLabel [displayWith]="formatSliderLabel"
                       (valueChange)="onSliderChange(review.controls.stipend, $event)"></mat-slider>
         </div>
       </div>
@@ -300,19 +306,23 @@
     </form>
   </mat-dialog-content>
   <mat-divider></mat-divider>
-  <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2px">
-    <button mat-button (click)="segue(review, true)"><mat-icon>navigate_before</mat-icon> Back</button>
-    <button mat-button class="warn" mat-dialog-close>Cancel</button>
-    <button mat-button style="background: green !important;" [disabled]="!reviewValid() || isSubmitting">
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2px" style="padding-right: 100px">
+    <button mat-button *ngIf="isEditReview" (click)="saveReview()" class="save" [disabled]="!review.dirty">Save</button>
+    <button mat-button class="warn" (click)="closeEditReview()" *ngIf="isEditReview">Cancel</button>
+    <span fxFlex="1 1 auto"></span>
+    <button mat-button (click)="segue(review, true)" *ngIf="!isEditReview"><mat-icon>navigate_before</mat-icon> Back</button>
+    <button mat-button class="warn" mat-dialog-close *ngIf="!isEditReview">Cancel</button>
+    <button mat-button (click)="submit()" class="save" [disabled]="!reviewValid() || isSubmitting" *ngIf="!isEditReview">
       Submit
       <mat-progress-bar mode="indeterminate" *ngIf="isSubmitting"></mat-progress-bar>
     </button>
+    <span fxFlex="1 1 auto"></span>
   </mat-dialog-actions>
 </ng-container>
 <ng-container *ngIf="!organizationView && disableControl">
   <h4 class="mat-dialog-title primary">Organization Reviews</h4>
   <mat-dialog-content>
-    <div fxLayout="row wrap" fxLayoutGap="1%" *ngFor="let review of reviews; let i = index;">
+    <div fxLayout="row wrap" fxLayoutGap="1%" *ngFor="let review of reviews; let i = index;" id="review-{{review.id}}">
       <h4 fxFlexFill>
         Review #{{i + 1}}
         <ng-container *ngIf="reviewer(review)">&nbsp;by&nbsp;<strong> {{review.reviewer.firstName}} ({{review.reviewer.id}}@berkeley.edu)</strong></ng-container>
@@ -320,53 +330,53 @@
         <span style="font-size: 0.95rem">Submitted on: {{date(review.submitted)}}</span>
       </h4>
       <p fxFlexFill><mat-divider fxFlexFill></mat-divider></p>
-      <p fxFlexFill><strong>Country: </strong>{{country(review.address.country)}}</p>
-      <p fxFlexFill><strong>Region: </strong>{{region(review.region)}}</p>
-      <p fxFlexFill><strong>City: </strong>{{review.address.city}}</p>
-      <p fxFlexFill><strong>Please list the languages spoken at your PE location:<br /></strong>{{reviewLanguages(review.languages)}}</p>
+      <p fxFlexFill><strong>Country: </strong><span id="country">{{country(review.address.country)}}</span></p>
+      <p fxFlexFill><strong>Region: </strong><span id="region">{{region(review.region)}}</span></p>
+      <p fxFlexFill><strong>City: </strong><span id="city">{{review.address.city}}</span></p>
+      <p fxFlexFill><strong>Please list the languages spoken at your PE location:<br /></strong><span id="languages">{{reviewLanguages(review.languages)}}</span></p>
       <p fxFlexFill>
         <strong>Did you experience any language difficulties? Please describe</strong><br />
-        {{review.difficulties}}
+        <span id="difficulties">{{review.difficulties}}</span>
       </p>
       <p fxFlexFill>
         <strong>Sectors:</strong><br />
-        <span [innerText]="reviewSectors(review)"></span>
+        <span [innerText]="reviewSectors(review)" id="sectors"></span>
       </p>
       <p fxFlexFill>
-        <strong>How safe did you feel during your experience? </strong>{{review.safety}}/5
+        <strong>How safe did you feel during your experience? </strong><span id="safety">{{review.safety}}</span>/5
       </p>
       <p fxFlexFill>
-        <strong>How responsive was your organization? </strong>{{review.responsiveness}}/5
+        <strong>How responsive was your organization? </strong><span id="responsiveness">{{review.responsiveness}}</span>/5
       </p>
       <p fxFlexFill>
-        <strong>What was the cost of your PE? </strong> ${{review.cost}}
+        <strong>What was the cost of your PE? </strong> $<span id="cost">{{review.cost}}</span>
       </p>
       <p fxFlexFill>
-        <strong>How much stipend were you paid by the organization? </strong>${{review.stipend}}
+        <strong>How much stipend were you paid by the organization? </strong>$<span id="stipend">{{review.stipend}}</span>
       </p>
       <p fxFlexFill>
-        <strong>What was the duration of your PE? </strong>{{review.duration}}
+        <strong>What was the duration of your PE? </strong><span id="duration">{{review.duration}}</span>
       </p>
       <p fxFlexFill>
         <strong>Please describe the work you did with your organization</strong><br />
-        {{review.workDone}}
+        <span id="workDone">{{review.workDone}}</span>
       </p>
       <p fxFlexFill>
         <strong>What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)</strong><br />
-        {{review.workDone}}
+        <span id="typicalDay">{{review.typicalDay}}</span>
       </p>
       <p fxFlexFill>
         <strong>What were your organization's strengths and weaknesses?</strong><br />
-        {{review.evaluation}}
+        <span id="evaluation">{{review.evaluation}}</span>
       </p>
       <p fxFlexFill>
         <strong>Is there anything else you would like to share with other students who may work with this organization?</strong><br />
-        {{review.other}}
+        <span id="other">{{review.other}}</span>
       </p>
       <p fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlexFill>
-        <button mat-button class="review-btn warn">Edit Review</button>
+        <button mat-button class="edit-btn warn" (click)="editReview(review)" id="edit-review-{{review.id}}" *ngIf="canEditReview(review)">Edit Review</button>
         <span fxFlex="1 1 auto"></span>
-        Last edited: {{date(review.lastEdited)}}
+        Last edited:&nbsp;<span id="lastEdited">{{date(review.lastEdited)}}</span>
       </p>
       <p fxFlexFill>
         <mat-divider fxFlexFill></mat-divider>

@@ -14,7 +14,7 @@ import { MainModalComponent } from '../main-modal/main-modal.component';
 export class TableComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
-  dataSource: MatTableDataSource<Organization> = new MatTableDataSource();
+  dataSource = new MatTableDataSource<Organization>([]);
   organizations: Organization[] = [];
   private filter: Observable<Filter>;
 
@@ -28,15 +28,19 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    const query = '{ organizations { id name type address { country } sectors } }';
+    const query = '{ organizations { id name type typeOther region address { country } sectors } }';
     this.appService.queryService(query).subscribe(data => {
       this.organizations = data.organizations.map(organization => new Organization(organization));
       this.dataSource = new MatTableDataSource<Organization>(this.organizations);
+      this.dataSource.sort = this.sort;
     });
     this.filter.subscribe(() => this._filter());
   }
 
   type(organization: Organization): string {
+    if (organization.type === this.appService.types.size) {
+      return organization.typeOther;
+    }
     return this.appService.types.get(organization.type);
   }
 
@@ -59,10 +63,10 @@ export class TableComponent implements OnInit {
   }
 
   openDetailsModal(id: number) {
-    const organization = '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved ' +
-      'contacts { name role email phone } address { street city state zip country } dateAdded }';
-    const review = '{ id submitted region languages address { city country } sectors cost stipend workDone evaluation ' +
-      'difficulties safety responsiveness duration other reviewer { id firstName } anonymous lastEdited }';
+    // tslint:disable-next-line:max-line-length
+    const organization = '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } dateAdded numReviews }';
+    // tslint:disable-next-line:max-line-length
+    const review = '{ id submitted region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName } anonymous lastEdited }';
     const query = `{ organization(id: ${id}) ${organization} reviews (organizationId: ${id}) ${review} }`;
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(MainModalComponent, {

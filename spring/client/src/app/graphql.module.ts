@@ -9,7 +9,7 @@ import { baseUrl } from './baseUrl';
 export function createApollo(httpLink: HttpLink) {
   return {
     link: httpLink.create({ uri: `${baseUrl}/graphql` }),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache()
   };
 }
 

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { User } from '../model/user';
 import { FormControl } from '@angular/forms';
-import { baseUrl } from '../baseUrl';
 
 @Component({
   selector: 'app-header',
@@ -27,6 +26,14 @@ export class HeaderComponent implements OnInit {
     const filter = this.appService.filterValue();
     filter.searchString = this.searchControl.value.trim().toLowerCase();
     this.appService.updateFilter(filter);
+  }
+
+  showSearchBar(): void {
+    document.getElementById('main-search-bar').style.display = 'block';
+  }
+
+  hideSearchBar(): void {
+    document.getElementById('main-search-bar').style.display = 'none';
   }
 
   login(): void {

@@ -8,24 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class OrganizationResolver implements GraphQLResolver<Organization> {
 
     @Autowired
     private AddressRepository addressRepository;
-
-    @Autowired
-    private AffiliationRepository affiliationRepository;
-
-    @Autowired
-    private TypeRepository typeRepository;
-
-    @Autowired
-    private SectorRepository sectorRepository;
 
     @Autowired
     private ContactRepository contactRepository;
@@ -40,7 +29,9 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
     public Iterable<Long> affiliations(Organization organization) {
         List<Long> affiliationIds = new ArrayList<>();
         for (String sectorId: organization.getAffiliationIds().split("\\^")) {
-            affiliationIds.add(Long.parseLong(sectorId));
+            if (sectorId.length() > 0) {
+                affiliationIds.add(Long.parseLong(sectorId));
+            }
         }
         return affiliationIds;
     }
@@ -48,7 +39,9 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
     public Iterable<Long> sectors(Organization organization) {
         List<Long> sectorIds = new ArrayList<>();
         for (String sectorId: organization.getSectorIds().split("\\^")) {
-            sectorIds.add(Long.parseLong(sectorId));
+            if (sectorId.length() > 0) {
+                sectorIds.add(Long.parseLong(sectorId));
+            }
         }
         return sectorIds;
     }

@@ -1,1 +1,10 @@
-<p>add-user works!</p>
+<h2 mat-dialog-title>Add User</h2>
+<mat-dialog-content>
+  <mat-form-field fxFlexFill>
+    <input [formControl]="inputControl" matInput placeholder="Enter CalNet Id or berkeley.edu email" required />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="center center">
+  <button mat-button class="warn" mat-dialog-close>Close</button>
+  <button mat-button style="background: green !important;" [disabled]="!inputControl.valid" (click)="addUser()">Add User</button>
+</mat-dialog-actions>

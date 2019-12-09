@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../app.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,10 @@ import { AppService } from '../app.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private appService: AppService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private appService: AppService,
+              private snackBar: MatSnackBar,
+              private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.appService.userState().subscribe(user => {
@@ -27,6 +31,12 @@ export class LoginComponent implements OnInit {
     }
     if (this.appService.tokenExists()) {
       this.appService.initializeState();
+    }
+
+    const error = this.route.snapshot.queryParams.error;
+    if (error) {
+      this.appService.openSnackBar(this.snackBar, error);
+      this.router.navigateByUrl('/login');
     }
   }
 

@@ -1,8 +1,8 @@
-import {Address} from './address';
-import {Contact} from './contact';
-import {Area} from './area';
-import {Filter} from './filter';
-import {AppService} from '../app.service';
+import { Address } from './address';
+import { Contact } from './contact';
+import { Area } from './area';
+import { Filter } from './filter';
+import { AppService } from '../app.service';
 
 export class Organization {
   static readonly numContacts = 3;
@@ -22,7 +22,8 @@ export class Organization {
     website: null,
     approved: false,
     contacts: [],
-    dateAdded: new Date().getTime()
+    dateAdded: new Date().getTime(),
+    numReviews: 0
   };
   id: number;
   name: string;
@@ -40,6 +41,7 @@ export class Organization {
   approved: boolean;
   contacts: Contact[] = [];
   dateAdded: number;
+  numReviews: number;
 
   constructor(object: any = {}) {
     for (const [key, value] of Object.entries(Organization.default)) {
@@ -66,6 +68,9 @@ export class Organization {
       return false;
     }
     if (filter.area === Area.DOMESTIC && this.address.country !== 'US') {
+      return false;
+    }
+    if (!filter.regions.has(this.region)) {
       return false;
     }
     const sectorsUnion = new Set([...filter.sectors].filter(sector => this.sectors.includes(sector)));

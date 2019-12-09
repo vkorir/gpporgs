@@ -43,12 +43,11 @@ import { TokenInterceptor } from './token.interceptor';
 import { AppService } from './app.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LookUpComponent } from './look-up/look-up.component';
-import { SubmissionState } from './model/submission.state';
 import { RouteReuseStrategy } from '@angular/router';
 import { CacheRouteReuseStrategy } from './cache-route-reuse.strategy';
 import { MainModalComponent } from './main-modal/main-modal.component';
 import { AddUserComponent } from './admin/add-user/add-user.component';
-import { AllUsersComponent } from './admin/all-users/all-users.component';
+import { ManageUsersComponent } from './admin/manage-users/manage-users.component';
 import { OrganizationsComponent } from './admin/organizations/organizations.component';
 
 const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
@@ -70,7 +69,7 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     LookUpComponent,
     MainModalComponent,
     AddUserComponent,
-    AllUsersComponent,
+    ManageUsersComponent,
     OrganizationsComponent,
   ],
   imports: [
@@ -87,7 +86,6 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
   ],
   providers: [
     AppService,
-    SubmissionState,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
@@ -105,7 +103,7 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     LookUpComponent,
     DetailsComponent,
     AddUserComponent,
-    AllUsersComponent,
+    ManageUsersComponent,
     OrganizationsComponent
   ]
 })

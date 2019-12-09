@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './model/user';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { map } from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Filter } from './model/filter';
 import { baseUrl } from './baseUrl';
@@ -69,7 +69,8 @@ export class AppService {
         this.__populateSources(data.languages, this.languages);
 
         const filter = this.organizationsFilter.getValue();
-        filter.sectors = new Set<number>(this.sectors.keys());
+        filter.regions = new Set(this.regions.keys());
+        filter.sectors = new Set(this.sectors.keys());
         this.updateFilter(filter);
       } else {
         this.openSnackBar(this.snackBar, data.message);
@@ -109,6 +110,26 @@ export class AppService {
     return this.organizationsFilter.asObservable();
   }
 
+  queryFy(object: any): any {
+    if (!object && typeof object !== 'boolean') {
+      return 'null';
+    }
+    if (typeof object === 'number') {
+      return object;
+    }
+    if (Array.isArray(object)) {
+      return `[${object.map(value => `${this.queryFy(value)}`).join()}]`;
+    }
+    if (typeof object === 'object') {
+      const props = Object.keys(object)
+        .filter(key => key !== '__typename')
+        .map(key => `${key}: ${this.queryFy(object[key])}`)
+        .join();
+      return `{${props}}`;
+    }
+    return JSON.stringify(object);
+  }
+
   queryService(query: string): Observable<any> {
     return this.apollo.watchQuery<any>({ query: gql(query) }).valueChanges.pipe(map(response => {
       if (response.errors) {
@@ -120,7 +141,14 @@ export class AppService {
   }
 
   mutationService(mutation: string): Observable<any> {
-    return this.apollo.mutate({ mutation: gql(mutation) });
+    return this.apollo.mutate({ mutation: gql(mutation) }).pipe(
+      map(response => {
+        if (response.errors) {
+          this.clearToken();
+        }
+        return response.data || response;
+      })
+    );
   }
 
   openSnackBar(snackBar: MatSnackBar, message: string) {
