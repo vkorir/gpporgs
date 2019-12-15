@@ -74,12 +74,7 @@ dist/
 nbdist/
 .nb-gradle/
 build/
+static/
 
 ### VS Code ###
 .vscode/
-
-
-## wordpress ##
-logs
-.git.back
-spring.back/*

@@ -17,34 +17,34 @@ type Review {
     safety: Int
     responsiveness: Int
     anonymous: Boolean
-    reviewerId: String
+    reviewerId: Int
     reviewer: User
     lastEdited: Float
 }
 
 input ReviewInput {
     id: Int
-    submitted: Float!
+    submitted: Float
     organizationId: Int
-    address: AddressInput!
-    region: Int!
-    languages: [String]!
+    address: AddressInput
+    region: Int
+    languages: [String]
     difficulties: String
     sectors: [Int]
     sectorOther: String
     stipend: Int
     cost: Int
     duration: String
-    workDone: String!
+    workDone: String
     typicalDay: String
-    evaluation: String!
+    evaluation: String
     other: String
     safety: Int
     responsiveness: Int
-    anonymous: Boolean!
-    reviewerId: String!
+    anonymous: Boolean
+    reviewerId: Int
     reviewer: UserInput
-    lastEdited: Float!
+    lastEdited: Float
 }
 
 extend type Query {

@@ -17,7 +17,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "users")
 public class User {
-    private @Id String id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    private @NonNull String email;
     private @NonNull String firstName;
     private String lastName;
     private @NonNull Boolean isAdmin;

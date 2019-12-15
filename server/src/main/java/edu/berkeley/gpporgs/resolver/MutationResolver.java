@@ -94,13 +94,10 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     public User createUser(User user) {
-        user.setId(OAuth2UserInfo.getCalNetId(user.getId()));
-        user.setIsAdmin(false);
-        user.setNumberOfLogin(0);
         return userRepository.save(user);
     }
 
-    public User updateUser(String id, User user) {
+    public User updateUser(Long id, User user) {
         if (!isAdmin()) {
             return null;
         }
@@ -126,15 +123,6 @@ public class MutationResolver implements GraphQLMutationResolver {
         }
         review = (Review) updateObject(review, optional.get());
         return delimitFields(review);
-    }
-
-    public Contact updateContact(Long id, Contact contact) {
-        Optional oldContact = contactRepository.findById(id);
-        if (oldContact.isPresent()) {
-            contact.setId(id);
-            return contactRepository.save(contact);
-        }
-        return null;
     }
 
     private Review delimitFields(Review review) {

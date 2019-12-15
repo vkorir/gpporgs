@@ -42,7 +42,7 @@ export class Review {
   responsiveness: number;
   duration: string;
   other: string;
-  reviewerId: null;
+  reviewerId: number;
   reviewer: User;
   anonymous: boolean;
   lastEdited: number;

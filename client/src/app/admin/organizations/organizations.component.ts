@@ -51,7 +51,7 @@ export class OrganizationsComponent implements OnInit {
   }
 
   approveOrg(organization: Organization): void {
-    const mutation = `mutation { updateOrganization(id: ${organization.id}, details: { approved: true }) { id } }`;
+    const mutation = `mutation { updateOrganization(organization: { id: ${organization.id} approved: true }) { id } }`;
     this.appService.mutationService(mutation).subscribe(response => {
       if (response.updateOrganization.id) {
         organization.approved = true;

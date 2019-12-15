@@ -15,6 +15,14 @@
   padding: 8px 20px 0;
 }
 
+#filter-regions {
+  max-height: 250px;
+}
+
+#filter-sectors {
+  max-height: 500px;
+}
+
 .mat-radio-button, .mat-checkbox {
   font-size: 0.9rem !important;
 }

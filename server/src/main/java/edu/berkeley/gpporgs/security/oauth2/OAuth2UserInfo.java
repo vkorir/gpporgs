@@ -17,7 +17,6 @@ public class OAuth2UserInfo {
 
     public String getLastName() {
         return capitalizeFirst((String) attributes.get("family_name"));
-
     }
 
     public String getEmail() {
@@ -30,13 +29,5 @@ public class OAuth2UserInfo {
         }
         String firstChar = string.substring(0, 1).toUpperCase();
         return firstChar + string.substring(1).toLowerCase();
-    }
-
-    public static String getCalNetId(String email) {
-        int index = email.indexOf('@');
-        if (index >= 0) {
-            return email.substring(0, index);
-        }
-        return email;
     }
 }

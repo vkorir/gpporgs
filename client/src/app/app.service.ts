@@ -111,7 +111,7 @@ export class AppService {
   }
 
   queryFy(object: any): any {
-    if (!object && typeof object !== 'boolean') {
+    if (!object && typeof object !== 'boolean' && typeof object !== 'number') {
       return 'null';
     }
     if (typeof object === 'number') {

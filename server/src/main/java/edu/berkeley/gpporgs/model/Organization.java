@@ -41,5 +41,5 @@ public class Organization {
     @Transient
     private Iterable<Contact> contacts;
     private @NonNull Long dateAdded;
-    private @NonNull Integer numReviews;
+    private Integer numReviews;
 }

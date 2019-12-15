@@ -9,14 +9,14 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.*;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
-    private String username;
+    private String email;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
     public static final String USER = "ROLE_USER";
     public static final String ADMIN = "ROLE_ADMIN";
 
-    private UserPrincipal(String username, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
+    private UserPrincipal(String email, Collection<? extends GrantedAuthority> authorities) {
+        this.email = email;
         this.authorities = authorities;
     }
 
@@ -26,7 +26,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
             authorities.add(new SimpleGrantedAuthority(ADMIN));
         }
         authorities.add(new SimpleGrantedAuthority(USER));
-        return new UserPrincipal(user.getId(), authorities);
+        return new UserPrincipal(user.getEmail(), authorities);
     }
 
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
@@ -42,7 +42,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

@@ -41,7 +41,8 @@ export class LookUpComponent implements OnInit {
   }
 
   fetchOrganization(id: number) {
-    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved dateAdded';
+    // tslint:disable-next-line:max-line-length
+    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved dateAdded numReviews';
     const address = 'address { id street city state zip country }';
     const contacts = 'contacts { id name role phone email }';
     const query = `{ organization(id: ${id}) { ${info} ${address} ${contacts} }}`;

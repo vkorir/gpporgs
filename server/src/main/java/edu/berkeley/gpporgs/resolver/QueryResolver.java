@@ -65,7 +65,7 @@ public class QueryResolver implements GraphQLQueryResolver {
             return null;
         }
         String currentUsername = authentication.getName();
-        return userRepository.findById(currentUsername).orElse(null);
+        return userRepository.findByEmail(currentUsername).orElse(null);
     }
 
     public Iterable<Language> languages() {
@@ -100,8 +100,8 @@ public class QueryResolver implements GraphQLQueryResolver {
         return typeRepository.findAll();
     }
 
-    public User user(String username) {
-        return userRepository.findById(username).orElse(null);
+    public User user(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public Iterable<User> users() {
