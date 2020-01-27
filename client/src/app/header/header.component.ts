@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
 import { Observable } from 'rxjs';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Router} from '@angular/router';
 import { User } from '../model/user';
 import { FormControl } from '@angular/forms';
 
@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   constructor(private appService: AppService, private router: Router) {}
 
   ngOnInit() {
+    console.log(window.location.href);
     this.user = this.appService.userState();
     this.searchControl.valueChanges.subscribe(() => this.updateSearchString());
   }

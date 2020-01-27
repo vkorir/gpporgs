@@ -28,6 +28,9 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
 
     public Iterable<Long> affiliations(Organization organization) {
         List<Long> affiliationIds = new ArrayList<>();
+        if (organization.getAffiliationIds() == null) {
+            return affiliationIds;
+        }
         for (String sectorId: organization.getAffiliationIds().split("\\^")) {
             if (sectorId.length() > 0) {
                 affiliationIds.add(Long.parseLong(sectorId));
@@ -38,6 +41,9 @@ public class OrganizationResolver implements GraphQLResolver<Organization> {
 
     public Iterable<Long> sectors(Organization organization) {
         List<Long> sectorIds = new ArrayList<>();
+        if (organization.getSectorIds() == null) {
+            return sectorIds;
+        }
         for (String sectorId: organization.getSectorIds().split("\\^")) {
             if (sectorId.length() > 0) {
                 sectorIds.add(Long.parseLong(sectorId));

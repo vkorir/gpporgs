@@ -46,4 +46,5 @@ extend type Query {
 extend type Mutation {
     createOrganization(organization: OrganizationInput!): Organization
     updateOrganization(organization: OrganizationInput!): Organization
+    addOrganizations(organizations: [OrganizationInput!]): [Organization]
 }

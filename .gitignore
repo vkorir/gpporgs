@@ -78,3 +78,5 @@ static/
 
 ### VS Code ###
 .vscode/
+
+application.yaml

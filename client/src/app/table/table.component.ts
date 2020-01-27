@@ -66,7 +66,7 @@ export class TableComponent implements OnInit {
     // tslint:disable-next-line:max-line-length
     const organization = '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } dateAdded numReviews }';
     // tslint:disable-next-line:max-line-length
-    const review = '{ id submitted region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName } anonymous lastEdited }';
+    const review = '{ id submitted region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName email } anonymous lastEdited }';
     const query = `{ organization(id: ${id}) ${organization} reviews (organizationId: ${id}) ${review} }`;
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(MainModalComponent, {

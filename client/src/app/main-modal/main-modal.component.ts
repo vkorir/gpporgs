@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import { Component, ElementRef, Inject, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Organization } from '../model/organization';
 import { AppService } from '../app.service';
@@ -60,6 +60,8 @@ export class MainModalComponent implements OnInit, OnChanges {
     this.countries = [...this.appService.countries.keys()];
     this.affiliations = [...this.appService.affiliations.keys()];
     this.types = [...this.appService.types.keys()];
+
+
     this.sectors = [...this.appService.sectors.keys()];
     this.languages = [...this.appService.languages.keys()];
     this.contacts = [...Array(Organization.numContacts).keys()];
@@ -255,6 +257,12 @@ export class MainModalComponent implements OnInit, OnChanges {
     } else {
       formGroup.markAllAsTouched();
     }
+    // const json = require('./organizations.json');
+    // for (const org of json) {
+    //   const mutation = `mutation { createOrganization(organization: ${this.appService.queryFy(org)}) { id } }`;
+    //   // console.log(mutation);
+    //   this.appService.mutationService(mutation).subscribe(response => console.log(response));
+    // }
   }
 
   reviewValid(): boolean {

@@ -60,6 +60,14 @@ public class MutationResolver implements GraphQLMutationResolver {
         return delimitFields(organization);
     }
 
+    public Iterable<Organization> addOrganizations(Iterable<Organization> organizations) {
+        List<Organization> result = new ArrayList<>();
+        for (Organization organization: organizations) {
+            result.add(createOrganization(organization));
+        }
+        return result;
+    }
+
     private Iterable<String> longsToStrings(Iterable<Long> longs) {
         List<String> strings = new ArrayList<>();
         for (Long value: longs) {
@@ -94,7 +102,8 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     public User createUser(User user) {
-        return userRepository.save(user);
+        Optional<User> optional = userRepository.findByEmail(user.getEmail());
+        return optional.orElseGet(() -> userRepository.save(user));
     }
 
     public User updateUser(Long id, User user) {

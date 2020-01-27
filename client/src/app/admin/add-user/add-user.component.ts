@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AddUserComponent implements OnInit {
 
-  inputControl: FormControl = new FormControl(null, [Validators.required]);
+  inputControl: FormControl = new FormControl(null, [Validators.required, Validators.email]);
 
   constructor(private dialogRef: MatDialogRef<AddUserComponent>,
               private appService: AppService,
@@ -21,10 +21,10 @@ export class AddUserComponent implements OnInit {
 
   addUser(): void {
     const now = new Date().getTime();
-    const mutation = `mutation { createUser(user: { id: "${this.inputControl.value}", creationTime: ${now} }) { id }}`;
-    this.appService.mutationService(mutation).subscribe(response => {
-      if (response.data.createUser.id != null) {
-        this.appService.openSnackBar(this.snackBar, `Successfully added ${response.data.createUser.id}`);
+    const mutation = `mutation { createUser(user: { email: "${this.inputControl.value}", creationTime: ${now} }) { email }}`;
+    this.appService.mutationService(mutation).subscribe(({ createUser }) => {
+      if (createUser && createUser.email) {
+        this.appService.openSnackBar(this.snackBar, `Successfully added ${createUser.email}`);
       }
       this.inputControl.setValue(null);
       this.inputControl.markAsUntouched();

@@ -325,7 +325,7 @@
     <div fxLayout="row wrap" fxLayoutGap="1%" *ngFor="let review of reviews; let i = index;" id="review-{{review.id}}">
       <h4 fxFlexFill>
         Review #{{i + 1}}
-        <ng-container *ngIf="reviewer(review)">&nbsp;by&nbsp;<strong> {{review.reviewer.firstName}} ({{review.reviewer.id}}@berkeley.edu)</strong></ng-container>
+        <ng-container *ngIf="reviewer(review)">&nbsp;by&nbsp;<strong> {{review.reviewer.firstName}} ({{review.reviewer.email}})</strong></ng-container>
         <span fxFlex="1 1 auto"></span>
         <span style="font-size: 0.95rem">Submitted on: {{date(review.submitted)}}</span>
       </h4>

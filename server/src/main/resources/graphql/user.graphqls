@@ -27,6 +27,6 @@ extend type Query {
 }
 
 extend type Mutation {
-    createUser(details: UserInput!): User
+    createUser(user: UserInput!): User
     updateUser(id: String!, details: UserInput!): User
 }
