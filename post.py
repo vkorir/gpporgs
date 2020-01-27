@@ -1,7 +1,8 @@
 import os
 import json
+import requests
 
-token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ2aWN0b3Iua29yaXJAYmVya2VsZXkuZWR1IiwiaWF0IjoxNTgwMDg2MTQ2LCJleHAiOjE1ODAxNzAxNDZ9.R1StZrm_h9D06Q0omHpA0wsP1ZwnHSOGjJqjPD7bTDTDBiHJR1ZsaA1v1-Xinbf0ZnRlWV4Kve4wUU8I-oY4yw'
+token = 'jwt token'
 headers = { 'Authorization': 'Bearer {}'.format(token) }
 file_name = 'organizations.json'
 
@@ -29,6 +30,6 @@ if os.path.exists(file_name):
 		# response = requests.post('http://localhost:8080/graphql', json={ 'query': mutate(mutify(organizations)) }, headers=headers)
 		print (mutation(python_to_graphql(organizations)))
 
-		# os.remove(file_name)
+		os.remove(file_name)
 else:
 	print ('{} file not found.'.format(file_name))
