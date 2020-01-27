@@ -80,3 +80,4 @@ static/
 .vscode/
 
 application.yaml
+organizations.json

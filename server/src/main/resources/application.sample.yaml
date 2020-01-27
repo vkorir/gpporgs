@@ -5,8 +5,8 @@ mysql_data_delimiter: ^
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/rateandreview_dev?serverTimezone=UTC
-    username: rarudev
-    password: Rr8&RevGPPwebbz
+    username: db-username
+    password: db-password
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,15 +16,15 @@ spring:
       client:
         registration:
           google:
-            client-id: 1035290053103-56crsjin0a9bcbdphqqqd3mhtjh3rtdv.apps.googleusercontent.com
-            client-secret: 1wtwcqwy_eWL_jVhHQ1TPJyt
+            client-id: google-client-id
+            client-secret: google-client-secret
             redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
 app:
   auth:
-    jwt-secret: 926D96C90030DD58429D2751AC1BDBBC
+    jwt-secret: jwt-secret-key
     jwt-expiration-ms: 84000000
   oauth2:
     domain: berkeley.edu
