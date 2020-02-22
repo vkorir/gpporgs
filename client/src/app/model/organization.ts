@@ -76,9 +76,23 @@ export class Organization {
     if (sectorsUnion.size === 0) {
       return false;
     }
-    const filterName = this.name.trim().toLowerCase().includes(filter.searchString);
-    const filterType = appService.types.get(this.type).trim().toLowerCase().includes(filter.searchString);
-    const filterCountry = appService.countries.get(this.address.country).trim().toLowerCase().includes(filter.searchString);
+    let filterName = true;
+    let filterType = true;
+    let filterCountry = true;
+    if (this.name) {
+      filterName = this.name.trim().toLowerCase().includes(filter.searchString);
+    }
+    if (this.type) {
+      filterType = appService.types.get(this.type).trim().toLowerCase().includes(filter.searchString);
+      if (this.typeOther) {
+        filterType = filterType || this.typeOther.trim().toLowerCase().includes(filter.searchString);
+      }
+    } else if (this.typeOther) {
+      filterType = this.typeOther.trim().toLowerCase().includes(filter.searchString);
+    }
+    if (this.address.country) {
+      filterCountry = appService.countries.get(this.address.country).trim().toLowerCase().includes(filter.searchString);
+    }
 
     return filterName || filterType || filterCountry;
   }
