@@ -42,7 +42,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   isEditReview = false;
 
   // tslint:disable-next-line:max-line-length
-  reviewEditableFields = ['country', 'city', 'region', 'languages', 'sectors', 'sectorOther', 'cost', 'stipend', 'workDone', 'evaluation', 'typicalDay', 'difficulties', 'safety', 'responsiveness', 'duration', 'other', 'lastEdited'];
+  reviewEditableFields = ['country', 'city', 'region', 'languages', 'sectors', 'sectorOther', 'cost', 'stipend', 'workDone', 'evaluation', 'typicalDay', 'difficulties', 'safety', 'responsiveness', 'duration', 'other'];
 
   @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;

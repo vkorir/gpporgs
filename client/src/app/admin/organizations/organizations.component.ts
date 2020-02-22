@@ -16,7 +16,7 @@ export class OrganizationsComponent implements OnInit {
 
   organizations: Organization[] = [];
   dataSource: MatTableDataSource<Organization>;
-  columns = ['name', 'location', 'dateAdded', 'numReviews', 'approved'];
+  columns = ['name', 'location', 'submitted', 'approved'];
 
   approvedControl = new FormControl(true);
 

@@ -20,7 +20,7 @@ export class AddUserComponent implements OnInit {
   ngOnInit() {}
 
   addUser(): void {
-    const now = new Date().getTime();
+    const now = Date.now();
     const mutation = `mutation { createUser(user: { email: "${this.inputControl.value}", creationTime: ${now} }) { email }}`;
     this.appService.mutationService(mutation).subscribe(({ createUser }) => {
       if (createUser && createUser.email) {

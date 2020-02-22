@@ -373,11 +373,6 @@
         <strong>Is there anything else you would like to share with other students who may work with this organization?</strong><br />
         <span id="other">{{review.other}}</span>
       </p>
-      <p fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlexFill>
-        <button mat-button class="edit-btn warn" (click)="editReview(review)" id="edit-review-{{review.id}}" *ngIf="canEditReview(review)">Edit Review</button>
-        <span fxFlex="1 1 auto"></span>
-        Last edited:&nbsp;<span id="lastEdited">{{date(review.lastEdited)}}</span>
-      </p>
       <p fxFlexFill>
         <mat-divider fxFlexFill></mat-divider>
       </p>

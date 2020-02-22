@@ -4,11 +4,15 @@
     <table mat-table [dataSource]="dataSource" multiTemplateDataRows fxFlexFill>
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let user">{{user.lastName}}, {{user.firstName}}</td>
+        <td mat-cell *matCellDef="let user">{{displayName(user)}}</td>
       </ng-container>
       <ng-container matColumnDef="accessLevel">
         <th mat-header-cell *matHeaderCellDef>Access Level</th>
         <td mat-cell *matCellDef="let user">{{user.isAdmin ? 'Admin, Student' : 'Student'}}</td>
+      </ng-container>
+      <ng-container matColumnDef="creationTime">
+        <th mat-header-cell *matHeaderCellDef>Created On</th>
+        <td mat-cell *matCellDef="let user">{{date(user.creationTime)}}</td>
       </ng-container>
       <ng-container matColumnDef="lastLogin">
         <th mat-header-cell *matHeaderCellDef>Last Login</th>

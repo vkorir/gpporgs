@@ -22,7 +22,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class ManageUsersComponent implements OnInit {
 
   dataSource: MatTableDataSource<User>;
-  columns = ['name', 'accessLevel', 'lastLogin', 'numberOfLogin', 'manageRole'];
+  columns = ['name', 'accessLevel', 'creationTime', 'lastLogin', 'numberOfLogin', 'manageRole'];
 
   expandedElement = null;
 
@@ -39,7 +39,17 @@ export class ManageUsersComponent implements OnInit {
 
   ngOnInit() {}
 
+  displayName(user: User): string {
+    if (user.firstName && user.lastName) {
+      return `${user.lastName}, ${user.firstName}`
+    }
+    return user.email;
+  }
+
   date(timestamp: number): string {
+    if (timestamp === 0) {
+      return '-';
+    }
     const lastAccess = new Date(timestamp);
     const month = `0${lastAccess.getMonth() + 1}`.slice(-2);
     const date = `0${lastAccess.getDate() + 1}`.slice(-2);
