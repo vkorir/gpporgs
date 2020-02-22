@@ -14,8 +14,7 @@ type Organization {
     sectorOther: String
     approved: Boolean
     contacts: [Contact]
-    dateAdded: Float
-    numReviews: Int
+    submitted: Float
 }
 
 input OrganizationInput {
@@ -34,8 +33,7 @@ input OrganizationInput {
     sectorOther: String
     approved: Boolean
     contacts: [ContactInput]
-    dateAdded: Float
-    numReviews: Int
+    submitted: Float
 }
 
 extend type Query {

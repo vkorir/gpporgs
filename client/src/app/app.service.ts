@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './model/user';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import {catchError, map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Filter } from './model/filter';
 import { baseUrl } from './baseUrl';

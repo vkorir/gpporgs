@@ -40,6 +40,5 @@ public class Organization {
     private @NonNull Boolean approved;
     @Transient
     private Iterable<Contact> contacts;
-    private @NonNull Long dateAdded;
-    private Integer numReviews;
+    private @NonNull Long submitted;
 }

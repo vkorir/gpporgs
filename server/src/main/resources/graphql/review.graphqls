@@ -19,7 +19,6 @@ type Review {
     anonymous: Boolean
     reviewerId: Int
     reviewer: User
-    lastEdited: Float
 }
 
 input ReviewInput {
@@ -44,7 +43,6 @@ input ReviewInput {
     anonymous: Boolean
     reviewerId: Int
     reviewer: UserInput
-    lastEdited: Float
 }
 
 extend type Query {

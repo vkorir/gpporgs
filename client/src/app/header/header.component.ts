@@ -18,7 +18,6 @@ export class HeaderComponent implements OnInit {
   constructor(private appService: AppService, private router: Router) {}
 
   ngOnInit() {
-    console.log(window.location.href);
     this.user = this.appService.userState();
     this.searchControl.valueChanges.subscribe(() => this.updateSearchString());
   }

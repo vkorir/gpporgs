@@ -119,7 +119,6 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     public Review createReview(Organization organization, Review review) {
-        organization.setNumReviews(organization.getNumReviews() + 1);
         Long orgId = delimitFields(organization).getId();
         review.setOrganizationId(orgId);
         return delimitFields(review);

@@ -80,10 +80,6 @@ public class QueryResolver implements GraphQLQueryResolver {
         return organizationRepository.findAll();
     }
 
-    public Iterable<Organization> filterOrganizations(Area area, List<Long> sectorIds, Integer offset, Integer limit) {
-        return organizationRepository.findAll();
-    }
-
     public Iterable<Region> regions() {
         return regionRepository.findAll();
     }

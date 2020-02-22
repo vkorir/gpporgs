@@ -47,5 +47,4 @@ public class Review {
     private @NonNull Long reviewerId;
     @Transient
     private User reviewer;
-    private @NonNull Long lastEdited;
 }
