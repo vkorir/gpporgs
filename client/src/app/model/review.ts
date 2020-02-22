@@ -22,8 +22,7 @@ export class Review {
     other: null,
     reviewerId: null,
     reviewer: null,
-    anonymous: true,
-    lastEdited: new Date().getTime()
+    anonymous: true
   };
   id: number;
   submitted: number;
@@ -45,7 +44,6 @@ export class Review {
   reviewerId: number;
   reviewer: User;
   anonymous: boolean;
-  lastEdited: number;
 
   constructor(object: any = {}) {
     for (const [key, value] of Object.entries(Review.default)) {

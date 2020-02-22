@@ -40,8 +40,7 @@ export class Organization {
   website: string;
   approved: boolean;
   contacts: Contact[] = [];
-  dateAdded: number;
-  numReviews: number;
+  submitted: number;
 
   constructor(object: any = {}) {
     for (const [key, value] of Object.entries(Organization.default)) {

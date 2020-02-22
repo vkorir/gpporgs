@@ -52,10 +52,10 @@ export class AdminComponent implements OnInit {
   }
 
   organizations(): void {
-    const query = '{ organizations { id name address { country } dateAdded numReviews approved }}';
+    const query = '{ organizations { id name address { country } submitted approved }}';
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(OrganizationsComponent, {
-        panelClass: 'mat-dialog--sm',
+        panelClass: 'mat-dialog--md',
         data
       });
     });
