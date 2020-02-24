@@ -132,7 +132,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   orgDateAdded(): string {
-    return this.date(this.organization.controls.dateAdded.value);
+    return this.date(this.organization.controls.submitted.value);
   }
 
   date(timestamp: number): string {

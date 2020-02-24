@@ -22,8 +22,7 @@ export class Organization {
     website: null,
     approved: false,
     contacts: [],
-    dateAdded: Date.now(),
-    numReviews: 0
+    submitted: Date.now()
   };
   id: number;
   name: string;
