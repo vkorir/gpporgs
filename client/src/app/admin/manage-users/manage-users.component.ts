@@ -41,13 +41,13 @@ export class ManageUsersComponent implements OnInit {
 
   displayName(user: User): string {
     if (user.firstName && user.lastName) {
-      return `${user.lastName}, ${user.firstName}`
+      return `${user.lastName}, ${user.firstName}`;
     }
     return user.email;
   }
 
-  date(timestamp: number): string {
-    if (timestamp === 0) {
+  date(timestamp: number | null): string {
+    if (!timestamp) {
       return '-';
     }
     const lastAccess = new Date(timestamp);

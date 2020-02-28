@@ -48,6 +48,7 @@ Thumbs.db
 ## other ##
 HELP.md
 target/
+resources/static
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**

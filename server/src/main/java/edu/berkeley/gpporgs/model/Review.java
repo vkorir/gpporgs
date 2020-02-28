@@ -35,14 +35,14 @@ public class Review {
     private @NonNull Iterable<Long> sectors;
     private String sectorOther;
     private Integer stipend;
-    private Integer cost;
+    private Integer cost = 0;
     private String duration;
     private @NonNull String workDone;
     private String typicalDay;
     private @NonNull String evaluation;
     private String other;
-    private Integer safety;
-    private Integer responsiveness;
+    private Integer safety = 1;
+    private Integer responsiveness = 1;
     private @NonNull Boolean anonymous;
     private @NonNull Long reviewerId;
     @Transient

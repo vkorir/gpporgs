@@ -19,10 +19,10 @@ import javax.persistence.*;
 public class User {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private @NonNull String email;
-    private @NonNull String firstName;
+    private String firstName;
     private String lastName;
-    private @NonNull Boolean isAdmin;
-    private @NonNull Long creationTime;
-    private @NonNull Integer numberOfLogin;
-    private @NonNull Long lastLogin;
+    private Boolean isAdmin = false;
+    private Long creationTime;
+    private Integer numberOfLogin = 0;
+    private Long lastLogin;
 }
