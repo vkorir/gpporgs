@@ -11,7 +11,7 @@ type User {
 
 input UserInput {
     id: Int
-    email: String!
+    email: String
     firstName: String
     lastName: String
     isAdmin: Boolean
