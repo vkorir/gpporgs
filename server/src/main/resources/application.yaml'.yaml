@@ -1,0 +1,33 @@
+##### General Properties #####
+mysql_data_delimiter: ^
+
+##### Database Properties #####
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/rateandreview_dev?serverTimezone=UTC
+    username: db-username
+    password: db-password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: google-client-id
+            client-secret: google-client-secret
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+app:
+  auth:
+    jwt-secret: jwt-secret-key
+    jwt-expiration-ms: 84000000
+  oauth2:
+    domain: berkeley.edu
+    authorized-redirect-uris: http://localhost:8080/login, http://localhost:4200/login, http://gpporgs-dev.berkeley.edu, https://gpporgs.berkeley.edu, http://gpporgs.berkeley.edu
+server:
+  port: 8080

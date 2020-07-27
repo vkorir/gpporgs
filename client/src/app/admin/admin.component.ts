@@ -24,7 +24,7 @@ export class AdminComponent implements OnInit {
       icon: 'group',
       description: 'View and manage roles for all the current GPPORGS users (student & admin roles)'
     }, {
-      title: 'Organizations',
+      title: 'Manage Organizations',
       action: () => this.organizations(),
       icon: 'list',
       description: 'View and filter all the GPPORGS organizations'

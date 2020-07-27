@@ -16,7 +16,7 @@ export class OrganizationsComponent implements OnInit {
 
   organizations: Organization[] = [];
   dataSource: MatTableDataSource<Organization>;
-  columns = ['name', 'location', 'submitted', 'approved'];
+  displayedColumns = ['name', 'location', 'submitted', 'approved'];
 
   approvedControl = new FormControl(true);
 
@@ -26,7 +26,7 @@ export class OrganizationsComponent implements OnInit {
               private snackBar: MatSnackBar,
               @Inject(MAT_DIALOG_DATA) private data: any) {
     this.dataSource = new MatTableDataSource<Organization>(data.organizations);
-    this.dataSource.paginator = this.paginator;
+    setTimeout(() => this.dataSource.paginator = this.paginator);
     this.organizations = data.organizations;
     this.approvedControl.valueChanges.subscribe(() => this.filter());
   }

@@ -29,6 +29,7 @@ speed-measure-plugin*.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+package-lock.json
 .history/*
 
 # misc
@@ -48,10 +49,11 @@ Thumbs.db
 ## other ##
 HELP.md
 target/
-resources/static
+server/src/main/resources/static/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+*.sql
 
 ### STS ###
 .apt_generated
@@ -81,4 +83,3 @@ static/
 .vscode/
 
 application.yaml
-organizations.json

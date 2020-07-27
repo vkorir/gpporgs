@@ -53,8 +53,8 @@
   }
 }
 
-.mat-radio-button, .mat-checkbox {
-  color: #777777;
+::ng-deep .mat-radio-button, .mat-checkbox {
+  color: #000000;
 }
 
 #filter-subheading {
@@ -70,6 +70,4 @@ p strong {
   color: $berkeley-blue;
 }
 
-.mat-button:disabled {
-  opacity: 0.3;
-}
+

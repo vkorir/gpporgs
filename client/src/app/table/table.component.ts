@@ -23,19 +23,15 @@ export class TableComponent implements OnInit {
 
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.filter = this.appService.filterState();
-  }
-
-  ngOnInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    this.filter.subscribe(() => this.applyFilter());
     const query = '{ organizations { id name type typeOther region address { country } sectors } }';
     this.appService.queryService(query).subscribe(data => {
       this.organizations = data.organizations.map(organization => new Organization(organization));
-      this.dataSource = new MatTableDataSource<Organization>(this.organizations);
-      this.dataSource.sort = this.sort;
+      this.applyFilter();
     });
-    this.filter.subscribe(() => this._filter());
   }
+
+  ngOnInit() {}
 
   type(organization: Organization): string {
     if (organization.type === this.appService.types.size) {
@@ -56,10 +52,12 @@ export class TableComponent implements OnInit {
     return sectors.join('\n');
   }
 
-  private _filter(): void {
+  private applyFilter(): void {
     const filter = this.appService.filterValue();
     const filtered = this.organizations.filter(organization => organization.applyFilter(filter, this.appService));
     this.dataSource = new MatTableDataSource<any>(filtered);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   openDetailsModal(id: number) {

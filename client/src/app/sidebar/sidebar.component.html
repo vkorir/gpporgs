@@ -7,26 +7,29 @@
 <span class="mat-subheading-1">AREA</span>
 <p>
   <mat-radio-group aria-label="Select Area" fxLayout="column" fxLayoutGap="4px" [formControl]="areaControl">
-    <mat-radio-button color="primary" [value]="area.ALL">all</mat-radio-button>
-    <mat-radio-button color="primary" [value]="area.DOMESTIC">domestic</mat-radio-button>
-    <mat-radio-button color="primary" [value]="area.INTERNATIONAL">international</mat-radio-button>
+    <mat-radio-button color="primary" [value]="area.ALL">All</mat-radio-button>
+    <mat-radio-button color="primary" [value]="area.DOMESTIC">Domestic</mat-radio-button>
+    <mat-radio-button color="primary" [value]="area.INTERNATIONAL">International</mat-radio-button>
   </mat-radio-group>
 </p>
 <span class="mat-subheading-1">REGIONS</span>
 <p class="overflow-y" id="filter-regions">
+  <mat-checkbox color ="primary" fxLayout="row" [checked]="masterSelectedRegion" (change)="toggleSelectAllRegions()" > Select / Deselect All</mat-checkbox>
   <mat-checkbox color="primary" fxLayout="row"
-                *ngFor="let id of regions()"
-                [checked]="checkedRegions.has(id)"
-                (change)="onRegionChange(id)">
-    {{ region(id) }}
+                *ngFor="let item of checklistRegion; let i = index"
+                [checked]="item.isSelected"
+                (change)="onRegionChange(i)">
+    {{ item.value }}
   </mat-checkbox>
+  
 </p>
 <span class="mat-subheading-1">SECTORS</span>
 <p class="overflow-y" id="filter-sectors">
+  <mat-checkbox color ="primary" fxLayout="row" [checked]="masterSelectedSector" (change)="toggleSelectAllSectors()" > Select / Deselect All</mat-checkbox>
   <mat-checkbox color="primary" fxLayout="row"
-                *ngFor="let id of sectors()"
-                [checked]="checkedSectors.has(id)"
-                (change)="onSectorChange(id)">
-    {{ sector(id).toLowerCase().startsWith('other') ? 'Other' : sector(id) }}
+                *ngFor="let item of checklistSector; let i = index"
+                [checked]="item.isSelected"
+                (change)="onSectorChange(i)">
+    {{ item.value }}
   </mat-checkbox>
 </p>

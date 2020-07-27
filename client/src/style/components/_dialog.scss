@@ -5,12 +5,19 @@
   .mat-dialog-content {
     margin: 0 -16px;
     padding: 0 16px;
+    color: black;
   }
 
   .mat-dialog-content--scroll {
     padding-top: 16px;
     padding-bottom: 16px;
   }
+}
+.mat-select-content{
+  color: black;
+}
+.mat-option.mat-selected {
+  color:black !important;
 }
 
 .dialog-menu {
