@@ -36,6 +36,7 @@ export class OrganizationsComponent implements OnInit {
   private filter(): void {
     const filtered = this.organizations.filter(organization => this.approvedControl.value || !organization.approved);
     this.dataSource = new MatTableDataSource<Organization>(filtered);
+    this.dataSource.paginator = this.paginator;
   }
 
   country(id: string): string {
