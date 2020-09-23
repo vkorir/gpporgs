@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
+import { MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
 import { User } from '../../model/user';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AppService } from '../../app.service';
@@ -26,15 +26,14 @@ export class ManageUsersComponent implements OnInit {
 
   expandedElement = null;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private dialogRef: MatDialogRef<ManageUsersComponent>,
               private appService: AppService,
               private snackBar: MatSnackBar,
               @Inject(MAT_DIALOG_DATA) private data: any) {
     this.dataSource = new MatTableDataSource<User>(data.users);
-    this.dataSource.paginator = this.paginator;
-    // data.users.map(user => user.adminControl = new FormControl(user.isAdmin));
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   ngOnInit() {}

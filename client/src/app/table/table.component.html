@@ -21,4 +21,5 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openDetailsModal(row.id)"></tr>
   </table>
 </div>
-<mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" [pageSize]="25" [length]="organizations.length" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+
