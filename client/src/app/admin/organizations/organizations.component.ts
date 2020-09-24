@@ -27,6 +27,7 @@ export class OrganizationsComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) private data: any) {
     this.dataSource = new MatTableDataSource<Organization>(data.organizations);
     setTimeout(() => this.dataSource.paginator = this.paginator);
+    
     this.organizations = data.organizations;
     this.approvedControl.valueChanges.subscribe(() => this.filter());
   }

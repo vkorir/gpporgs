@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { AppService } from '../../app.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { User } from 'src/app/model/user';
 
 @Component({
   selector: 'app-add-user',
@@ -13,18 +13,29 @@ export class AddUserComponent implements OnInit {
 
   inputControl: FormControl = new FormControl(null, [Validators.required, Validators.email]);
 
-  constructor(private dialogRef: MatDialogRef<AddUserComponent>,
-              private appService: AppService,
+  constructor(private appService: AppService,
               private snackBar: MatSnackBar) { }
 
   ngOnInit() {}
 
   addUser(): void {
-    const fields = `email: "${this.inputControl.value}" creationTime: ${Date.now()}`;
-    const mutation = `mutation { createUser(user: { ${fields} }) { email }}`;
+    const email = this.inputControl.value;
+    if (email.substring(email.indexOf('@')) !== '@berkeley.edu') {
+      this.appService.openSnackBar(this.snackBar, 'Enter a berkeley.edu email');
+      return;
+    }
+    const user = new User();
+    user.email = email;
+    const mutation = `mutation { createUser(user: ${this.appService.queryFy(user)}) { email }}`;
     this.appService.mutationService(mutation).subscribe(({ createUser }) => {
       if (createUser && createUser.email) {
-        this.appService.openSnackBar(this.snackBar, `Successfully added ${createUser.email}`);
+        this.appService.openSnackBar(this.snackBar, `Successfully added ${createUser.email} with role 'Student'`);
+
+        const users = this.appService.users.getValue();
+        if (Array.isArray(users)) {
+          (users as Array<any>).push(user);
+        }
+        this.appService.users.next(users);
       }
       this.inputControl.setValue(null);
       this.inputControl.markAsUntouched();

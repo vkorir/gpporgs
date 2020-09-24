@@ -15,6 +15,7 @@ export class AppService {
   private readonly tokenKey = 'token';
   private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private organizationsFilter = new BehaviorSubject<Filter>(new Filter());
+  public users = new BehaviorSubject<[]>([]);
   public regions = new Map<number, string>();
   public countries = new Map<string, string>();
   public affiliations = new Map<number, string>();

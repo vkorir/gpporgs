@@ -250,8 +250,6 @@
       </div>
     </form>
   </mat-dialog-content>
-  
-
 
   <mat-divider></mat-divider>
   <mat-dialog-actions fxLayout="row" style="padding-right: 100px">
@@ -260,7 +258,7 @@
     <button mat-button class="warn" *ngIf="isEditOrganization" (click)="closeEditOrganization()">Cancel</button>
     <span fxFlex="1 1 auto"></span>
     <button mat-button class="warn" mat-dialog-close *ngIf="!isEditOrganization">Cancel</button>
-    <button mat-button (click)="segue(organization, false)" *ngIf="!isEditOrganization">Next <mat-icon>navigate_next</mat-icon></button>
+    <button mat-button style="width: auto" (click)="segue(organization, false)" *ngIf="!isEditOrganization">{{orgReviewBtnText}} <mat-icon>navigate_next</mat-icon></button>
     <span fxFlex="1 1 auto"></span>
   </mat-dialog-actions>
 </ng-container>
@@ -431,11 +429,11 @@
     <button mat-button *ngIf="isEditReview" (click)="saveReview()" class="save" [disabled]="!review.dirty">Save</button>
     <button mat-button class="warn" (click)="closeEditReview()" *ngIf="isEditReview">Cancel</button>
     <span fxFlex="1 1 auto"></span>
-    <button mat-button (click)="segue(review, true)" *ngIf="!isEditReview"><mat-icon>navigate_before</mat-icon> Back</button>
-    <button mat-button class="warn" mat-dialog-close *ngIf="!isEditReview">Cancel</button>
-    <button mat-button (click)="submit()" class="save" [disabled]="!reviewValid() || isSubmitting" *ngIf="!isEditReview">
-      Submit
+    <button mat-button *ngIf="!isEditReview" style="width: auto" (click)="segue(review, true)"><mat-icon>navigate_before</mat-icon> {{orgInfoBtnText}}</button>
+    <button mat-button *ngIf="!isEditReview" class="warn" mat-dialog-close>Cancel</button>
+    <button mat-button *ngIf="!isEditReview" (click)="submit()" class="save" [disabled]="!reviewValid() || isSubmitting">
       <mat-progress-bar mode="indeterminate" *ngIf="isSubmitting"></mat-progress-bar>
+      Submit
     </button>
     <span fxFlex="1 1 auto"></span>
   </mat-dialog-actions>
@@ -501,6 +499,6 @@
   </mat-dialog-content>
   <mat-divider></mat-divider>
   <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2px">
-    <button mat-button (click)="organizationView = true"><mat-icon>navigate_before</mat-icon> Back</button>
+    <button mat-button style="width: auto" (click)="organizationView = true"><mat-icon>navigate_before</mat-icon> {{orgInfoBtnText}}</button>
   </mat-dialog-actions>
 </ng-container>

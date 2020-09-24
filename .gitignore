@@ -43,17 +43,13 @@ testem.log
 typings
 
 # System Files
-.DS_Store
+**/.DS_Store
 Thumbs.db
 
 ## other ##
 HELP.md
 target/
-server/src/main/resources/static/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**
-!**/src/test/**
-*.sql
 
 ### STS ###
 .apt_generated
@@ -82,4 +78,5 @@ static/
 ### VS Code ###
 .vscode/
 
+server/src/main/resources/static/*
 application.yaml

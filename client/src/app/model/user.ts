@@ -4,7 +4,7 @@ export class User {
   firstName: string;
   lastName: string;
   isAdmin: boolean;
-  creationTime: number;
-  numberOfLogin: number;
+  creationTime: number = Date.now();
+  numberOfLogin: number = 0;
   lastLogin: number;
 }

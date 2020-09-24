@@ -41,6 +41,9 @@ export class MainModalComponent implements OnInit, OnChanges {
   isEditOrganization = false;
   isEditReview = false;
 
+  orgReviewBtnText = 'Add Review for This Organization';
+  orgInfoBtnText = 'Organization Info';
+
   // tslint:disable-next-line:max-line-length
   reviewEditableFields = ['country', 'city', 'region', 'languages', 'sectors', 'sectorOther', 'cost', 'stipend', 'workDone', 'evaluation', 'typicalDay', 'difficulties', 'safety', 'responsiveness', 'duration', 'other'];
 
@@ -61,7 +64,6 @@ export class MainModalComponent implements OnInit, OnChanges {
     this.affiliations = [...this.appService.affiliations.keys()];
     this.types = [...this.appService.types.keys()];
 
-
     this.sectors = [...this.appService.sectors.keys()];
     this.languages = [...this.appService.languages.keys()];
     this.contacts = [...Array(Organization.numContacts).keys()];
@@ -71,6 +73,11 @@ export class MainModalComponent implements OnInit, OnChanges {
         this.reviewControls.push(this.buildFormGroup(review, true));
         return review;
       });
+    }
+    
+    if (this.disableControl) {
+      this.orgReviewBtnText = 'View Past Student Reviews of This Organization';
+      this.orgInfoBtnText = 'View Organization Info';
     }
   }
 

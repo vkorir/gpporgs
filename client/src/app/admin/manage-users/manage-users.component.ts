@@ -21,19 +21,19 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class ManageUsersComponent implements OnInit {
 
-  dataSource: MatTableDataSource<User>;
+  dataSource = new MatTableDataSource<Array<User>>();
   columns = ['name', 'accessLevel', 'creationTime', 'lastLogin', 'numberOfLogin', 'manageRole'];
 
   expandedElement = null;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  constructor(private dialogRef: MatDialogRef<ManageUsersComponent>,
-              private appService: AppService,
-              private snackBar: MatSnackBar,
-              @Inject(MAT_DIALOG_DATA) private data: any) {
-    this.dataSource = new MatTableDataSource<User>(data.users);
-    setTimeout(() => this.dataSource.paginator = this.paginator);
+  constructor(private appService: AppService,
+              private snackBar: MatSnackBar) {
+    this.appService.users.subscribe(value => {
+      this.dataSource = new MatTableDataSource<Array<User>>(value);
+      setTimeout(() => this.dataSource.paginator = this.paginator);
+    });
   }
 
   ngOnInit() {}
@@ -61,13 +61,14 @@ export class ManageUsersComponent implements OnInit {
 
   roleChanged(user: User): void {
     if (user.id === this.appService.userValue().id) {
-      this.appService.openSnackBar(this.snackBar, 'Cannot manage your roles');
+      this.appService.openSnackBar(this.snackBar, 'Cannot change own roles');
       return;
     }
     const mutation = `mutation { updateUser(id: "${user.id}", details: { isAdmin: ${!user.isAdmin} }) { id, firstName } }`;
     this.appService.mutationService(mutation).subscribe(({ updateUser }) => {
       if (updateUser && updateUser.id) {
         setTimeout(() => user.isAdmin = !user.isAdmin, 300);
+        user.isAdmin
         this.appService.openSnackBar(this.snackBar, `Updated roles for ${updateUser.firstName}`);
       } else {
         this.appService.openSnackBar(this.snackBar, 'An error occurred');
