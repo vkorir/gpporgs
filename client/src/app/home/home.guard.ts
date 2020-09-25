@@ -28,7 +28,11 @@ export class HomeGuard implements CanActivate, CanLoad {
       if (user == null) {
         this.router.navigateByUrl('/login');
       }
-      return user != null;
+      if (!!user) {
+        this.appService.isShowSearchBar.next(true);
+        return true;
+      }
+      return false;
     }));
   }
 }

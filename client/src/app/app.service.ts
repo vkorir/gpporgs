@@ -23,6 +23,8 @@ export class AppService {
   public sectors = new Map<number, string>();
   public languages = new Map<string, string>();
 
+  public isShowSearchBar = new BehaviorSubject<boolean>(true);
+
   constructor(private apollo: Apollo, private snackBar: MatSnackBar) {}
 
   loginUrl(): string {

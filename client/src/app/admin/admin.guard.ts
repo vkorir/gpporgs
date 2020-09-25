@@ -13,6 +13,7 @@ export class AdminGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
     if (this.appService.isAdmin()) {
+      this.appService.isShowSearchBar.next(false);
       return true;
     }
     this.router.navigateByUrl('/');

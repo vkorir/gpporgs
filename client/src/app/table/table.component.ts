@@ -18,6 +18,8 @@ export class TableComponent implements OnInit {
   organizations: Organization[] = [];
   private filter: Observable<Filter>;
 
+  isLoading: boolean;
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -25,8 +27,10 @@ export class TableComponent implements OnInit {
     this.filter = this.appService.filterState();
     this.filter.subscribe(() => this.applyFilter());
     const query = '{ organizations { id name type typeOther region address { country } sectors } }';
+    this.isLoading = true;
     this.appService.queryService(query).subscribe(data => {
       this.organizations = data.organizations.map(organization => new Organization(organization));
+      this.isLoading = false;
       this.applyFilter();
     });
   }
