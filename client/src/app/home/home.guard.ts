@@ -24,7 +24,7 @@ export class HomeGuard implements CanActivate, CanLoad {
   }
 
   checkAuthentication(): Observable<boolean> {
-    return this.appService.userState().pipe(map(user => {
+    return this.appService.user.asObservable().pipe(map(user => {
       if (user == null) {
         this.router.navigateByUrl('/login');
       }

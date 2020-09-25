@@ -30,9 +30,9 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
     this.masterSelectedRegion = true;
     this.masterSelectedSector = true;
     this.areaControl.valueChanges.subscribe(() => {
-      const filter = this.appService.filterValue();
-      filter.area = this.areaControl.value;
-      this.appService.updateFilter(filter);
+      const value = this.appService.filter.getValue();
+      value.area = this.areaControl.value;
+      this.appService.filter.next(value);
     });
     appService.regions.forEach((value, id) => {
       this.checklistRegion.push({ id, value, isSelected: true });
@@ -73,7 +73,7 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   getFistName(): string {
-    return this.appService.userValue().firstName;
+    return this.appService.user.getValue().firstName;
   }
 
   onRegionChange(index: number): void {
@@ -89,9 +89,9 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   private updateFilterRegion(): void {
-    const filter = this.appService.filterValue();
-    filter.regions = new Set(this.checkedRegions);
-    this.appService.updateFilter(filter);
+    const value = this.appService.filter.getValue();
+    value.regions = new Set(this.checkedRegions);
+    this.appService.filter.next(value);
   }
 
   onSectorChange(index: number): void {
@@ -107,9 +107,9 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   private updateFilterSectors(): void {
-    const filter = this.appService.filterValue();
-    filter.sectors = new Set<number>(this.checkedSectors);
-    this.appService.updateFilter(filter);
+    const value = this.appService.filter.getValue();
+    value.sectors = new Set<number>(this.checkedSectors);
+    this.appService.filter.next(value);
   }
 
 

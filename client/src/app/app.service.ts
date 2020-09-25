@@ -13,17 +13,16 @@ import { baseUrl } from './baseUrl';
 })
 export class AppService {
   private readonly tokenKey = 'token';
-  private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  private organizationsFilter = new BehaviorSubject<Filter>(new Filter());
-  public users = new BehaviorSubject<[]>([]);
+  public user = new BehaviorSubject<User>(null);
+  public filter = new BehaviorSubject<Filter>(new Filter());
+  public users = new BehaviorSubject<Array<User>>(new Array());
+  public isShowSearchBar = new BehaviorSubject<boolean>(true);
   public regions = new Map<number, string>();
   public countries = new Map<string, string>();
   public affiliations = new Map<number, string>();
   public types = new Map<number, string>();
   public sectors = new Map<number, string>();
   public languages = new Map<string, string>();
-
-  public isShowSearchBar = new BehaviorSubject<boolean>(true);
 
   constructor(private apollo: Apollo, private snackBar: MatSnackBar) {}
 
@@ -71,10 +70,10 @@ export class AppService {
         this.__populateSources(data.sectors, this.sectors);
         this.__populateSources(data.languages, this.languages);
 
-        const filter = this.organizationsFilter.getValue();
-        filter.regions = new Set(this.regions.keys());
-        filter.sectors = new Set(this.sectors.keys());
-        this.updateFilter(filter);
+        const value = this.filter.getValue();
+        value.regions = new Set(this.regions.keys());
+        value.sectors = new Set(this.sectors.keys());
+        this.filter.next(value);
       } else {
         this.openSnackBar(this.snackBar, data.message);
       }
@@ -83,34 +82,6 @@ export class AppService {
 
   private __populateSources(data: any, source: Map<any, any>): void {
     data.map(item => source.set(item.id || item.code, item.value));
-  }
-
-  userValue(): User {
-    return this.user.getValue();
-  }
-
-  userState(): Observable<User> {
-    return this.user.asObservable();
-  }
-
-  isSignedIn(): boolean {
-    return this.user.getValue() != null;
-  }
-
-  isAdmin(): boolean {
-    return this.isSignedIn() && this.user.getValue().isAdmin;
-  }
-
-  updateFilter(filter: Filter): void {
-    this.organizationsFilter.next(filter);
-  }
-
-  filterValue(): Filter {
-    return this.organizationsFilter.getValue();
-  }
-
-  filterState(): Observable<Filter> {
-    return this.organizationsFilter.asObservable();
   }
 
   queryFy(object: any): any {
@@ -137,7 +108,6 @@ export class AppService {
     return this.apollo.watchQuery<any>({ query: gql(query) }).valueChanges.pipe(map(response => {
       if (response.errors) {
         this.clearToken();
-        // window.location.reload();
       }
       return response.data || response;
     }));

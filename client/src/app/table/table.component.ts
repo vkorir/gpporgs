@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppService } from '../app.service';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Observable } from 'rxjs';
-import { Filter } from '../model/filter';
 import { Organization } from '../model/organization';
 import { MainModalComponent } from '../main-modal/main-modal.component';
 
@@ -16,7 +14,6 @@ export class TableComponent implements OnInit {
   displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
   dataSource = new MatTableDataSource<Organization>([]);
   organizations: Organization[] = [];
-  private filter: Observable<Filter>;
 
   isLoading: boolean;
 
@@ -24,8 +21,7 @@ export class TableComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private appService: AppService, private dialog: MatDialog) {
-    this.filter = this.appService.filterState();
-    this.filter.subscribe(() => this.applyFilter());
+    this.appService.filter.subscribe(() => this.applyFilter());
     const query = '{ organizations { id name type typeOther region address { country } sectors } }';
     this.isLoading = true;
     this.appService.queryService(query).subscribe(data => {
@@ -57,8 +53,8 @@ export class TableComponent implements OnInit {
   }
 
   private applyFilter(): void {
-    const filter = this.appService.filterValue();
-    const filtered = this.organizations.filter(organization => organization.applyFilter(filter, this.appService));
+    const value = this.appService.filter.getValue();
+    const filtered = this.organizations.filter(organization => organization.applyFilter(value, this.appService));
     this.dataSource = new MatTableDataSource<any>(filtered);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

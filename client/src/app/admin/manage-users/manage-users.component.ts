@@ -1,7 +1,6 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material';
 import { User } from '../../model/user';
-import { MatDialogRef } from '@angular/material/dialog';
 import { AppService } from '../../app.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatPaginator } from '@angular/material/paginator';
@@ -21,7 +20,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class ManageUsersComponent implements OnInit {
 
-  dataSource = new MatTableDataSource<Array<User>>();
+  dataSource = new MatTableDataSource<User>();
   columns = ['name', 'accessLevel', 'creationTime', 'lastLogin', 'numberOfLogin', 'manageRole'];
 
   expandedElement = null;
@@ -31,7 +30,7 @@ export class ManageUsersComponent implements OnInit {
   constructor(private appService: AppService,
               private snackBar: MatSnackBar) {
     this.appService.users.subscribe(value => {
-      this.dataSource = new MatTableDataSource<Array<User>>(value);
+      this.dataSource = new MatTableDataSource<User>(value);
       setTimeout(() => this.dataSource.paginator = this.paginator);
     });
   }
@@ -60,7 +59,7 @@ export class ManageUsersComponent implements OnInit {
   }
 
   roleChanged(user: User): void {
-    if (user.id === this.appService.userValue().id) {
+    if (user.id === this.appService.user.getValue().id) {
       this.appService.openSnackBar(this.snackBar, 'Cannot change own roles');
       return;
     }

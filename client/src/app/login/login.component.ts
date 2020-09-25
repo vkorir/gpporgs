@@ -16,10 +16,10 @@ export class LoginComponent implements OnInit {
               private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.appService.userState().subscribe(user => {
+    this.appService.user.subscribe(user => {
       if (!!user) {
         let redirectUrl = '/';
-        if (!!user && this.appService.isAdmin()) {
+        if (this.appService.user.getValue().isAdmin) {
           redirectUrl = '/admin';
         }
         this.router.navigateByUrl(redirectUrl);

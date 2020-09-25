@@ -74,7 +74,7 @@ export class MainModalComponent implements OnInit, OnChanges {
         return review;
       });
     }
-    
+
     if (this.disableControl) {
       this.orgReviewBtnText = 'View Past Student Reviews of This Organization';
       this.orgInfoBtnText = 'View Organization Info';
@@ -92,7 +92,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.review.controls.reviewerId.setValue(this.appService.userValue().id);
+    this.review.controls.reviewerId.setValue(this.appService.user.getValue().id);
     this.selectedLanguages = this.review.controls.languages.value;
     this.filteredLanguages = this.languageControl.valueChanges.pipe(
       startWith(null),
@@ -105,7 +105,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   isAdmin(): boolean {
-    return this.appService.userValue().isAdmin;
+    return this.appService.user.getValue().isAdmin;
   }
 
   region(id: number): string {
@@ -198,7 +198,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   reviewer(review: Review): boolean {
-    return this.appService.isAdmin() || !review.anonymous;
+    return this.appService.user.getValue().isAdmin || !review.anonymous;
   }
 
   formatSliderLabel(value: number): string | number {
@@ -264,12 +264,6 @@ export class MainModalComponent implements OnInit, OnChanges {
     } else {
       formGroup.markAllAsTouched();
     }
-    // const json = require('./organizations.json');
-    // for (const org of json) {
-    //   const mutation = `mutation { createOrganization(organization: ${this.appService.queryFy(org)}) { id } }`;
-    //   // console.log(mutation);
-    //   this.appService.mutationService(mutation).subscribe(response => console.log(response));
-    // }
   }
 
   reviewValid(): boolean {
@@ -305,7 +299,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   canEditReview(review: Review): boolean {
-    return this.appService.userValue().isAdmin || this.appService.userValue().id === review.reviewerId;
+    return this.appService.user.getValue().isAdmin || this.appService.user.getValue().id === review.reviewerId;
   }
 
   editReview(review: Review): void {

@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   isShowSearchBar: boolean;
 
   constructor(private appService: AppService, private router: Router) {
-    this.user = this.appService.userState();
+    this.user = this.appService.user.asObservable();
     this.searchControl.valueChanges.subscribe(() => this.updateSearchString());
     this.appService.isShowSearchBar.subscribe(value => {
       this.isShowSearchBar = value;
@@ -27,14 +27,10 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {}
 
   private updateSearchString(): void {
-    const filter = this.appService.filterValue();
-    filter.searchString = this.searchControl.value.trim().toLowerCase();
-    this.appService.updateFilter(filter);
+    const value = this.appService.filter.getValue();
+    value.searchString = this.searchControl.value.trim().toLowerCase();
+    this.appService.filter.next(value);
   }
-
-  // toggeShowSearchBar(value: boolean) {
-  //   this.appService.isShowSearchBar.next(value);
-  // }
 
   login(): void {
     window.location.assign(this.appService.loginUrl());
