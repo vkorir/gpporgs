@@ -22,7 +22,7 @@ public class User {
     private String firstName;
     private String lastName;
     private Boolean isAdmin = false;
-    private Long creationTime;
+    private String creationTime;
     private Integer numberOfLogin = 0;
-    private Long lastLogin;
+    private String lastLogin;
 }

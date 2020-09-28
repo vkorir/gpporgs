@@ -16,6 +16,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.time.Instant;
+import java.util.Date;
+import java.util.TimeZone;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
@@ -45,6 +50,9 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     public Organization createOrganization(Organization organization) {
+        if (organization == null) {
+            return null;
+        }
         return delimitFields(organization);
     }
 
@@ -91,6 +99,9 @@ public class MutationResolver implements GraphQLMutationResolver {
         if (organization.getContacts() != null) {
             contacts = organization.getContacts();
         }
+        if (organization.getId() == null) {
+            organization.setCreationTime(getCurrentUTCTime());
+        }
         organization = organizationRepository.save(organization);
         if (contacts != null) {
             for (Contact contact: contacts) {
@@ -102,15 +113,19 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     public User createUser(User user) {
+        if (user == null || user.getEmail() == null) {
+            return null;
+        }
+        user.setCreationTime(getCurrentUTCTime());
         Optional<User> optional = userRepository.findByEmail(user.getEmail());
         return optional.orElseGet(() -> userRepository.save(user));
     }
 
-    public User updateUser(Long id, User user) {
-        if (!isAdmin()) {
+    public User updateUser(User user) {
+        if (user == null || !isAdmin()) {
             return null;
         }
-        Optional<User> optional = userRepository.findById(id);
+        Optional<User> optional = userRepository.findById(user.getId());
         if (!optional.isPresent()) {
             return null;
         }
@@ -119,6 +134,9 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     public Review createReview(Organization organization, Review review) {
+        if (review == null) {
+            return null;
+        }
         Long orgId = delimitFields(organization).getId();
         review.setOrganizationId(orgId);
         return delimitFields(review);
@@ -133,6 +151,13 @@ public class MutationResolver implements GraphQLMutationResolver {
         return delimitFields(review);
     }
 
+    private String getCurrentUTCTime() {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(new Date());
+    }
+
     private Review delimitFields(Review review) {
         if (review.getAddress() != null) {
             Long addressId = addressRepository.save(review.getAddress()).getId();
@@ -143,6 +168,9 @@ public class MutationResolver implements GraphQLMutationResolver {
         }
         if (review.getSectors() != null) {
             review.setSectorIds(String.join(dataDelimiter, longsToStrings(review.getSectors())));
+        }
+        if (review.getId() == null) {
+            review.setCreationTime(getCurrentUTCTime());
         }
         return reviewRepository.save(review);
     }

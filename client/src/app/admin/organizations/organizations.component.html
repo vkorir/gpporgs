@@ -11,7 +11,7 @@
     </ng-container>
     <ng-container matColumnDef="submitted">
       <th mat-header-cell *matHeaderCellDef>Date Added</th>
-      <td mat-cell *matCellDef="let organization">{{date(organization.submitted)}}</td>
+      <td mat-cell *matCellDef="let organization">{{formatDate(organization.creationDate)}}</td>
     </ng-container>
     <ng-container matColumnDef="approved">
       <th mat-header-cell *matHeaderCellDef>Approved</th>

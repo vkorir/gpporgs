@@ -62,13 +62,13 @@ export class AppService {
     const query = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
     this.queryService(query).subscribe(data => {
       if (!data.message) {
-        this.user.next(data.currentUser as User);
-        this.__populateSources(data.regions, this.regions);
-        this.__populateSources(data.countries, this.countries);
-        this.__populateSources(data.affiliations, this.affiliations);
-        this.__populateSources(data.types, this.types);
-        this.__populateSources(data.sectors, this.sectors);
-        this.__populateSources(data.languages, this.languages);
+        this.user.next(data.currentUser);
+        this.populateDate(data.regions, this.regions);
+        this.populateDate(data.countries, this.countries);
+        this.populateDate(data.affiliations, this.affiliations);
+        this.populateDate(data.types, this.types);
+        this.populateDate(data.sectors, this.sectors);
+        this.populateDate(data.languages, this.languages);
 
         const value = this.filter.getValue();
         value.regions = new Set(this.regions.keys());
@@ -80,8 +80,22 @@ export class AppService {
     });
   }
 
-  private __populateSources(data: any, source: Map<any, any>): void {
+  private populateDate(data: any, source: Map<any, any>): void {
     data.map(item => source.set(item.id || item.code, item.value));
+  }
+
+  formatDate(date: string): string {
+    if (!date) {
+      return '-';
+    }
+    const lastLogin = new Date(date);
+    const formatNum = value => { return value < 10 ? `0${value}` : value; }
+    let month = formatNum(lastLogin.getMonth());
+    const day = formatNum(lastLogin.getDate());
+    const year = formatNum(lastLogin.getFullYear());
+    const hours = formatNum(lastLogin.getHours());
+    const minutes = formatNum(lastLogin.getMinutes());
+    return `${month}/${day}/${year} ${hours}:${minutes}`;
   }
 
   queryFy(object: any): any {

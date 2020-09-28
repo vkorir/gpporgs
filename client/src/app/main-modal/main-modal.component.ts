@@ -56,20 +56,17 @@ export class MainModalComponent implements OnInit, OnChanges {
               private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.disableControl = data.disableControl;
-    const organization = data.organization ? new Organization(data.organization) : new Organization();
-    this.organization = this.buildFormGroup(organization, data.disableControl) as FormGroup;
+    this.organization = this.buildFormGroup(data.organization, data.disableControl) as FormGroup;
     this.review = this.buildFormGroup(new Review(), data.disableControl) as FormGroup;
     this.regions = [...this.appService.regions.keys()];
     this.countries = [...this.appService.countries.keys()];
     this.affiliations = [...this.appService.affiliations.keys()];
     this.types = [...this.appService.types.keys()];
-
     this.sectors = [...this.appService.sectors.keys()];
     this.languages = [...this.appService.languages.keys()];
     this.contacts = [...Array(Organization.numContacts).keys()];
     if (data.reviews) {
-      this.reviews = data.reviews.map(detail => {
-        const review = new Review(detail);
+      this.reviews = data.reviews.map(review => {
         this.reviewControls.push(this.buildFormGroup(review, true));
         return review;
       });
@@ -138,8 +135,8 @@ export class MainModalComponent implements OnInit, OnChanges {
     return this.appService.languages.get(id);
   }
 
-  orgDateAdded(): string {
-    return this.date(this.organization.controls.submitted.value);
+  formatDate(creationDate: string): string {
+    return this.appService.formatDate(creationDate);
   }
 
   date(timestamp: number): string {
@@ -236,7 +233,7 @@ export class MainModalComponent implements OnInit, OnChanges {
       });
       return target;
     }
-    if (Array.isArray(source) && source.length > 0 && source[0] instanceof Contact) {
+    if (Array.isArray(source) && source.length == Organization.numContacts) {
       const items = [];
       for (const contact of source) {
         items.push(this.buildFormGroup(contact, disableControl));

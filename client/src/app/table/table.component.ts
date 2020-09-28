@@ -12,7 +12,7 @@ import { MainModalComponent } from '../main-modal/main-modal.component';
 export class TableComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
-  dataSource = new MatTableDataSource<Organization>([]);
+  dataSource: MatTableDataSource<any>;
   organizations: Organization[] = [];
 
   isLoading: boolean;
@@ -25,8 +25,7 @@ export class TableComponent implements OnInit {
     const query = '{ organizations { id name type typeOther region address { country } sectors } }';
     this.isLoading = true;
     this.appService.queryService(query).subscribe(data => {
-      this.organizations = data.organizations.map(organization => new Organization(organization));
-      this.isLoading = false;
+      this.organizations = data.organizations.map(organization => Object.assign(new Organization(), organization));
       this.applyFilter();
     });
   }
@@ -58,13 +57,14 @@ export class TableComponent implements OnInit {
     this.dataSource = new MatTableDataSource<any>(filtered);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.isLoading = false;
   }
 
   openDetailsModal(id: number) {
     // tslint:disable-next-line:max-line-length
-    const organization = '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } submitted }';
+    const organization = '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } creationTime }';
     // tslint:disable-next-line:max-line-length
-    const review = '{ id submitted region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName email } anonymous }';
+    const review = '{ id creationTime region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName email } anonymous }';
     const query = `{ organization(id: ${id}) ${organization} reviews (organizationId: ${id}) ${review} }`;
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(MainModalComponent, {

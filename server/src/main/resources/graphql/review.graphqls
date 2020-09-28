@@ -1,55 +1,55 @@
 type Review {
-    id: Int
-    submitted: Float
-    address: Address
-    region: Int
-    languages: [String]
-    difficulties: String
-    sectors: [Int]
-    sectorOther: String
-    stipend: Int
-    cost: Int
-    duration: String
-    workDone: String
-    typicalDay: String
-    evaluation: String
-    other: String
-    safety: Int
-    responsiveness: Int
-    anonymous: Boolean
-    reviewerId: Int
-    reviewer: User
+	id: Int
+	creationTime: String
+	address: Address
+	region: Int
+	languages: [String]
+	difficulties: String
+	sectors: [Int]
+	sectorOther: String
+	stipend: Int
+	cost: Int
+	duration: String
+	workDone: String
+	typicalDay: String
+	evaluation: String
+	other: String
+	safety: Int
+	responsiveness: Int
+	anonymous: Boolean
+	reviewerId: Int
+	reviewer: User
 }
 
 input ReviewInput {
-    id: Int
-    submitted: Float
-    organizationId: Int
-    address: AddressInput
-    region: Int
-    languages: [String]
-    difficulties: String
-    sectors: [Int]
-    sectorOther: String
-    stipend: Int
-    cost: Int
-    duration: String
-    workDone: String
-    typicalDay: String
-    evaluation: String
-    other: String
-    safety: Int
-    responsiveness: Int
-    anonymous: Boolean
-    reviewerId: Int
-    reviewer: UserInput
+	id: Int
+	creationTime: String
+	organizationId: Int
+	address: AddressInput
+	region: Int
+	languages: [String]
+	difficulties: String
+	sectors: [Int]
+	sectorOther: String
+	stipend: Int
+	cost: Int
+	duration: String
+	workDone: String
+	typicalDay: String
+	evaluation: String
+	other: String
+	safety: Int
+	responsiveness: Int
+	anonymous: Boolean
+	reviewerId: Int
+	reviewer: UserInput
 }
 
 extend type Query {
-    reviews(organizationId: ID!): [Review]
+	reviews(organizationId: ID!): [Review]
 }
 
 extend type Mutation {
-    createReview(organization: OrganizationInput!, review: ReviewInput!): Review
-    updateReview(review: ReviewInput!): Review
+	createReview(organization: OrganizationInput!, review: ReviewInput!): Review
+	updateReview(review: ReviewInput!): Review
 }

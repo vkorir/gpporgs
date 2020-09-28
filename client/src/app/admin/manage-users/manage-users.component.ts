@@ -20,22 +20,26 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class ManageUsersComponent implements OnInit {
 
-  dataSource = new MatTableDataSource<User>();
-  columns = ['name', 'accessLevel', 'creationTime', 'lastLogin', 'numberOfLogin', 'manageRole'];
+  dataSource: MatTableDataSource<User>;
+  displayedColumns = ['name', 'accessLevel', 'creationTime', 'lastLogin', 'numberOfLogin', 'manageRole'];
 
-  expandedElement = null;
+  expandedUser: User;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private appService: AppService,
               private snackBar: MatSnackBar) {
-    this.appService.users.subscribe(value => {
-      this.dataSource = new MatTableDataSource<User>(value);
+    this.appService.users.subscribe(users => {
+      this.dataSource = new MatTableDataSource<User>(users);
       setTimeout(() => this.dataSource.paginator = this.paginator);
     });
   }
 
   ngOnInit() {}
+
+  isCurrentUser(id: number): boolean {
+    return id == this.appService.user.getValue().id;
+  }
 
   displayName(user: User): string {
     if (user.firstName && user.lastName) {
@@ -44,31 +48,29 @@ export class ManageUsersComponent implements OnInit {
     return user.email;
   }
 
-  date(timestamp: number | null): string {
-    if (!timestamp) {
-      return '-';
-    }
-    const lastAccess = new Date(timestamp);
-    const month = `0${lastAccess.getMonth() + 1}`.slice(-2);
-    const date = `0${lastAccess.getDate() + 1}`.slice(-2);
-    const year = lastAccess.getFullYear();
-    const hours = `0${lastAccess.getHours()}`.slice(-2);
-    const minutes = `0${lastAccess.getMinutes()}`.slice(-2);
-    const seconds = `0${lastAccess.getSeconds()}`.slice(-2);
-    return `${month}/${date}/${year} ${hours}:${minutes}:${seconds}`;
+  formatDate(creationDate: string): string {
+    return this.appService.formatDate(creationDate);
   }
 
-  roleChanged(user: User): void {
-    if (user.id === this.appService.user.getValue().id) {
-      this.appService.openSnackBar(this.snackBar, 'Cannot change own roles');
+  roleChanged(id: number, isAdmin: boolean): void {
+    if (id === this.appService.user.getValue().id) {
+      this.appService.openSnackBar(this.snackBar, 'Cannot change your own roles');
       return;
     }
-    const mutation = `mutation { updateUser(id: "${user.id}", details: { isAdmin: ${!user.isAdmin} }) { id, firstName } }`;
+    const mutation = `mutation { updateUser(user: ${this.appService.queryFy({ id, isAdmin })}) { id } }`;
     this.appService.mutationService(mutation).subscribe(({ updateUser }) => {
       if (updateUser && updateUser.id) {
-        setTimeout(() => user.isAdmin = !user.isAdmin, 300);
-        user.isAdmin
-        this.appService.openSnackBar(this.snackBar, `Updated roles for ${updateUser.firstName}`);
+        const users = this.appService.users.getValue().map(value => {
+          if (value.id == updateUser.id) {
+            const user = Object.assign(new User(), value);
+            user.isAdmin = !user.isAdmin;
+            this.expandedUser = user;
+            return user;
+          }
+          return value;
+        });
+        this.appService.users.next(users);
+        this.appService.openSnackBar(this.snackBar, `Updated roles for ${this.expandedUser.firstName || this.expandedUser.email}`);
       } else {
         this.appService.openSnackBar(this.snackBar, 'An error occurred');
       }

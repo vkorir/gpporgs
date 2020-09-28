@@ -25,11 +25,9 @@ export class OrganizationsComponent implements OnInit {
   constructor(private appService: AppService,
               private snackBar: MatSnackBar,
               @Inject(MAT_DIALOG_DATA) private data: any) {
-    this.dataSource = new MatTableDataSource<Organization>(data.organizations);
-    setTimeout(() => this.dataSource.paginator = this.paginator);
-    
-    this.organizations = data.organizations;
+    this.organizations = data.organizations.map(value => Object.assign(new Organization(), value));
     this.approvedControl.valueChanges.subscribe(() => this.filter());
+    this.filter();
   }
 
   ngOnInit() {}
@@ -37,19 +35,15 @@ export class OrganizationsComponent implements OnInit {
   private filter(): void {
     const filtered = this.organizations.filter(organization => this.approvedControl.value || !organization.approved);
     this.dataSource = new MatTableDataSource<Organization>(filtered);
-    this.dataSource.paginator = this.paginator;
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   country(id: string): string {
     return this.appService.countries.get(id);
   }
 
-  date(timestamp: number): string {
-    const dateAdded = new Date(timestamp);
-    const month = `0${dateAdded.getMonth() + 1}`.slice(-2);
-    const date = `0${dateAdded.getDate() + 1}`.slice(-2);
-    const year = dateAdded.getFullYear();
-    return `${month}/${date}/${year}`;
+  formatDate(creationDate: string): string {
+    return this.appService.formatDate(creationDate);
   }
 
   approveOrg(organization: Organization): void {

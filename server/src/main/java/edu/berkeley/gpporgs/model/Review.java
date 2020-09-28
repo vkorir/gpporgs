@@ -20,7 +20,7 @@ import javax.persistence.Transient;
 @Table(name = "reviews")
 public class Review {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
-    private @NonNull Long submitted;
+    private String creationTime;
     private Long organizationId;
     private @NonNull Long addressId;
     @Transient

@@ -85,7 +85,7 @@ public class QueryResolver implements GraphQLQueryResolver {
     }
 
     public Iterable<Review> reviews(Long organizationId) {
-        return reviewRepository.findAllByOrganizationIdOrderBySubmittedDesc(organizationId);
+        return reviewRepository.findAllByOrganizationIdOrderByCreationTimeDesc(organizationId);
     }
 
     public Iterable<Sector> sectors() {

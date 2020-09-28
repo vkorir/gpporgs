@@ -39,7 +39,7 @@ export class AdminComponent implements OnInit {
 
   addUser(): void {
     this.dialog.open(AddUserComponent, {
-      panelClass: 'mat-dialog--sm',
+      panelClass: 'mat-dialog--xm',
       disableClose: true
     });
   }
@@ -58,7 +58,7 @@ export class AdminComponent implements OnInit {
 
   organizations(index: number): void {
     this.actions[index].isLoading = true;
-    const query = '{ organizations { id name address { country } submitted approved }}';
+    const query = '{ organizations { id name address { country } creationTime approved }}';
     this.appService.queryService(query).subscribe(data => {
       this.actions[index].isLoading = false;
       this.dialog.open(OrganizationsComponent, {

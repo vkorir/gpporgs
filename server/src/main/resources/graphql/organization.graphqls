@@ -1,48 +1,48 @@
 type Organization {
-    id: Int!
-    name: String
-    description: String
-    address: Address
-    phone: String
-    email: String
-    website: String
-    affiliations: [Int]
-    type: Int
-    typeOther: String
-    region: Int
-    sectors: [Int]
-    sectorOther: String
-    approved: Boolean
-    contacts: [Contact]
-    submitted: Float
+	id: Int!
+	name: String
+	description: String
+	address: Address
+	phone: String
+	email: String
+	website: String
+	affiliations: [Int]
+	type: Int
+	typeOther: String
+	region: Int
+	sectors: [Int]
+	sectorOther: String
+	approved: Boolean
+	contacts: [Contact]
+	creationTime: String
 }
 
 input OrganizationInput {
-    id: Int
-    name: String
-    description: String
-    address: AddressInput
-    phone: String
-    email: String
-    website: String
-    affiliations: [Int]
-    type: Int
-    typeOther: String
-    region: Int
-    sectors: [Int]
-    sectorOther: String
-    approved: Boolean
-    contacts: [ContactInput]
-    submitted: Float
+	id: Int
+	name: String
+	description: String
+	address: AddressInput
+	phone: String
+	email: String
+	website: String
+	affiliations: [Int]
+	type: Int
+	typeOther: String
+	region: Int
+	sectors: [Int]
+	sectorOther: String
+	approved: Boolean
+	contacts: [ContactInput]
+	creationTime: String
 }
 
 extend type Query {
-    organization(id: ID!): Organization
-    organizations: [Organization]
+	organization(id: ID!): Organization
+	organizations: [Organization]
 }
 
 extend type Mutation {
-    createOrganization(organization: OrganizationInput!): Organization
-    updateOrganization(organization: OrganizationInput!): Organization
-    addOrganizations(organizations: [OrganizationInput!]): [Organization]
+	createOrganization(organization: OrganizationInput!): Organization
+	updateOrganization(organization: OrganizationInput!): Organization
+	addOrganizations(organizations: [OrganizationInput!]): [Organization]
 }

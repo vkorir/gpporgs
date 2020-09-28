@@ -1,7 +1,8 @@
 <h2 mat-dialog-title>Add User</h2>
 <mat-dialog-content>
   <mat-form-field fxFlexFill>
-    <input [formControl]="inputControl" matInput placeholder="Enter berkeley.edu email" required />
+    <input matInput id="add-user-input" [formControl]="inputControl" placeholder="Enter CalNet ID" data-lpignore="true" required/>
+    <span matSuffix>{{domain}}</span>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="center center">

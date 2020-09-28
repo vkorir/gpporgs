@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MainModalComponent } from '../main-modal/main-modal.component';
+import { Organization } from '../model/organization';
 
 @Component({
   selector: 'app-look-up',
@@ -42,21 +43,24 @@ export class LookUpComponent implements OnInit {
 
   fetchOrganization(id: number) {
     // tslint:disable-next-line:max-line-length
-    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved submitted';
+    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved creationTime';
     const address = 'address { id street city state zip country }';
     const contacts = 'contacts { id name role phone email }';
     const query = `{ organization(id: ${id}) { ${info} ${address} ${contacts} }}`;
-    this.appService.queryService(query).subscribe(data => {
-      this.openReviewDialog(data);
+    this.appService.queryService(query).subscribe(({ organization }) => {
+      this.openReviewDialog(organization);
     });
   }
 
-  openReviewDialog(data: any) {
+  openReviewDialog(organization: any) {
+    if (!organization) {
+      organization = new Organization();
+    }
     this.dialogRef.close();
     this.dialog.open(MainModalComponent, {
       panelClass: 'mat-dialog--md',
       disableClose: true,
-      data: { ...data, disableControl: false }
+      data: { organization, disableControl: false }
     });
   }
 }
