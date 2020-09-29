@@ -8,6 +8,7 @@
   overflow: auto;
 
   table {
+    height: 100%;
     width: 100% !important;
     table-layout: fixed;
 
@@ -26,6 +27,13 @@
 
   .mat-header-row {
     position: sticky;
+  }
+
+  #loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
 }
 

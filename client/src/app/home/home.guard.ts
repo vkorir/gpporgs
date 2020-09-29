@@ -24,11 +24,15 @@ export class HomeGuard implements CanActivate, CanLoad {
   }
 
   checkAuthentication(): Observable<boolean> {
-    return this.appService.userState().pipe(map(user => {
+    return this.appService.user.asObservable().pipe(map(user => {
       if (user == null) {
         this.router.navigateByUrl('/login');
       }
-      return user != null;
+      if (!!user) {
+        this.appService.isShowSearchBar.next(true);
+        return true;
+      }
+      return false;
     }));
   }
 }

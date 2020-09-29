@@ -13,8 +13,10 @@ import { baseUrl } from './baseUrl';
 })
 export class AppService {
   private readonly tokenKey = 'token';
-  private user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  private organizationsFilter = new BehaviorSubject<Filter>(new Filter());
+  public user = new BehaviorSubject<User>(null);
+  public filter = new BehaviorSubject<Filter>(new Filter());
+  public users = new BehaviorSubject<Array<User>>(new Array());
+  public isShowSearchBar = new BehaviorSubject<boolean>(true);
   public regions = new Map<number, string>();
   public countries = new Map<string, string>();
   public affiliations = new Map<number, string>();
@@ -60,54 +62,40 @@ export class AppService {
     const query = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
     this.queryService(query).subscribe(data => {
       if (!data.message) {
-        this.user.next(data.currentUser as User);
-        this.__populateSources(data.regions, this.regions);
-        this.__populateSources(data.countries, this.countries);
-        this.__populateSources(data.affiliations, this.affiliations);
-        this.__populateSources(data.types, this.types);
-        this.__populateSources(data.sectors, this.sectors);
-        this.__populateSources(data.languages, this.languages);
+        this.user.next(data.currentUser);
+        this.populateDate(data.regions, this.regions);
+        this.populateDate(data.countries, this.countries);
+        this.populateDate(data.affiliations, this.affiliations);
+        this.populateDate(data.types, this.types);
+        this.populateDate(data.sectors, this.sectors);
+        this.populateDate(data.languages, this.languages);
 
-        const filter = this.organizationsFilter.getValue();
-        filter.regions = new Set(this.regions.keys());
-        filter.sectors = new Set(this.sectors.keys());
-        this.updateFilter(filter);
+        const value = this.filter.getValue();
+        value.regions = new Set(this.regions.keys());
+        value.sectors = new Set(this.sectors.keys());
+        this.filter.next(value);
       } else {
         this.openSnackBar(this.snackBar, data.message);
       }
     });
   }
 
-  private __populateSources(data: any, source: Map<any, any>): void {
+  private populateDate(data: any, source: Map<any, any>): void {
     data.map(item => source.set(item.id || item.code, item.value));
   }
 
-  userValue(): User {
-    return this.user.getValue();
-  }
-
-  userState(): Observable<User> {
-    return this.user.asObservable();
-  }
-
-  isSignedIn(): boolean {
-    return this.user.getValue() != null;
-  }
-
-  isAdmin(): boolean {
-    return this.isSignedIn() && this.user.getValue().isAdmin;
-  }
-
-  updateFilter(filter: Filter): void {
-    this.organizationsFilter.next(filter);
-  }
-
-  filterValue(): Filter {
-    return this.organizationsFilter.getValue();
-  }
-
-  filterState(): Observable<Filter> {
-    return this.organizationsFilter.asObservable();
+  formatDate(date: string): string {
+    if (!date) {
+      return '-';
+    }
+    const lastLogin = new Date(date);
+    const formatNum = value => { return value < 10 ? `0${value}` : value; }
+    let month = formatNum(lastLogin.getMonth());
+    const day = formatNum(lastLogin.getDate());
+    const year = formatNum(lastLogin.getFullYear());
+    const hours = formatNum(lastLogin.getHours());
+    const minutes = formatNum(lastLogin.getMinutes());
+    return `${month}/${day}/${year} ${hours}:${minutes}`;
   }
 
   queryFy(object: any): any {
@@ -134,7 +122,6 @@ export class AppService {
     return this.apollo.watchQuery<any>({ query: gql(query) }).valueChanges.pipe(map(response => {
       if (response.errors) {
         this.clearToken();
-        // window.location.reload();
       }
       return response.data || response;
     }));

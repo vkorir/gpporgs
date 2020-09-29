@@ -14,26 +14,22 @@ export class HeaderComponent implements OnInit {
 
   user: Observable<User>;
   searchControl = new FormControl();
+  isShowSearchBar: boolean;
 
-  constructor(private appService: AppService, private router: Router) {}
-
-  ngOnInit() {
-    this.user = this.appService.userState();
+  constructor(private appService: AppService, private router: Router) {
+    this.user = this.appService.user.asObservable();
     this.searchControl.valueChanges.subscribe(() => this.updateSearchString());
+    this.appService.isShowSearchBar.subscribe(value => {
+      this.isShowSearchBar = value;
+    });
   }
+
+  ngOnInit() {}
 
   private updateSearchString(): void {
-    const filter = this.appService.filterValue();
-    filter.searchString = this.searchControl.value.trim().toLowerCase();
-    this.appService.updateFilter(filter);
-  }
-
-  showSearchBar(): void {
-    document.getElementById('main-search-bar').style.display = 'block';
-  }
-
-  hideSearchBar(): void {
-    document.getElementById('main-search-bar').style.display = 'none';
+    const value = this.appService.filter.getValue();
+    value.searchString = this.searchControl.value.trim().toLowerCase();
+    this.appService.filter.next(value);
   }
 
   login(): void {

@@ -15,19 +15,22 @@ export class AdminComponent implements OnInit {
   actions = [
     {
       title: 'Add User',
-      action: () => this.addUser(),
+      action: _ => this.addUser(),
       icon: 'person_add',
-      description: 'Add a new user from CAS. A user will not be able to access this site before they are added.'
+      description: 'Add a new user from CAS. A user will not be able to access this site before they are added.',
+      isLoading: false
     }, {
       title: 'Manage Users',
-      action: () => this.manageUsers(),
+      action: index => this.manageUsers(index),
       icon: 'group',
-      description: 'View and manage roles for all the current GPPORGS users (student & admin roles)'
+      description: 'View and manage roles for all the current GPPORGS users (student & admin roles)',
+      isLoading: false
     }, {
       title: 'Manage Organizations',
-      action: () => this.organizations(),
+      action: index => this.organizations(index),
       icon: 'list',
-      description: 'View and filter all the GPPORGS organizations'
+      description: 'View and filter all the GPPORGS organizations',
+      isLoading: false
     }];
 
   constructor(private appService: AppService, private dialog: MatDialog) {}
@@ -36,24 +39,28 @@ export class AdminComponent implements OnInit {
 
   addUser(): void {
     this.dialog.open(AddUserComponent, {
-      panelClass: 'mat-dialog--sm',
+      panelClass: 'mat-dialog--xm',
       disableClose: true
     });
   }
 
-  manageUsers(): void {
+  manageUsers(index: number): void {
+    this.actions[index].isLoading = true;
     const query = '{ users { id email firstName lastName isAdmin creationTime lastLogin numberOfLogin } }';
     this.appService.queryService(query).subscribe(data => {
+      this.appService.users.next(data.users);
+      this.actions[index].isLoading = false;
       this.dialog.open(ManageUsersComponent, {
-        panelClass: 'mat-dialog--md',
-        data
+        panelClass: 'mat-dialog--md'
       });
     });
   }
 
-  organizations(): void {
-    const query = '{ organizations { id name address { country } submitted approved }}';
+  organizations(index: number): void {
+    this.actions[index].isLoading = true;
+    const query = '{ organizations { id name address { country } creationTime approved }}';
     this.appService.queryService(query).subscribe(data => {
+      this.actions[index].isLoading = false;
       this.dialog.open(OrganizationsComponent, {
         panelClass: 'mat-dialog--md',
         data

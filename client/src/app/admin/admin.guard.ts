@@ -12,7 +12,8 @@ export class AdminGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
-    if (this.appService.isAdmin()) {
+    if (this.appService.user.getValue() && this.appService.user.getValue().isAdmin) {
+      this.appService.isShowSearchBar.next(false);
       return true;
     }
     this.router.navigateByUrl('/');

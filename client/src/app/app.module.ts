@@ -35,6 +35,7 @@ import {
   MatChipsModule,
   MatSliderModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatCardModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -50,7 +51,7 @@ import { AddUserComponent } from './admin/add-user/add-user.component';
 import { ManageUsersComponent } from './admin/manage-users/manage-users.component';
 import { OrganizationsComponent } from './admin/organizations/organizations.component';
 
-const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule,
+const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule, MatProgressSpinnerModule,
   MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
   MatSortModule, MatDialogModule, MatSnackBarModule, MatIconModule, MatAutocompleteModule, MatSelectModule,
   MatExpansionModule, MatSlideToggleModule, MatChipsModule, MatSliderModule, MatProgressBarModule, MatCardModule

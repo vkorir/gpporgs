@@ -1,10 +1,10 @@
 export class User {
-  id: number;
+  id: number = null;
   email: string;
   firstName: string;
   lastName: string;
-  isAdmin: boolean;
-  creationTime: number;
-  numberOfLogin: number;
-  lastLogin: number;
+  isAdmin: boolean = false;
+  creationTime: Date;
+  numberOfLogin: number = 0;
+  lastLogin: Date;
 }

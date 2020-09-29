@@ -14,9 +14,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Optional;
+import java.util.Date;
+import java.util.TimeZone;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
@@ -51,10 +53,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User updateAndSaveUser(User user, OAuth2UserInfo oAuth2UserInfo) {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+        dateFormat.setTimeZone(timeZone);
         user.setFirstName(oAuth2UserInfo.getFirstName());
         user.setLastName(oAuth2UserInfo.getLastName());
-        Date now = new Date();
-        user.setLastLogin(now.getTime());
+        user.setLastLogin(dateFormat.format(new Date()));
         user.setNumberOfLogin(user.getNumberOfLogin() + 1);
         return userRepository.save(user);
     }

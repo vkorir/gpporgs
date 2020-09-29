@@ -186,7 +186,7 @@ CREATE TABLE `organizations` (
   `type` bigint DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
   `type_other` varchar(255) DEFAULT NULL,
-  `submitted` bigint DEFAULT NULL,
+  `creation_time` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=292 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -197,7 +197,7 @@ CREATE TABLE `organizations` (
 
 LOCK TABLES `organizations` WRITE;
 /*!40000 ALTER TABLE `organizations` DISABLE KEYS */;
-INSERT INTO `organizations` VALUES (1,1,'1^2^3',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','A Test Org','111-111-1112','1','1^2^3',NULL,4,'http://example.org',NULL,1583035114858),(2,2,'1^2^3^1',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','B Test Org','111-111-1112','1','1^2^3',NULL,4,'http://example.org',NULL,1583035114858),(3,3,'1^2^3',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','C Test Org','111-111-1112','5','1^2^3','',4,'http://example.org','',1583035114858),(4,4,'1^2^3',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','D Test Org','111-111-1112','4','1^2^3^18^16^9','',4,'http://example.org','',1583035114858),(5,5,'1^2^1^5',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','E Test Org','111-111-1112','5','1^2^3^17^15','',4,'http://example.org','',1583035114858),(6,6,'1^1^1^1^6',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','F Test Org','111-111-1112','3','1^1^11^17^14^10','',4,'http://example.org','',1583035114858),(7,7,'1^1^4',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','G Test Org','111-111-1112','1','1^8^10^1^17','',5,'http://example.org','',1583035114858),(8,8,'1^3^1',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','H Test Org','111-111-1112','1','1^4^12^1^9^13','',6,'http://example.org','',1583035114858),(9,9,'1^1^5^4',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','I Test Org','111-111-1112','6','1^2^1^15^8^16','',1,'http://example.org','',1583035114858),(10,10,'1',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','J Test Org','111-111-1112','1','1^1^18^19^4','Political Stability',7,'http://example.org','Political',1583035114858);
+INSERT INTO `organizations` VALUES (1,1,'1^2^3',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','A Test Org','111-111-1112','1','1^2^3',NULL,4,'http://example.org',NULL,'2020-09-26T17:33Z'),(2,2,'1^2^3^1',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','B Test Org','111-111-1112','1','1^2^3',NULL,4,'http://example.org',NULL,'2020-09-26T17:33Z'),(3,3,'1^2^3',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','C Test Org','111-111-1112','5','1^2^3','',4,'http://example.org','','2020-09-26T17:33Z'),(4,4,'1^2^3',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','D Test Org','111-111-1112','4','1^2^3^18^16^9','',4,'http://example.org','','2020-09-26T17:33Z'),(5,5,'1^2^1^5',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','E Test Org','111-111-1112','5','1^2^3^17^15','',4,'http://example.org','','2020-09-26T17:33Z'),(6,6,'1^1^1^1^6',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','F Test Org','111-111-1112','3','1^1^11^17^14^10','',4,'http://example.org','','2020-09-26T17:33Z'),(7,7,'1^1^4',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','G Test Org','111-111-1112','1','1^8^10^1^17','',5,'http://example.org','','2020-09-26T17:33Z'),(8,8,'1^3^1',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','H Test Org','111-111-1112','1','1^4^12^1^9^13','',6,'http://example.org','','2020-09-26T17:33Z'),(9,9,'1^1^5^4',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','I Test Org','111-111-1112','6','1^2^1^15^8^16','',1,'http://example.org','','2020-09-26T17:33Z'),(10,10,'1',_binary '','There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.','testemail@mail.com','J Test Org','111-111-1112','1','1^1^18^19^4','Political Stability',7,'http://example.org','Political','2020-09-26T17:33Z');
 /*!40000 ALTER TABLE `organizations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -252,7 +252,7 @@ CREATE TABLE `reviews` (
   `stipend` int DEFAULT NULL,
   `typical_day` longtext,
   `work_done` longtext,
-  `submitted` bigint DEFAULT NULL,
+  `creation_time` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -326,10 +326,10 @@ CREATE TABLE `users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `is_admin` bit(1) DEFAULT b'0',
-  `last_login` float DEFAULT '0',
+  `last_login` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
   `number_of_login` int DEFAULT '0',
-  `creation_time` float DEFAULT NULL,
+  `creation_time` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_id_uindex` (`id`),
@@ -343,7 +343,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'testuser1@berkeley.edu',_binary '',1582860000000,'Test User',11,1574750000000,'User 1'),(2,'testuser2@berkeley.edu',_binary '',1582860000000,'Test User',48,1574750000000,'User 2'),(3,'testuser3@berkeley.edu',_binary '',1582860000000,'Test User',35,1574750000000,'User 3'),(4,'victor.korir@berkeley.edu',_binary '',1582860000000,'Victor Korir',35,1574750000000,'victor.korir');
+INSERT INTO `users` VALUES (DEFAULT,'victor.korir@berkeley.edu',_binary '','2020-09-26T17:33Z',DEFAULT,0,'2020-09-26T17:33Z',DEFAULT);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -41,6 +41,9 @@ export class MainModalComponent implements OnInit, OnChanges {
   isEditOrganization = false;
   isEditReview = false;
 
+  orgReviewBtnText = 'Add Review for This Organization';
+  orgInfoBtnText = 'Organization Info';
+
   // tslint:disable-next-line:max-line-length
   reviewEditableFields = ['country', 'city', 'region', 'languages', 'sectors', 'sectorOther', 'cost', 'stipend', 'workDone', 'evaluation', 'typicalDay', 'difficulties', 'safety', 'responsiveness', 'duration', 'other'];
 
@@ -53,24 +56,25 @@ export class MainModalComponent implements OnInit, OnChanges {
               private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.disableControl = data.disableControl;
-    const organization = data.organization ? new Organization(data.organization) : new Organization();
-    this.organization = this.buildFormGroup(organization, data.disableControl) as FormGroup;
+    this.organization = this.buildFormGroup(data.organization, data.disableControl) as FormGroup;
     this.review = this.buildFormGroup(new Review(), data.disableControl) as FormGroup;
     this.regions = [...this.appService.regions.keys()];
     this.countries = [...this.appService.countries.keys()];
     this.affiliations = [...this.appService.affiliations.keys()];
     this.types = [...this.appService.types.keys()];
-
-
     this.sectors = [...this.appService.sectors.keys()];
     this.languages = [...this.appService.languages.keys()];
     this.contacts = [...Array(Organization.numContacts).keys()];
     if (data.reviews) {
-      this.reviews = data.reviews.map(detail => {
-        const review = new Review(detail);
+      this.reviews = data.reviews.map(review => {
         this.reviewControls.push(this.buildFormGroup(review, true));
         return review;
       });
+    }
+
+    if (this.disableControl) {
+      this.orgReviewBtnText = 'View Past Student Reviews of This Organization';
+      this.orgInfoBtnText = 'View Organization Info';
     }
   }
 
@@ -85,7 +89,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.review.controls.reviewerId.setValue(this.appService.userValue().id);
+    this.review.controls.reviewerId.setValue(this.appService.user.getValue().id);
     this.selectedLanguages = this.review.controls.languages.value;
     this.filteredLanguages = this.languageControl.valueChanges.pipe(
       startWith(null),
@@ -98,7 +102,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   isAdmin(): boolean {
-    return this.appService.userValue().isAdmin;
+    return this.appService.user.getValue().isAdmin;
   }
 
   region(id: number): string {
@@ -131,8 +135,8 @@ export class MainModalComponent implements OnInit, OnChanges {
     return this.appService.languages.get(id);
   }
 
-  orgDateAdded(): string {
-    return this.date(this.organization.controls.submitted.value);
+  formatDate(creationDate: string): string {
+    return this.appService.formatDate(creationDate);
   }
 
   date(timestamp: number): string {
@@ -191,7 +195,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   reviewer(review: Review): boolean {
-    return this.appService.isAdmin() || !review.anonymous;
+    return this.appService.user.getValue().isAdmin || !review.anonymous;
   }
 
   formatSliderLabel(value: number): string | number {
@@ -229,7 +233,7 @@ export class MainModalComponent implements OnInit, OnChanges {
       });
       return target;
     }
-    if (Array.isArray(source) && source.length > 0 && source[0] instanceof Contact) {
+    if (Array.isArray(source) && source.length == Organization.numContacts) {
       const items = [];
       for (const contact of source) {
         items.push(this.buildFormGroup(contact, disableControl));
@@ -257,12 +261,6 @@ export class MainModalComponent implements OnInit, OnChanges {
     } else {
       formGroup.markAllAsTouched();
     }
-    // const json = require('./organizations.json');
-    // for (const org of json) {
-    //   const mutation = `mutation { createOrganization(organization: ${this.appService.queryFy(org)}) { id } }`;
-    //   // console.log(mutation);
-    //   this.appService.mutationService(mutation).subscribe(response => console.log(response));
-    // }
   }
 
   reviewValid(): boolean {
@@ -298,7 +296,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   canEditReview(review: Review): boolean {
-    return this.appService.userValue().isAdmin || this.appService.userValue().id === review.reviewerId;
+    return this.appService.user.getValue().isAdmin || this.appService.user.getValue().id === review.reviewerId;
   }
 
   editReview(review: Review): void {
