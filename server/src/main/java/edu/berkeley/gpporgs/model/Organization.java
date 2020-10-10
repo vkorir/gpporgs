@@ -12,6 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * @author Victor Korir
+ */
+
 @Entity
 @Getter
 @Setter
@@ -30,15 +34,15 @@ public class Organization {
     private String affiliationIds;
     @Transient
     private Iterable<Long> affiliations;
-    private @NonNull Long type;
+    private Long type;
     private String typeOther;
-    private @NonNull Long region;
+    private Long region;
     private String sectorIds;
     @Transient
     private Iterable<Long> sectors;
     private String sectorOther;
-    private @NonNull Boolean approved;
+    private Boolean approved;
     @Transient
     private Iterable<Contact> contacts;
-    private String creationTime;
+    private String created;
 }

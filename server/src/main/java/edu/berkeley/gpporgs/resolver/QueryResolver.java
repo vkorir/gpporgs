@@ -3,20 +3,16 @@ package edu.berkeley.gpporgs.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
-import edu.berkeley.gpporgs.security.CurrentUser;
 import edu.berkeley.gpporgs.security.UserPrincipal;
 import graphql.GraphQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class QueryResolver implements GraphQLQueryResolver {
@@ -85,7 +81,7 @@ public class QueryResolver implements GraphQLQueryResolver {
     }
 
     public Iterable<Review> reviews(Long organizationId) {
-        return reviewRepository.findAllByOrganizationIdOrderByCreationTimeDesc(organizationId);
+        return reviewRepository.findAllByOrganizationIdOrderByCreatedDesc(organizationId);
     }
 
     public Iterable<Sector> sectors() {
@@ -102,7 +98,8 @@ public class QueryResolver implements GraphQLQueryResolver {
 
     public Iterable<User> users() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority(UserPrincipal.ADMIN))) {
+        if (authentication != null
+                && authentication.getAuthorities().contains(new SimpleGrantedAuthority(UserPrincipal.ADMIN))) {
             return userRepository.findAll();
         }
         return new ArrayList<>();

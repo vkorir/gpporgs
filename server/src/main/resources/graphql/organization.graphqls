@@ -14,7 +14,7 @@ type Organization {
 	sectorOther: String
 	approved: Boolean
 	contacts: [Contact]
-	creationTime: String
+	created: String
 }
 
 input OrganizationInput {
@@ -33,7 +33,7 @@ input OrganizationInput {
 	sectorOther: String
 	approved: Boolean
 	contacts: [ContactInput]
-	creationTime: String
+	created: String
 }
 
 extend type Query {

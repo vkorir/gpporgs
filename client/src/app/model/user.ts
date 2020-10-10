@@ -4,7 +4,8 @@ export class User {
   firstName: string;
   lastName: string;
   isAdmin: boolean = false;
-  creationTime: Date;
+  created: Date;
   numberOfLogin: number = 0;
+  hasAccess: boolean = false;
   lastLogin: Date;
 }

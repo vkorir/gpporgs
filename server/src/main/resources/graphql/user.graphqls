@@ -4,15 +4,17 @@ type User {
 	firstName: String
 	lastName: String
 	isAdmin: Boolean
-	creationTime: String
+	created: String
 	numberOfLogin: Int
 	lastLogin: String
+	hasAccess: Boolean
 }
 
 input UserInput {
 	id: Int
 	email: String
 	isAdmin: Boolean
+	hasAccess: Boolean
 }
 
 extend type Query {

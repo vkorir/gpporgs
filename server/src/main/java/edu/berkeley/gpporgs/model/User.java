@@ -21,8 +21,9 @@ public class User {
     private @NonNull String email;
     private String firstName;
     private String lastName;
-    private Boolean isAdmin = false;
-    private String creationTime;
+    private Boolean isAdmin;
+    private Boolean hasAccess;
+    private String created;
     private Integer numberOfLogin = 0;
     private String lastLogin;
 }

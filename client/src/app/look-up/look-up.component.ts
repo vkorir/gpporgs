@@ -1,41 +1,49 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { AppService } from '../app.service';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { MainModalComponent } from '../main-modal/main-modal.component';
-import { Organization } from '../model/organization';
+import { Component, Inject, OnInit } from "@angular/core";
+import { AppService } from "../app.service";
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+  MatSnackBar,
+} from "@angular/material";
+import { FormControl } from "@angular/forms";
+import { Observable } from "rxjs";
+import { map, startWith } from "rxjs/operators";
+import { MainModalComponent } from "../main-modal/main-modal.component";
+import { Organization } from "../model/organization";
 
 @Component({
-  selector: 'app-look-up',
-  templateUrl: './look-up.component.html',
-  styleUrls: ['./look-up.component.scss']
+  selector: "app-look-up",
+  templateUrl: "./look-up.component.html",
+  styleUrls: ["./look-up.component.scss"],
 })
 export class LookUpComponent implements OnInit {
-
   organizations: any[] = [];
   lookUpControl = new FormControl();
   lookUpResults: Observable<any[]>;
 
-  constructor(private appService: AppService,
-              private snackBar: MatSnackBar,
-              private dialogRef: MatDialogRef<LookUpComponent>,
-              private dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) private data: any) {
+  constructor(
+    private appService: AppService,
+    private snackBar: MatSnackBar,
+    private dialogRef: MatDialogRef<LookUpComponent>,
+    private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) private data: any
+  ) {
     this.organizations = data.organizations;
     this.lookUpResults = this.lookUpControl.valueChanges.pipe(
       startWith(null),
-      map(value => {
+      map((value) => {
         if (!value || value.length < 2) {
           return [];
         }
-        return this.organizations.filter(organization => organization.name.toLowerCase().startsWith(value.toLowerCase()));
+        return this.organizations.filter((organization) =>
+          organization.name.toLowerCase().startsWith(value.toLowerCase())
+        );
       })
     );
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   country(id: string): string {
     return this.appService.countries.get(id);
@@ -43,9 +51,10 @@ export class LookUpComponent implements OnInit {
 
   fetchOrganization(id: number) {
     // tslint:disable-next-line:max-line-length
-    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved creationTime';
-    const address = 'address { id street city state zip country }';
-    const contacts = 'contacts { id name role phone email }';
+    const info =
+      "id name region phone email website description affiliations type typeOther sectors sectorOther approved created";
+    const address = "address { id street city state zip country }";
+    const contacts = "contacts { id name role phone email }";
     const query = `{ organization(id: ${id}) { ${info} ${address} ${contacts} }}`;
     this.appService.queryService(query).subscribe(({ organization }) => {
       this.openReviewDialog(organization);
@@ -58,9 +67,9 @@ export class LookUpComponent implements OnInit {
     }
     this.dialogRef.close();
     this.dialog.open(MainModalComponent, {
-      panelClass: 'mat-dialog--md',
+      panelClass: "mat-dialog--md",
       disableClose: true,
-      data: { organization, disableControl: false }
+      data: { organization, disableControl: false },
     });
   }
 }

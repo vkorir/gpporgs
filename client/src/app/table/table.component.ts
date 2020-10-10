@@ -1,17 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AppService } from '../app.service';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Organization } from '../model/organization';
-import { MainModalComponent } from '../main-modal/main-modal.component';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { AppService } from "../app.service";
+import {
+  MatDialog,
+  MatPaginator,
+  MatSort,
+  MatTableDataSource,
+} from "@angular/material";
+import { Organization } from "../model/organization";
+import { MainModalComponent } from "../main-modal/main-modal.component";
 
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  selector: "app-table",
+  templateUrl: "./table.component.html",
+  styleUrls: ["./table.component.scss"],
 })
 export class TableComponent implements OnInit {
-
-  displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
+  displayedColumns: string[] = ["name", "type", "location", "sectors"];
   dataSource: MatTableDataSource<any>;
   organizations: Organization[] = [];
 
@@ -22,10 +26,13 @@ export class TableComponent implements OnInit {
 
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.appService.filter.subscribe(() => this.applyFilter());
-    const query = '{ organizations { id name type typeOther region address { country } sectors } }';
+    const query =
+      "{ organizations { id name type typeOther region address { country } sectors } }";
     this.isLoading = true;
-    this.appService.queryService(query).subscribe(data => {
-      this.organizations = data.organizations.map(organization => Object.assign(new Organization(), organization));
+    this.appService.queryService(query).subscribe((data) => {
+      this.organizations = data.organizations.map((organization) =>
+        Object.assign(new Organization(), organization)
+      );
       this.applyFilter();
     });
   }
@@ -44,16 +51,20 @@ export class TableComponent implements OnInit {
   }
 
   sectors(organization: Organization): string {
-    const sectors = organization.sectors.map(id => this.appService.sectors.get(id));
+    const sectors = organization.sectors.map((id) =>
+      this.appService.sectors.get(id)
+    );
     if (!!organization.sectorOther) {
       sectors.push(organization.sectorOther);
     }
-    return sectors.join('\n');
+    return sectors.join("\n");
   }
 
   private applyFilter(): void {
     const value = this.appService.filter.getValue();
-    const filtered = this.organizations.filter(organization => organization.applyFilter(value, this.appService));
+    const filtered = this.organizations.filter((organization) =>
+      organization.applyFilter(value, this.appService)
+    );
     this.dataSource = new MatTableDataSource<any>(filtered);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -62,14 +73,16 @@ export class TableComponent implements OnInit {
 
   openDetailsModal(id: number) {
     // tslint:disable-next-line:max-line-length
-    const organization = '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } creationTime }';
+    const organization =
+      "{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } created }";
     // tslint:disable-next-line:max-line-length
-    const review = '{ id creationTime region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName email } anonymous }';
+    const review =
+      "{ id created region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName email } anonymous }";
     const query = `{ organization(id: ${id}) ${organization} reviews (organizationId: ${id}) ${review} }`;
-    this.appService.queryService(query).subscribe(data => {
+    this.appService.queryService(query).subscribe((data) => {
       this.dialog.open(MainModalComponent, {
-        panelClass: 'mat-dialog--md',
-        data: { ...data, disableControl: true }
+        panelClass: "mat-dialog--md",
+        data: { ...data, disableControl: true },
       });
     });
   }

@@ -4,7 +4,6 @@ import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import edu.berkeley.gpporgs.model.*;
 import edu.berkeley.gpporgs.repository.*;
 import edu.berkeley.gpporgs.security.UserPrincipal;
-import edu.berkeley.gpporgs.security.oauth2.OAuth2UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -16,7 +15,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.time.Instant;
 import java.util.Date;
 import java.util.TimeZone;
 import java.text.DateFormat;
@@ -100,7 +98,7 @@ public class MutationResolver implements GraphQLMutationResolver {
             contacts = organization.getContacts();
         }
         if (organization.getId() == null) {
-            organization.setCreationTime(getCurrentUTCTime());
+            organization.setCreated(getCurrentUTCTime());
         }
         organization = organizationRepository.save(organization);
         if (contacts != null) {
@@ -116,7 +114,7 @@ public class MutationResolver implements GraphQLMutationResolver {
         if (user == null || user.getEmail() == null) {
             return null;
         }
-        user.setCreationTime(getCurrentUTCTime());
+        user.setCreated(getCurrentUTCTime());
         Optional<User> optional = userRepository.findByEmail(user.getEmail());
         return optional.orElseGet(() -> userRepository.save(user));
     }
@@ -170,7 +168,7 @@ public class MutationResolver implements GraphQLMutationResolver {
             review.setSectorIds(String.join(dataDelimiter, longsToStrings(review.getSectors())));
         }
         if (review.getId() == null) {
-            review.setCreationTime(getCurrentUTCTime());
+            review.setCreated(getCurrentUTCTime());
         }
         return reviewRepository.save(review);
     }

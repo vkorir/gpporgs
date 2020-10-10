@@ -3,7 +3,6 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from 
 import { Organization } from '../model/organization';
 import { AppService } from '../app.service';
 import { MAT_DIALOG_DATA, MatAutocomplete, MatAutocompleteSelectedEvent, MatDialogRef, MatSnackBar } from '@angular/material';
-import { Contact } from '../model/contact';
 import { Review } from '../model/review';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -194,8 +193,8 @@ export class MainModalComponent implements OnInit, OnChanges {
     return contact.controls[field] as FormControl;
   }
 
-  reviewer(review: Review): boolean {
-    return this.appService.user.getValue().isAdmin || !review.anonymous;
+  isAnonymousReview(review: Review): boolean {
+    return !!review.reviewerId && (this.appService.user.getValue().isAdmin || !review.anonymous);
   }
 
   formatSliderLabel(value: number): string | number {
@@ -255,6 +254,10 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   segue(formGroup: FormGroup, flag: boolean): void {
+    if (this.reviews.length == 0) {
+      this.appService.openSnackBar(this.snackBar, 'No reviews have been posted for this organization');
+      return;
+    }
     if (this.disableControl || formGroup.valid || (flag && !this.isAddrDiffControl.value && formGroup.controls.workDone.valid
       && formGroup.controls.evaluation.valid)) {
       this.organizationView = flag;

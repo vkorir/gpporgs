@@ -1,6 +1,6 @@
 type Review {
 	id: Int
-	creationTime: String
+	created: String
 	address: Address
 	region: Int
 	languages: [String]
@@ -23,7 +23,7 @@ type Review {
 
 input ReviewInput {
 	id: Int
-	creationTime: String
+	created: String
 	organizationId: Int
 	address: AddressInput
 	region: Int

@@ -6,107 +6,165 @@
   <h4 class="mat-dialog-title primary">
     Organization Information
     <span fxFlex="1 1 auto"></span>
-    <span *ngIf="disableControl">Created on: {{formatDate(organization.controls.creationTime.value)}}</span>
+    <span *ngIf="disableControl && !!organization.controls.created.value">
+      Created on: {{ formatDate(organization.controls.created.value) }}
+    </span>
   </h4>
-  <mat-dialog-content *ngIf = "!disableControl">
-    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="organization">
-      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" >
+  <mat-dialog-content *ngIf="!disableControl">
+    <form
+      role="form"
+      fxLayout="row wrap"
+      fxLayoutGap="1%"
+      [formGroup]="organization"
+    >
+      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49">
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name" required>
+          <input matInput formControlName="name" required />
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Email</mat-label>
-          <input matInput formControlName="email">
+          <input matInput formControlName="email" />
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Phone</mat-label>
-          <input matInput formControlName="phone">
+          <input matInput formControlName="phone" />
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Website</mat-label>
-          <input matInput formControlName="website">
+          <input matInput formControlName="website" />
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Region</mat-label>
           <mat-select formControlName="region" required>
             <mat-option *ngFor="let id of regions" [value]="id">
-              {{region(id)}}
+              {{ region(id) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" formGroupName="address">
+      <div
+        fxLayout="column"
+        fxFlex.lt-md="100"
+        fxFlex.gt-sm="49"
+        formGroupName="address"
+      >
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Street</mat-label>
-          <input matInput formControlName="street">
+          <input matInput formControlName="street" />
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>City</mat-label>
-          <input matInput formControlName="city">
+          <input matInput formControlName="city" />
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>State</mat-label>
-          <input matInput formControlName="state">
+          <input matInput formControlName="state" />
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Zip</mat-label>
-          <input matInput formControlName="zip">
+          <input matInput formControlName="zip" />
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Country</mat-label>
           <mat-select formControlName="country" required>
             <mat-option *ngFor="let id of countries" [value]="id">
-              {{country(id)}}
+              {{ country(id) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <p fxFlexFill>
         <mat-form-field appearance="legacy" fxFlexFill>
-          <textarea matInput formControlName="description"
-                    placeholder="{{!disableControl ? 'Write about your organization' : 'Organization description'}}"
-                    rows="4"></textarea>
+          <textarea
+            matInput
+            formControlName="description"
+            placeholder="{{
+              !disableControl
+                ? 'Write about your organization'
+                : 'Organization description'
+            }}"
+            rows="4"
+          ></textarea>
         </mat-form-field>
       </p>
-      <p fxFlexFill>Affiliations:<i>{{!disableControl ? ' Check all that may apply' : ''}}</i></p>
+      <p fxFlexFill>
+        Affiliations:<i>{{
+          !disableControl ? " Check all that may apply" : ""
+        }}</i>
+      </p>
       <p fxLayout="row wrap" fxFlexFill>
-        <mat-checkbox *ngFor="let id of affiliations"
-                      [checked]="checked(organization.controls.affiliations, id)"
-                      [hidden]="disableControl && !checked(organization.controls.affiliations, id)"
-                      (change)="onCheckboxChange(organization.controls.affiliations, id)"
-                      [disabled]="disableControl"
-                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-          {{affiliation(id)}}
+        <mat-checkbox
+          *ngFor="let id of affiliations"
+          [checked]="checked(organization.controls.affiliations, id)"
+          [hidden]="
+            disableControl && !checked(organization.controls.affiliations, id)
+          "
+          (change)="onCheckboxChange(organization.controls.affiliations, id)"
+          [disabled]="disableControl"
+          fxFlex.lt-md="100"
+          fxFlex.gt-sm="50"
+          color="primary"
+        >
+          {{ affiliation(id) }}
         </mat-checkbox>
       </p>
-      <p fxFlexFill>Type:<i>{{!disableControl ? ' Select one' : ''}}</i></p>
+      <p fxFlexFill>
+        Type:<i>{{ !disableControl ? " Select one" : "" }}</i>
+      </p>
       <div>
         <mat-radio-group fxLayout="row wrap" formControlName="type">
           <ng-container *ngFor="let id of filteredTypes()">
-            <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary" [value]="id">
-              {{type(id)}}
+            <mat-radio-button
+              fxFlex.lt-md="100"
+              fxFlex.gt-sm="50"
+              color="primary"
+              [value]="id"
+            >
+              {{ type(id) }}
             </mat-radio-button>
           </ng-container>
         </mat-radio-group>
       </div>
       <p fxFlexFill>
-        <mat-form-field fxFlex="60" *ngIf="organization.controls.type.value === numTypes">
-          <input matInput placeholder="Describe here" formControlName="typeOther">
+        <mat-form-field
+          fxFlex="60"
+          *ngIf="organization.controls.type.value === numTypes"
+        >
+          <input
+            matInput
+            placeholder="Describe here"
+            formControlName="typeOther"
+          />
         </mat-form-field>
       </p>
-      <p fxFlexFill>Sectors:<i>{{!disableControl ? ' Check all that may apply' : ''}}</i></p>
+      <p fxFlexFill>
+        Sectors:<i>{{ !disableControl ? " Check all that may apply" : "" }}</i>
+      </p>
       <p fxLayout="row wrap" fxFlexFill>
-        <mat-checkbox *ngFor="let id of sectors"
-                      [checked]="checked(organization.controls.sectors, id)"
-                      [hidden]="disableControl && !checked(organization.controls.sectors, id)"
-                      (change)="onCheckboxChange(organization.controls.sectors, id)"
-                      [disabled]="disableControl"
-                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-          {{sector(id)}}
+        <mat-checkbox
+          *ngFor="let id of sectors"
+          [checked]="checked(organization.controls.sectors, id)"
+          [hidden]="
+            disableControl && !checked(organization.controls.sectors, id)
+          "
+          (change)="onCheckboxChange(organization.controls.sectors, id)"
+          [disabled]="disableControl"
+          fxFlex.lt-md="100"
+          fxFlex.gt-sm="50"
+          color="primary"
+        >
+          {{ sector(id) }}
         </mat-checkbox>
-        <mat-form-field fxFlex="60" *ngIf="checked(organization.controls.sectors, numSectors)">
-          <input matInput placeholder="Describe here" formControlName="sectorOther">
+        <mat-form-field
+          fxFlex="60"
+          *ngIf="checked(organization.controls.sectors, numSectors)"
+        >
+          <input
+            matInput
+            placeholder="Describe here"
+            formControlName="sectorOther"
+          />
         </mat-form-field>
       </p>
       <h4 class="mat-dialog-title primary">Contact Information</h4>
@@ -114,75 +172,105 @@
         <ng-container *ngFor="let i of contacts">
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Name</mat-label>
-            <input matInput [formControl]="contactControl(i, 'name')">
+            <input matInput [formControl]="contactControl(i, 'name')" />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Role</mat-label>
-            <input matInput [formControl]="contactControl(i, 'role')">
+            <input matInput [formControl]="contactControl(i, 'role')" />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Email</mat-label>
-            <input matInput [formControl]="contactControl(i, 'email')">
+            <input matInput [formControl]="contactControl(i, 'email')" />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Phone</mat-label>
-            <input matInput [formControl]="contactControl(i, 'phone')">
+            <input matInput [formControl]="contactControl(i, 'phone')" />
           </mat-form-field>
         </ng-container>
       </div>
     </form>
   </mat-dialog-content>
 
-  <mat-dialog-content *ngIf = "disableControl">
-    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="organization">
-      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" >
+  <mat-dialog-content *ngIf="disableControl">
+    <form
+      role="form"
+      fxLayout="row wrap"
+      fxLayoutGap="1%"
+      [formGroup]="organization"
+    >
+      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49">
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Name</mat-label>
-          <input matInput formControlName="name" required style="color:black"> 
+          <input
+            matInput
+            formControlName="name"
+            required
+            style="color: black"
+          />
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Email</mat-label>
-          <input matInput formControlName="email" class="labelColor" style="color:black">
+          <input
+            matInput
+            formControlName="email"
+            class="labelColor"
+            style="color: black"
+          />
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Phone</mat-label>
-          <input matInput formControlName="phone" class="labelColor" style="color:black">
+          <input
+            matInput
+            formControlName="phone"
+            class="labelColor"
+            style="color: black"
+          />
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Website</mat-label>
-          <input matInput formControlName="website" class="labelColor" style="color:black">
+          <input
+            matInput
+            formControlName="website"
+            class="labelColor"
+            style="color: black"
+          />
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Region</mat-label>
           <mat-select formControlName="region" required>
             <mat-option *ngFor="let id of regions" [value]="id">
-              {{region(id)}}
+              {{ region(id) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" formGroupName="address">
+      <div
+        fxLayout="column"
+        fxFlex.lt-md="100"
+        fxFlex.gt-sm="49"
+        formGroupName="address"
+      >
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Street</mat-label>
-          <input matInput formControlName="street" style="color:black">
+          <input matInput formControlName="street" style="color: black" />
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label class="labelColor">City</mat-label>
-          <input matInput formControlName="city" style="color:black"> 
+          <input matInput formControlName="city" style="color: black" />
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label class="labelColor">State</mat-label>
-          <input matInput formControlName="state" style="color:black">
+          <input matInput formControlName="state" style="color: black" />
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Zip</mat-label>
-          <input matInput formControlName="zip" style="color:black">
+          <input matInput formControlName="zip" style="color: black" />
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Country</mat-label>
           <mat-select formControlName="country" required>
             <mat-option *ngFor="let id of countries" [value]="id">
-              {{country(id)}}
+              {{ country(id) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -190,41 +278,81 @@
       <p fxFlexFill>
         <mat-form-field appearance="legacy" fxFlexFill>
           <mat-label class="labelColor">Organization Description</mat-label>
-          <textarea matInput formControlName="description"
-                    rows="4" class="labelColor" style="color:black"></textarea>
+          <textarea
+            matInput
+            formControlName="description"
+            rows="4"
+            class="labelColor"
+            style="color: black"
+          ></textarea>
         </mat-form-field>
       </p>
-      <p fxFlexFill>Type: <i>{{!disableControl ? ' Select one' : ''}}</i> <ng-container *ngFor="let id of filteredTypes()">
-        {{type(id)}}
- </ng-container></p>
-      <p fxFlexFill>Affiliations:<i>{{!disableControl ? ' Check all that may apply' : ''}}</i></p>
+      <p fxFlexFill>
+        Type: <i>{{ !disableControl ? " Select one" : "" }}</i>
+        <ng-container *ngFor="let id of filteredTypes()">
+          {{ type(id) }}
+        </ng-container>
+      </p>
+      <p fxFlexFill>
+        Affiliations:<i>{{
+          !disableControl ? " Check all that may apply" : ""
+        }}</i>
+      </p>
       <p fxLayout="row wrap" fxFlexFill>
-        <mat-checkbox *ngFor="let id of affiliations"
-                      [checked]="checked(organization.controls.affiliations, id)"
-                      [hidden]="disableControl && !checked(organization.controls.affiliations, id)"
-                      (change)="onCheckboxChange(organization.controls.affiliations, id)"
-                      [disabled]="disableControl"
-                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-          {{affiliation(id)}}
+        <mat-checkbox
+          *ngFor="let id of affiliations"
+          [checked]="checked(organization.controls.affiliations, id)"
+          [hidden]="
+            disableControl && !checked(organization.controls.affiliations, id)
+          "
+          (change)="onCheckboxChange(organization.controls.affiliations, id)"
+          [disabled]="disableControl"
+          fxFlex.lt-md="100"
+          fxFlex.gt-sm="50"
+          color="primary"
+        >
+          {{ affiliation(id) }}
         </mat-checkbox>
       </p>
       <p fxFlexFill>
-        <mat-form-field fxFlex="60" *ngIf="organization.controls.type.value === numTypes">
-          <input matInput placeholder="Describe here" formControlName="typeOther">
+        <mat-form-field
+          fxFlex="60"
+          *ngIf="organization.controls.type.value === numTypes"
+        >
+          <input
+            matInput
+            placeholder="Describe here"
+            formControlName="typeOther"
+          />
         </mat-form-field>
       </p>
-      <p fxFlexFill>Sectors:<i>{{!disableControl ? ' Check all that may apply' : ''}}</i></p>
+      <p fxFlexFill>
+        Sectors:<i>{{ !disableControl ? " Check all that may apply" : "" }}</i>
+      </p>
       <p fxLayout="row wrap" fxFlexFill>
-        <mat-checkbox *ngFor="let id of sectors"
-                      [checked]="checked(organization.controls.sectors, id)"
-                      [hidden]="disableControl && !checked(organization.controls.sectors, id)"
-                      (change)="onCheckboxChange(organization.controls.sectors, id)"
-                      [disabled]="disableControl"
-                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-          {{sector(id)}}
+        <mat-checkbox
+          *ngFor="let id of sectors"
+          [checked]="checked(organization.controls.sectors, id)"
+          [hidden]="
+            disableControl && !checked(organization.controls.sectors, id)
+          "
+          (change)="onCheckboxChange(organization.controls.sectors, id)"
+          [disabled]="disableControl"
+          fxFlex.lt-md="100"
+          fxFlex.gt-sm="50"
+          color="primary"
+        >
+          {{ sector(id) }}
         </mat-checkbox>
-        <mat-form-field fxFlex="60" *ngIf="checked(organization.controls.sectors, numSectors)">
-          <input matInput placeholder="Describe here" formControlName="sectorOther">
+        <mat-form-field
+          fxFlex="60"
+          *ngIf="checked(organization.controls.sectors, numSectors)"
+        >
+          <input
+            matInput
+            placeholder="Describe here"
+            formControlName="sectorOther"
+          />
         </mat-form-field>
       </p>
       <h4 class="mat-dialog-title primary">Contact Information</h4>
@@ -232,19 +360,35 @@
         <ng-container *ngFor="let i of contacts">
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label class="labelColor">Name</mat-label>
-            <input matInput [formControl]="contactControl(i, 'name')" style="color:black">
+            <input
+              matInput
+              [formControl]="contactControl(i, 'name')"
+              style="color: black"
+            />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label class="labelColor">Role</mat-label>
-            <input matInput [formControl]="contactControl(i, 'role')" style="color:black">
+            <input
+              matInput
+              [formControl]="contactControl(i, 'role')"
+              style="color: black"
+            />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label class="labelColor">Email</mat-label>
-            <input matInput [formControl]="contactControl(i, 'email')" style="color:black"> 
+            <input
+              matInput
+              [formControl]="contactControl(i, 'email')"
+              style="color: black"
+            />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label class="labelColor">Phone</mat-label>
-            <input matInput [formControl]="contactControl(i, 'phone')" style="color:black">
+            <input
+              matInput
+              [formControl]="contactControl(i, 'phone')"
+              style="color: black"
+            />
           </mat-form-field>
         </ng-container>
       </div>
@@ -253,12 +397,48 @@
 
   <mat-divider></mat-divider>
   <mat-dialog-actions fxLayout="row" style="padding-right: 100px">
-    <button mat-button class="edit-btn warn" *ngIf="disableControl && isAdmin()" (click)="editOrganization()">Edit</button>
-    <button mat-button class="save" *ngIf="isEditOrganization" (click)="saveOrganization()" [disabled]="!organization.dirty">Save</button>
-    <button mat-button class="warn" *ngIf="isEditOrganization" (click)="closeEditOrganization()">Cancel</button>
+    <button
+      mat-button
+      class="edit-btn warn"
+      *ngIf="disableControl && isAdmin()"
+      (click)="editOrganization()"
+    >
+      Edit
+    </button>
+    <button
+      mat-button
+      class="save"
+      *ngIf="isEditOrganization"
+      (click)="saveOrganization()"
+      [disabled]="!organization.dirty"
+    >
+      Save
+    </button>
+    <button
+      mat-button
+      class="warn"
+      *ngIf="isEditOrganization"
+      (click)="closeEditOrganization()"
+    >
+      Cancel
+    </button>
     <span fxFlex="1 1 auto"></span>
-    <button mat-button class="warn" mat-dialog-close *ngIf="!isEditOrganization">Cancel</button>
-    <button mat-button style="width: auto" (click)="segue(organization, false)" *ngIf="!isEditOrganization">{{orgReviewBtnText}} <mat-icon>navigate_next</mat-icon></button>
+    <button
+      mat-button
+      class="warn"
+      mat-dialog-close
+      *ngIf="!isEditOrganization"
+    >
+      Cancel
+    </button>
+    <button
+      mat-button
+      style="width: auto"
+      (click)="segue(organization, false)"
+      *ngIf="!isEditOrganization"
+    >
+      {{ orgReviewBtnText }} <mat-icon>navigate_next</mat-icon>
+    </button>
     <span fxFlex="1 1 auto"></span>
   </mat-dialog-actions>
 </ng-container>
@@ -269,42 +449,64 @@
       <div fxLayout="row" fxLayoutGap="8px" *ngIf="!isEditReview">
         <p>Was your PE site different from your organization address?</p>
         <mat-radio-group fxLayoutGap="8px" [formControl]="isAddrDiffControl">
-          <mat-radio-button color="primary" [value]="true">Yes</mat-radio-button>
-          <mat-radio-button color="primary" [value]="false">No</mat-radio-button>
+          <mat-radio-button color="primary" [value]="true"
+            >Yes</mat-radio-button
+          >
+          <mat-radio-button color="primary" [value]="false"
+            >No</mat-radio-button
+          >
         </mat-radio-group>
       </div>
-      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" formGroupName="address" *ngIf="isAddrDiffControl.value">
+      <div
+        fxLayout="column"
+        fxFlex.lt-md="100"
+        fxFlex.gt-sm="49"
+        formGroupName="address"
+        *ngIf="isAddrDiffControl.value"
+      >
         <mat-form-field appearance="outline">
           <mat-label>Street</mat-label>
-          <input matInput formControlName="street">
+          <input matInput formControlName="street" />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>City</mat-label>
-          <input matInput formControlName="city">
+          <input matInput formControlName="city" />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>State</mat-label>
-          <input matInput formControlName="state">
+          <input matInput formControlName="state" />
         </mat-form-field>
       </div>
-      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" formGroupName="address" *ngIf="isAddrDiffControl.value">
+      <div
+        fxLayout="column"
+        fxFlex.lt-md="100"
+        fxFlex.gt-sm="49"
+        formGroupName="address"
+        *ngIf="isAddrDiffControl.value"
+      >
         <mat-form-field appearance="outline">
           <mat-label>Zip</mat-label>
-          <input matInput formControlName="zip">
+          <input matInput formControlName="zip" />
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Region</mat-label>
-          <mat-select [formControl]="review.controls.region" [required]="isAddrDiffControl.value">
+          <mat-select
+            [formControl]="review.controls.region"
+            [required]="isAddrDiffControl.value"
+          >
             <mat-option *ngFor="let id of regions" [value]="id">
-              {{region(id)}}
+              {{ region(id) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Country</mat-label>
-          <mat-select formControlName="country" [required]="isAddrDiffControl.value">
+          <mat-select
+            formControlName="country"
+            [required]="isAddrDiffControl.value"
+          >
             <mat-option *ngFor="let id of countries" [value]="id">
-              {{country(id)}}
+              {{ country(id) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -312,93 +514,162 @@
       <p fxFlexFill>
         <mat-form-field fxFlex.gt-sm="70">
           <mat-chip-list #chipList>
-            <mat-chip *ngFor="let id of selectedLanguages" [selectable]="true" [removable]="true" (removed)="removeLanguage(id)">
-              {{language(id)}}
+            <mat-chip
+              *ngFor="let id of selectedLanguages"
+              [selectable]="true"
+              [removable]="true"
+              (removed)="removeLanguage(id)"
+            >
+              {{ language(id) }}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <input placeholder="Please list the languages spoken at your PE location"
-                   #languageInput
-                   [formControl]="languageControl"
-                   [matAutocomplete]="auto"
-                   [matChipInputFor]="chipList">
+            <input
+              placeholder="Please list the languages spoken at your PE location"
+              #languageInput
+              [formControl]="languageControl"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+            />
           </mat-chip-list>
         </mat-form-field>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addLanguage($event)">
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          (optionSelected)="addLanguage($event)"
+        >
           <mat-option *ngFor="let id of filteredLanguages | async" [value]="id">
-            {{language(id)}}
+            {{ language(id) }}
           </mat-option>
         </mat-autocomplete>
       </p>
       <p fxFlexFill>
         <mat-form-field appearance="legacy" fxFlexFill>
-          <textarea matInput formControlName="difficulties" placeholder="Did you have any language difficulties?" rows="4"></textarea>
+          <textarea
+            matInput
+            formControlName="difficulties"
+            placeholder="Did you have any language difficulties?"
+            rows="4"
+          ></textarea>
         </mat-form-field>
       </p>
       <p>What were the sectors of your PE? <i>Check all that may apply</i></p>
       <p fxLayout="row wrap">
-        <mat-checkbox *ngFor="let id of sectors"
-                      [checked]="checked(review.controls.sectors, id)"
-                      (change)="onCheckboxChange(review.controls.sectors, id)"
-                      fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary">
-          {{sector(id)}}
+        <mat-checkbox
+          *ngFor="let id of sectors"
+          [checked]="checked(review.controls.sectors, id)"
+          (change)="onCheckboxChange(review.controls.sectors, id)"
+          fxFlex.lt-md="100"
+          fxFlex.gt-sm="50"
+          color="primary"
+        >
+          {{ sector(id) }}
         </mat-checkbox>
-        <mat-form-field fxFlex="60" *ngIf="checked(review.controls.sectors, numSectors)">
-          <input matInput placeholder="Describe here" formControlName="sectorOther">
+        <mat-form-field
+          fxFlex="60"
+          *ngIf="checked(review.controls.sectors, numSectors)"
+        >
+          <input
+            matInput
+            placeholder="Describe here"
+            formControlName="sectorOther"
+          />
         </mat-form-field>
       </p>
       <p fxFlexFill>
-        What was the cost of your PE? <i> All incurred costs (i.e. transportation, housing, etc)</i><br>
+        What was the cost of your PE?
+        <i> All incurred costs (i.e. transportation, housing, etc)</i><br />
       </p>
       <div fxFlexFill>
         <div fxLayout="column" fxFlex.gt-sm="50">
           <span fxFlex>Cost of PE <i>(drag the slider)</i></span>
-          <mat-slider color="primary" min="0" max="10000" step="100" [value]="review.controls.cost.value" thumbLabel [displayWith]="formatSliderLabel"
-                      (valueChange)="onSliderChange(review.controls.cost, $event)"></mat-slider>
+          <mat-slider
+            color="primary"
+            min="0"
+            max="10000"
+            step="100"
+            [value]="review.controls.cost.value"
+            thumbLabel
+            [displayWith]="formatSliderLabel"
+            (valueChange)="onSliderChange(review.controls.cost, $event)"
+          ></mat-slider>
         </div>
         <div fxLayout="column" fxFlex.gt-sm="50">
           <span>Stipend paid by organization<i>(drag the slider)</i></span>
-          <mat-slider color="primary" min="0" max="10000" [value]="review.controls.stipend.value" thumbLabel [displayWith]="formatSliderLabel"
-                      (valueChange)="onSliderChange(review.controls.stipend, $event)"></mat-slider>
+          <mat-slider
+            color="primary"
+            min="0"
+            max="10000"
+            [value]="review.controls.stipend.value"
+            thumbLabel
+            [displayWith]="formatSliderLabel"
+            (valueChange)="onSliderChange(review.controls.stipend, $event)"
+          ></mat-slider>
         </div>
       </div>
       <p>What was the duration of your PE?</p>
       <p fxFlexFill>
         <mat-radio-group fxFlexFill formControlName="duration">
-          <mat-radio-button color="primary" fxFlex="25" [value]="duration" *ngFor="let duration of ['<2 months', '2-4 months', '4-6 months', '6-12 months', '>1 year']">
-            {{duration}}
+          <mat-radio-button
+            color="primary"
+            fxFlex="25"
+            [value]="duration"
+            *ngFor="
+              let duration of [
+                '<2 months',
+                '2-4 months',
+                '4-6 months',
+                '6-12 months',
+                '>1 year'
+              ]
+            "
+          >
+            {{ duration }}
           </mat-radio-button>
         </mat-radio-group>
       </p>
       <p fxLayout="column" fxFlexFill>
         <mat-form-field appearance="legacy">
-            <textarea matInput formControlName="workDone"
-                      placeholder="Please describe the work that you did with your organization (2 paragraphs)"
-                      rows="4" required>
-            </textarea>
+          <textarea
+            matInput
+            formControlName="workDone"
+            placeholder="Please describe the work that you did with your organization (2 paragraphs)"
+            rows="4"
+            required
+          >
+          </textarea>
         </mat-form-field>
       </p>
       <p fxLayout="column" fxFlexFill>
         <mat-form-field appearance="legacy">
-            <textarea matInput formControlName="typicalDay"
-                      placeholder="What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)"
-                      rows="4">
-            </textarea>
+          <textarea
+            matInput
+            formControlName="typicalDay"
+            placeholder="What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)"
+            rows="4"
+          >
+          </textarea>
         </mat-form-field>
       </p>
       <p fxLayout="column" fxFlexFill>
         <mat-form-field appearance="legacy">
-            <textarea matInput formControlName="evaluation"
-                      placeholder="What were your organization's strengths and weaknesses? (2 paragraphs)"
-                      rows="4" required>
-            </textarea>
+          <textarea
+            matInput
+            formControlName="evaluation"
+            placeholder="What were your organization's strengths and weaknesses? (2 paragraphs)"
+            rows="4"
+            required
+          >
+          </textarea>
         </mat-form-field>
       </p>
       <p fxLayout="column" fxFlexFill>
         <mat-form-field appearance="legacy">
-            <textarea matInput formControlName="other"
-                      placeholder="Is there anything else you would like to share with other students who may work with this organization?"
-                      rows="4">
-            </textarea>
+          <textarea
+            matInput
+            formControlName="other"
+            placeholder="Is there anything else you would like to share with other students who may work with this organization?"
+            rows="4"
+          >
+          </textarea>
         </mat-form-field>
       </p>
       <p>How safe did you feel?</p>
@@ -406,7 +677,8 @@
         <mat-radio-group fxFlexFill formControlName="safety">
           <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
             <mat-radio-button color="primary" fxFlex="25" [value]="i">
-              {{i}}{{i === 1 ? ' (very unsafe)': (i == 5 ? ' (very safe)': '')}}
+              {{ i
+              }}{{ i === 1 ? " (very unsafe)" : i == 5 ? " (very safe)" : "" }}
             </mat-radio-button>
           </ng-container>
         </mat-radio-group>
@@ -416,23 +688,69 @@
         <mat-radio-group fxFlexFill formControlName="responsiveness">
           <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
             <mat-radio-button color="primary" fxFlex="25" [value]="i">
-              {{i}}{{i === 1 ? ' (rarely got back)': (i == 5 ? ' (right away)': '')}}
+              {{ i
+              }}{{
+                i === 1 ? " (rarely got back)" : i == 5 ? " (right away)" : ""
+              }}
             </mat-radio-button>
           </ng-container>
         </mat-radio-group>
       </p>
-      <mat-slide-toggle labelPosition="before" formControlName="anonymous" [checked]>Post as anonymous?</mat-slide-toggle>
+      <mat-slide-toggle
+        labelPosition="before"
+        formControlName="anonymous"
+        [checked]
+        >Post as anonymous?</mat-slide-toggle
+      >
     </form>
   </mat-dialog-content>
   <mat-divider></mat-divider>
-  <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2px" style="padding-right: 100px">
-    <button mat-button *ngIf="isEditReview" (click)="saveReview()" class="save" [disabled]="!review.dirty">Save</button>
-    <button mat-button class="warn" (click)="closeEditReview()" *ngIf="isEditReview">Cancel</button>
+  <mat-dialog-actions
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    fxLayoutGap="2px"
+    style="padding-right: 100px"
+  >
+    <button
+      mat-button
+      *ngIf="isEditReview"
+      (click)="saveReview()"
+      class="save"
+      [disabled]="!review.dirty"
+    >
+      Save
+    </button>
+    <button
+      mat-button
+      class="warn"
+      (click)="closeEditReview()"
+      *ngIf="isEditReview"
+    >
+      Cancel
+    </button>
     <span fxFlex="1 1 auto"></span>
-    <button mat-button *ngIf="!isEditReview" style="width: auto" (click)="segue(review, true)"><mat-icon>navigate_before</mat-icon> {{orgInfoBtnText}}</button>
-    <button mat-button *ngIf="!isEditReview" class="warn" mat-dialog-close>Cancel</button>
-    <button mat-button *ngIf="!isEditReview" (click)="submit()" class="save" [disabled]="!reviewValid() || isSubmitting">
-      <mat-progress-bar mode="indeterminate" *ngIf="isSubmitting"></mat-progress-bar>
+    <button
+      mat-button
+      *ngIf="!isEditReview"
+      style="width: auto"
+      (click)="segue(review, true)"
+    >
+      <mat-icon>navigate_before</mat-icon> {{ orgInfoBtnText }}
+    </button>
+    <button mat-button *ngIf="!isEditReview" class="warn" mat-dialog-close>
+      Cancel
+    </button>
+    <button
+      mat-button
+      *ngIf="!isEditReview"
+      (click)="submit()"
+      class="save"
+      [disabled]="!reviewValid() || isSubmitting"
+    >
+      <mat-progress-bar
+        mode="indeterminate"
+        *ngIf="isSubmitting"
+      ></mat-progress-bar>
       Submit
     </button>
     <span fxFlex="1 1 auto"></span>
@@ -441,56 +759,97 @@
 <ng-container *ngIf="!organizationView && disableControl">
   <h4 class="mat-dialog-title primary">Organization Reviews</h4>
   <mat-dialog-content>
-    <div fxLayout="row wrap" fxLayoutGap="1%" *ngFor="let review of reviews; let i = index;" id="review-{{review.id}}">
+    <div
+      fxLayout="row wrap"
+      fxLayoutGap="1%"
+      *ngFor="let review of reviews; let i = index"
+      id="review-{{ review.id }}"
+    >
       <h4 fxFlexFill>
-        Review #{{i + 1}}
-        <ng-container *ngIf="reviewer(review)">&nbsp;by&nbsp;<strong> {{review.reviewer.firstName}} ({{review.reviewer.email}})</strong></ng-container>
+        Review #{{ i + 1 }}
+        <ng-container *ngIf="isAnonymousReview(review)"
+          >&nbsp;by&nbsp;<strong>
+            {{!!review.reviewer.firstName ? (review.reviewer.firstName + ' ' + review.reviewer.email) : review.reviewer.email}}
+          </strong>
+        </ng-container>
         <span fxFlex="1 1 auto"></span>
-        <span style="font-size: 0.95rem">Submitted on: {{formatDate(review.creationTime)}}</span>
+        <span style="font-size: 0.95rem"
+          >Submitted on: {{ formatDate(review.created) }}</span
+        >
       </h4>
       <p fxFlexFill><mat-divider fxFlexFill></mat-divider></p>
-      <p fxFlexFill><strong>Country: </strong><span id="country">{{country(review.address.country)}}</span></p>
-      <p fxFlexFill><strong>Region: </strong><span id="region">{{region(review.region)}}</span></p>
-      <p fxFlexFill><strong>City: </strong><span id="city">{{review.address.city}}</span></p>
-      <p fxFlexFill><strong>Please list the languages spoken at your PE location:<br /></strong><span id="languages">{{reviewLanguages(review.languages)}}</span></p>
       <p fxFlexFill>
-        <strong>Did you experience any language difficulties? Please describe</strong><br />
-        <span id="difficulties">{{review.difficulties}}</span>
+        <strong>Country: </strong
+        ><span id="country">{{ country(review.address.country) }}</span>
+      </p>
+      <p fxFlexFill>
+        <strong>Region: </strong
+        ><span id="region">{{ region(review.region) }}</span>
+      </p>
+      <p fxFlexFill>
+        <strong>City: </strong><span id="city">{{ review.address.city }}</span>
+      </p>
+      <p fxFlexFill>
+        <strong
+          >Please list the languages spoken at your PE location:<br /></strong
+        ><span id="languages">{{ reviewLanguages(review.languages) }}</span>
+      </p>
+      <p fxFlexFill>
+        <strong
+          >Did you experience any language difficulties? Please describe</strong
+        ><br />
+        <span id="difficulties">{{ review.difficulties }}</span>
       </p>
       <p fxFlexFill>
         <strong>Sectors:</strong><br />
         <span [innerText]="reviewSectors(review)" id="sectors"></span>
       </p>
       <p fxFlexFill>
-        <strong>How safe did you feel during your experience? </strong><span id="safety">{{review.safety}}</span>/5
+        <strong>How safe did you feel during your experience? </strong
+        ><span id="safety">{{ review.safety }}</span
+        >/5
       </p>
       <p fxFlexFill>
-        <strong>How responsive was your organization? </strong><span id="responsiveness">{{review.responsiveness}}</span>/5
+        <strong>How responsive was your organization? </strong
+        ><span id="responsiveness">{{ review.responsiveness }}</span
+        >/5
       </p>
       <p fxFlexFill>
-        <strong>What was the cost of your PE? </strong> $<span id="cost">{{review.cost}}</span>
+        <strong>What was the cost of your PE? </strong> $<span id="cost">{{
+          review.cost
+        }}</span>
       </p>
       <p fxFlexFill>
-        <strong>How much stipend were you paid by the organization? </strong>$<span id="stipend">{{review.stipend}}</span>
+        <strong>How much stipend were you paid by the organization? </strong
+        >$<span id="stipend">{{ review.stipend }}</span>
       </p>
       <p fxFlexFill>
-        <strong>What was the duration of your PE? </strong><span id="duration">{{review.duration}}</span>
+        <strong>What was the duration of your PE? </strong
+        ><span id="duration">{{ review.duration }}</span>
       </p>
       <p fxFlexFill>
-        <strong>Please describe the work you did with your organization</strong><br />
-        <span id="workDone">{{review.workDone}}</span>
+        <strong>Please describe the work you did with your organization</strong
+        ><br />
+        <span id="workDone">{{ review.workDone }}</span>
       </p>
       <p fxFlexFill>
-        <strong>What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)</strong><br />
-        <span id="typicalDay">{{review.typicalDay}}</span>
+        <strong
+          >What was a typical day like while on your PE? (please consider
+          housing, food, travel, weather, etc)</strong
+        ><br />
+        <span id="typicalDay">{{ review.typicalDay }}</span>
       </p>
       <p fxFlexFill>
-        <strong>What were your organization's strengths and weaknesses?</strong><br />
-        <span id="evaluation">{{review.evaluation}}</span>
+        <strong>What were your organization's strengths and weaknesses?</strong
+        ><br />
+        <span id="evaluation">{{ review.evaluation }}</span>
       </p>
       <p fxFlexFill>
-        <strong>Is there anything else you would like to share with other students who may work with this organization?</strong><br />
-        <span id="other">{{review.other}}</span>
+        <strong
+          >Is there anything else you would like to share with other students
+          who may work with this organization?</strong
+        ><br />
+        <span id="other">{{ review.other }}</span>
       </p>
       <p fxFlexFill>
         <mat-divider fxFlexFill></mat-divider>
@@ -498,7 +857,13 @@
     </div>
   </mat-dialog-content>
   <mat-divider></mat-divider>
-  <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2px">
-    <button mat-button style="width: auto" (click)="organizationView = true"><mat-icon>navigate_before</mat-icon> {{orgInfoBtnText}}</button>
+  <mat-dialog-actions
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    fxLayoutGap="2px"
+  >
+    <button mat-button style="width: auto" (click)="organizationView = true">
+      <mat-icon>navigate_before</mat-icon> {{ orgInfoBtnText }}
+    </button>
   </mat-dialog-actions>
 </ng-container>

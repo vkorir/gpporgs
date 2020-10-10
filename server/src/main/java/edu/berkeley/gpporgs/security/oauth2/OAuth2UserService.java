@@ -44,11 +44,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
-        Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
-        if (!userOptional.isPresent()) {
+        User user = userRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
+        if (user == null || !user.getHasAccess()) {
             throw new Exception("You are not authorized to access this site.");
         }
-        User user = updateAndSaveUser(userOptional.get(), oAuth2UserInfo);
+        user = updateAndSaveUser(user, oAuth2UserInfo);
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 

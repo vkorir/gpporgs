@@ -16,7 +16,7 @@ export class OrganizationsComponent implements OnInit {
 
   organizations: Organization[] = [];
   dataSource: MatTableDataSource<Organization>;
-  displayedColumns = ['name', 'location', 'submitted', 'approved'];
+  displayedColumns = ['name', 'location', 'created', 'approved'];
 
   approvedControl = new FormControl(true);
 
@@ -43,7 +43,8 @@ export class OrganizationsComponent implements OnInit {
   }
 
   formatDate(creationDate: string): string {
-    return this.appService.formatDate(creationDate);
+    const date = this.appService.formatDate(creationDate);
+    return date.substring(0, date.length - 6);
   }
 
   approveOrg(organization: Organization): void {

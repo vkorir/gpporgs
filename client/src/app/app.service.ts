@@ -90,7 +90,7 @@ export class AppService {
     }
     const lastLogin = new Date(date);
     const formatNum = value => { return value < 10 ? `0${value}` : value; }
-    let month = formatNum(lastLogin.getMonth());
+    let month = formatNum(lastLogin.getMonth() + 1);
     const day = formatNum(lastLogin.getDate());
     const year = formatNum(lastLogin.getFullYear());
     const hours = formatNum(lastLogin.getHours());

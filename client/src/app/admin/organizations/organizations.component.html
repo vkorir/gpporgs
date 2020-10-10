@@ -9,9 +9,9 @@
       <th mat-header-cell *matHeaderCellDef>Location</th>
       <td mat-cell *matCellDef="let organization">{{country(organization.address.country)}}</td>
     </ng-container>
-    <ng-container matColumnDef="submitted">
+    <ng-container matColumnDef="created">
       <th mat-header-cell *matHeaderCellDef>Date Added</th>
-      <td mat-cell *matCellDef="let organization">{{formatDate(organization.creationDate)}}</td>
+      <td mat-cell *matCellDef="let organization">{{formatDate(organization.created)}}</td>
     </ng-container>
     <ng-container matColumnDef="approved">
       <th mat-header-cell *matHeaderCellDef>Approved</th>

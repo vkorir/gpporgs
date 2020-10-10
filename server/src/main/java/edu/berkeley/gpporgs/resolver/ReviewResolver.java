@@ -34,6 +34,9 @@ public class ReviewResolver implements GraphQLResolver<Review> {
     public User reviewer(Review review) {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            if (review.getReviewerId() == null) {
+                return null;
+            }
             return userRepository.findById(review.getReviewerId()).orElse(null);
         }
         return null;
@@ -41,6 +44,9 @@ public class ReviewResolver implements GraphQLResolver<Review> {
 
     public Iterable<Long> sectors(Review review) {
         List<Long> sectorIds = new ArrayList<>();
+        if (review.getSectorIds().length() == 0) {
+            return sectorIds;
+        }
         for (String sectorId: review.getSectorIds().split("\\^")) {
             sectorIds.add(Long.parseLong(sectorId));
         }
