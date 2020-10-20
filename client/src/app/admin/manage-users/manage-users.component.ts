@@ -44,7 +44,7 @@ export class ManageUsersComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private appService: AppService, private snackBar: MatSnackBar) {
-    this.appService.users.subscribe((users) => {
+    this.appService.users.subscribe(users => {
       this.dataSource = new MatTableDataSource<User>(users);
       setTimeout(() => (this.dataSource.paginator = this.paginator));
     });
@@ -75,10 +75,7 @@ export class ManageUsersComponent implements OnInit {
       );
       return;
     }
-    const mutation = `mutation { updateUser(user: ${this.appService.queryFy({
-      id,
-      isAdmin,
-    })}) { id } }`;
+    const mutation = `mutation { updateUser(user: ${this.appService.queryFy({id, isAdmin})}) { id } }`;
     this.appService.mutationService(mutation).subscribe(({ updateUser }) => {
       if (updateUser && updateUser.id) {
         const users = this.appService.users.getValue().map((value) => {

@@ -192,5 +192,7 @@ INSERT INTO users(email, is_admin, has_access, created) VALUES
 ('victor.korir@berkeley.edu', TRUE, TRUE, '2020-10-01T07:00Z'),
 ('cchowdhry@berkeley.edu', TRUE, TRUE, '2020-10-01T07:00Z'),
 ('sarasiddiqui@berkeley.edu', TRUE, TRUE, '2020-10-01T07:00Z'),
-('larsrohr@eecs.berkeley.edu', TRUE, TRUE, '2020-10-01T07:00Z');
+('larsrohr@eecs.berkeley.edu', TRUE, TRUE, '2020-10-01T07:00Z'),
+('viloriaparis@berkeley.edu', TRUE, TRUE, '2020-10-19T22:06Z'),
+('nseedat@berkeley.edu', TRUE, TRUE, '2020-10-19T22:09Z');
 UNLOCK TABLES;

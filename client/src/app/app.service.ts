@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Filter } from './model/filter';
 import { baseUrl } from './baseUrl';
+import { Organization } from './model/organization';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class AppService {
   public filter = new BehaviorSubject<Filter>(new Filter());
   public users = new BehaviorSubject<Array<User>>(new Array());
   public isShowSearchBar = new BehaviorSubject<boolean>(true);
+  public organizations = new BehaviorSubject<Array<Organization>>([])
   public regions = new Map<number, string>();
   public countries = new Map<string, string>();
   public affiliations = new Map<number, string>();

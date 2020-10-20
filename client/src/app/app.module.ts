@@ -1,18 +1,18 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { GraphQLModule } from './graphql.module';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { HomeComponent } from './home/home.component';
-import { HeaderComponent } from './header/header.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { TableComponent } from './table/table.component';
-import { DetailsComponent } from './details/details.component';
-import { AdminComponent } from './admin/admin.component';
-import { LoginComponent } from './login/login.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { GraphQLModule } from "./graphql.module";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { HomeComponent } from "./home/home.component";
+import { HeaderComponent } from "./header/header.component";
+import { SidebarComponent } from "./sidebar/sidebar.component";
+import { TableComponent } from "./table/table.component";
+import { DetailsComponent } from "./details/details.component";
+import { AdminComponent } from "./admin/admin.component";
+import { LoginComponent } from "./login/login.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -36,25 +36,45 @@ import {
   MatSliderModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
-  MatCardModule
-} from '@angular/material';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { LayoutModule } from '@angular/cdk/layout';
-import { TokenInterceptor } from './token.interceptor';
-import { AppService } from './app.service';
-import { ReactiveFormsModule } from '@angular/forms';
-import { LookUpComponent } from './look-up/look-up.component';
-import { RouteReuseStrategy } from '@angular/router';
-import { CacheRouteReuseStrategy } from './cache-route-reuse.strategy';
-import { MainModalComponent } from './main-modal/main-modal.component';
-import { AddUserComponent } from './admin/add-user/add-user.component';
-import { ManageUsersComponent } from './admin/manage-users/manage-users.component';
-import { OrganizationsComponent } from './admin/organizations/organizations.component';
+  MatCardModule,
+} from "@angular/material";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { LayoutModule } from "@angular/cdk/layout";
+import { TokenInterceptor } from "./token.interceptor";
+import { AppService } from "./app.service";
+import { ReactiveFormsModule } from "@angular/forms";
+import { LookUpComponent } from "./look-up/look-up.component";
+import { RouteReuseStrategy } from "@angular/router";
+import { CacheRouteReuseStrategy } from "./cache-route-reuse.strategy";
+import { MainModalComponent } from "./main-modal/main-modal.component";
+import { AddUserComponent } from "./admin/add-user/add-user.component";
+import { ManageUsersComponent } from "./admin/manage-users/manage-users.component";
+import { OrganizationsComponent } from "./admin/manage-organizations/manage-organizations.component";
 
-const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule, MatProgressSpinnerModule,
-  MatGridListModule, MatInputModule, MatToolbarModule, MatRadioModule, MatTableModule, MatPaginatorModule,
-  MatSortModule, MatDialogModule, MatSnackBarModule, MatIconModule, MatAutocompleteModule, MatSelectModule,
-  MatExpansionModule, MatSlideToggleModule, MatChipsModule, MatSliderModule, MatProgressBarModule, MatCardModule
+const materialModules = [
+  MatButtonModule,
+  MatCheckboxModule,
+  MatDividerModule,
+  MatFormFieldModule,
+  MatProgressSpinnerModule,
+  MatGridListModule,
+  MatInputModule,
+  MatToolbarModule,
+  MatRadioModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatDialogModule,
+  MatSnackBarModule,
+  MatIconModule,
+  MatAutocompleteModule,
+  MatSelectModule,
+  MatExpansionModule,
+  MatSlideToggleModule,
+  MatChipsModule,
+  MatSliderModule,
+  MatProgressBarModule,
+  MatCardModule,
 ];
 
 @NgModule({
@@ -83,19 +103,19 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     FlexLayoutModule,
     materialModules,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   providers: [
     AppService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: RouteReuseStrategy,
-      useClass: CacheRouteReuseStrategy
-    }
+      useClass: CacheRouteReuseStrategy,
+    },
   ],
   bootstrap: [AppComponent],
   entryComponents: [
@@ -105,7 +125,7 @@ const materialModules = [MatButtonModule, MatCheckboxModule, MatDividerModule, M
     DetailsComponent,
     AddUserComponent,
     ManageUsersComponent,
-    OrganizationsComponent
-  ]
+    OrganizationsComponent,
+  ],
 })
-export class AppModule { }
+export class AppModule {}

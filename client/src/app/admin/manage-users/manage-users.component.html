@@ -44,50 +44,44 @@
       <td
         mat-cell
         *matCellDef="let user"
-        [attr.colspan]="displayedColumns.length"
-      >
+        [attr.colspan]="displayedColumns.length">
         <div
           class="element-detail"
           [@detailExpand]="user == expandedUser ? 'expanded' : 'collapsed'"
           fxLayout="row"
-          fxLayoutGap="8px"
-        >
+          fxLayoutGap="8px">
           <span style="color: gray">Manage Roles:</span>
           <span fxFlex="1 1 auto"></span>
-          <mat-checkbox color="primary" [checked]="true" disabled
-            >Student</mat-checkbox
-          >
+          <mat-checkbox color="primary" [checked]="true" disabled>Student</mat-checkbox>
           <mat-checkbox
             color="primary"
             [checked]="user.isAdmin"
             (change)="roleChanged(user.id, !user.isAdmin)"
-            [disabled]="isCurrentUser(user.id)"
-            >Admin</mat-checkbox
-          >
+            [disabled]="isCurrentUser(user.id)">
+            Admin
+          </mat-checkbox>
           <span fxFlex="1 1 auto"></span>
         </div>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr
-      mat-row
+    <tr mat-row
       *matRowDef="let user; columns: displayedColumns"
       class="element-row"
       [class.expanded-row]="expandedUser === user"
-      (click)="expandedUser = expandedUser === user ? null : user"
-    ></tr>
-    <tr
-      mat-row
+      (click)="expandedUser = expandedUser === user ? null : user">
+    </tr>
+    <tr mat-row
       *matRowDef="let row; columns: ['manageRoles']"
-      class="detail-row"
-    ></tr>
+      class="detail-row">
+    </tr>
   </table>
   <div class="table-footer">
     <mat-paginator
       [pageSizeOptions]="[10, 25, 50]"
-      showFirstLastButtons
-    ></mat-paginator>
+      showFirstLastButtons>
+    </mat-paginator>
   </div>
 </mat-dialog-content>
 <mat-divider></mat-divider>

@@ -769,7 +769,7 @@
         Review #{{ i + 1 }}
         <ng-container *ngIf="isAnonymousReview(review)"
           >&nbsp;by&nbsp;<strong>
-            {{!!review.reviewer.firstName ? (review.reviewer.firstName + ' ' + review.reviewer.email) : review.reviewer.email}}
+            {{!!review.reviewer.firstName ? review.reviewer.firstName + ' (' + review.reviewer.email + ')' : review.reviewer.email}}
           </strong>
         </ng-container>
         <span fxFlex="1 1 auto"></span>

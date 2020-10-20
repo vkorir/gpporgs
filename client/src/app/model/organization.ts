@@ -24,6 +24,9 @@ export class Organization {
   created: string = null;
 
   applyFilter(filter: Filter, appService: AppService): boolean {
+    if (!!this.name && !this.name.trim().toLowerCase().includes(filter.searchString)) {
+      return false;
+    }
     if (filter.area === Area.INTERNATIONAL && (!!this.address.country && this.address.country === "US")) {
       return false;
     }
@@ -39,12 +42,8 @@ export class Organization {
     if (sectorsUnion.size == 0 && this.sectors.length != 0) {
       return false;
     }
-    let filterName = true;
     let filterType = true;
     let filterCountry = true;
-    if (!!this.name) {
-      filterName = this.name.trim().toLowerCase().includes(filter.searchString);
-    }
     if (!!this.type) {
       filterType = appService.types
         .get(this.type)
@@ -70,6 +69,6 @@ export class Organization {
         .includes(filter.searchString);
     }
 
-    return filterName || filterType || filterCountry;
+    return filterType || filterCountry;
   }
 }

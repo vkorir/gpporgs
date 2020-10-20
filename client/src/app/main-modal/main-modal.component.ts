@@ -254,7 +254,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   segue(formGroup: FormGroup, flag: boolean): void {
-    if (this.reviews.length == 0) {
+    if (this.reviews.length == 0 && this.disableControl) {
       this.appService.openSnackBar(this.snackBar, 'No reviews have been posted for this organization');
       return;
     }
@@ -384,7 +384,7 @@ export class MainModalComponent implements OnInit, OnChanges {
     const mutation = `mutation { createReview(${variables}) { id } }`;
     this.appService.mutationService(mutation).subscribe(response => {
       this.isSubmitting = response.loading;
-      this.appService.openSnackBar(this.snackBar, 'Organization successfully submitted');
+      this.appService.openSnackBar(this.snackBar, 'Successfully submitted');
       this.dialogRef.close();
     });
   }
