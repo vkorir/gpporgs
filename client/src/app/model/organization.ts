@@ -24,51 +24,64 @@ export class Organization {
   created: string = null;
 
   applyFilter(filter: Filter, appService: AppService): boolean {
-    if (!!this.name && !this.name.trim().toLowerCase().includes(filter.searchString)) {
-      return false;
-    }
-    if (filter.area === Area.INTERNATIONAL && (!!this.address.country && this.address.country === "US")) {
-      return false;
-    }
-    if (filter.area === Area.DOMESTIC && (!!this.address.country && this.address.country !== "US")) {
-      return false;
-    }
-    if (!!this.region && !filter.regions.has(this.region)) {
-      return false;
-    }
-    const sectorsUnion = new Set(
-      [...filter.sectors].filter((sector) => this.sectors.includes(sector))
-    );
-    if (sectorsUnion.size == 0 && this.sectors.length != 0) {
-      return false;
-    }
-    let filterType = true;
-    let filterCountry = true;
-    if (!!this.type) {
-      filterType = appService.types
-        .get(this.type)
-        .trim()
-        .toLowerCase()
-        .includes(filter.searchString);
-      if (this.typeOther) {
-        filterType =
-          filterType ||
-          this.typeOther.trim().toLowerCase().includes(filter.searchString);
+    const subString = filter.searchString;
+    const containsSubstring = (string: string): boolean => {
+      if (!string) {
+        return false;
       }
-    } else if (!!this.typeOther) {
-      filterType = this.typeOther
-        .trim()
-        .toLowerCase()
-        .includes(filter.searchString);
+      return string.trim().toLowerCase().includes(subString);
     }
-    if (!!this.address.country) {
-      filterCountry = appService.countries
-        .get(this.address.country)
-        .trim()
-        .toLowerCase()
-        .includes(filter.searchString);
-    }
+    if (!!subString) {
+      if (containsSubstring(this.name)) {
+        return true;
+      }
+      if (containsSubstring(appService.types.get(this.type))) {
+        return true;
+      }
+      if (containsSubstring(this.typeOther)) {
+        return true;
+      }
+      if (containsSubstring(appService.regions.get(this.region))) {
+        return true;
+      }
+      if (containsSubstring(appService.countries.get(this.address.country))) {
+        return true;
+      }
+      this.sectors.forEach(id => {
+        if (containsSubstring(appService.sectors.get(id))) {
+          return true;
+        }
+      });
+      if (containsSubstring(this.sectorOther)) {
+        return true;
+      }
+    } else {
+      let filterArea = false;
+      let filterRegions = false;
+      let filterSectors = false;
+      if (filter.area == Area.ALL) {
+        filterArea = true;
+      } else if (filter.area == Area.INTERNATIONAL && this.address.country != 'US') {
+        filterArea = true;
+      } else if (filter.area == Area.DOMESTIC && this.address.country == 'US') {
+        filterArea = true;
+      }
+      if (!this.region || (!!this.region && filter.regions.has(this.region))) {
+        filterRegions = true;
+      }
+      if (this.sectors.length == 0) {
+        filterSectors = true;
+      } else {
+        filter.sectors.forEach(id => {
+          if (this.sectors.includes(id)) {
+            filterSectors = true;
+          }
+        });
+      }
 
-    return filterType || filterCountry;
+      return (filterArea && filterRegions && filterSectors);
+    }
+    
+    return false;
   }
 }

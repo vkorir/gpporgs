@@ -255,7 +255,7 @@ export class MainModalComponent implements OnInit, OnChanges {
 
   segue(formGroup: FormGroup, flag: boolean): void {
     if (this.reviews.length == 0 && this.disableControl) {
-      this.appService.openSnackBar(this.snackBar, 'No reviews have been posted for this organization');
+      this.appService.openSnackBar(this.snackBar, 'No reviews have been submitted for this organization');
       return;
     }
     if (this.disableControl || formGroup.valid || (flag && !this.isAddrDiffControl.value && formGroup.controls.workDone.valid
