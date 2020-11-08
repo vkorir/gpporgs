@@ -48,12 +48,12 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   
   toggleSelectAllRegions() {
     this.masterSelectedRegion = !this.masterSelectedRegion;
-    this.checklistRegion.forEach((region, id) => {
+    this.checklistRegion.forEach(region => {
       region.isSelected = this.masterSelectedRegion;
-      if (!this.checkedRegions.has(id)) {
-        this.checkedRegions.add(id);
+      if (!this.checkedRegions.has(region.id)) {
+        this.checkedRegions.add(region.id);
       } else {
-        this.checkedRegions.delete(id);
+        this.checkedRegions.delete(region.id);
       }
     });
     this.updateFilterRegion();
@@ -61,12 +61,12 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
 
   toggleSelectAllSectors() {
     this.masterSelectedSector = !this.masterSelectedSector;
-    this.checklistSector.forEach((sector, id) => {
+    this.checklistSector.forEach(sector => {
       sector.isSelected = this.masterSelectedSector;
-      if (!this.checkedSectors.has(id)) {
-        this.checkedSectors.add(id);
+      if (!this.checkedSectors.has(sector.id)) {
+        this.checkedSectors.add(sector.id);
       } else {
-        this.checkedSectors.delete(id);
+        this.checkedSectors.delete(sector.id);
       }
     });
     this.updateFilterSectors();

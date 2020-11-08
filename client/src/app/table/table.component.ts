@@ -27,14 +27,16 @@ export class TableComponent implements OnInit {
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.appService.filter.subscribe(() => this.applyFilter());
     const query =
-      "{ approvedOrganizations { id name type typeOther region address { country } sectors } }";
+      "{ approvedOrganizations { id name type typeOther region address { country }  sectorOther } }";
     this.isLoading = true;
     this.appService.queryService(query).subscribe((data) => {
-      this.organizations = data.approvedOrganizations.map((organization) =>
+      this.organizations = data.approvedOrganizations.map(organization =>
         Object.assign(new Organization(), organization)
       );
       this.applyFilter();
     });
+    this.appService.filter.subscribe(() => this.applyFilter());
+    // setTimeout(() => this.appService.filter.subscribe(() => this.applyFilter()), 1000);
   }
 
   ngOnInit() {}
@@ -62,7 +64,7 @@ export class TableComponent implements OnInit {
 
   private applyFilter(): void {
     const value = this.appService.filter.getValue();
-    const filtered = this.organizations.filter((organization) =>
+    const filtered = this.organizations.filter(organization =>
       organization.applyFilter(value, this.appService)
     );
     this.dataSource = new MatTableDataSource<any>(filtered);
