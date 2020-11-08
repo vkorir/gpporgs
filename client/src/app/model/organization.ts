@@ -79,7 +79,7 @@ export class Organization {
         });
       }
 
-      return (filterArea && filterRegions && filterSectors);
+      return filterArea && filterRegions && filterSectors;
     }
     
     return false;

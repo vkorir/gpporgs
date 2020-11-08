@@ -36,8 +36,6 @@ export class TableComponent implements OnInit {
       this.applyFilter();
       this.appService.filter.subscribe(() => this.applyFilter());
     });
-    this.appService.filter.subscribe(() => this.applyFilter());
-    // setTimeout(() => this.appService.filter.subscribe(() => this.applyFilter()), 1000);
   }
 
   ngOnInit() {}
