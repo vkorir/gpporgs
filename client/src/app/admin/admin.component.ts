@@ -63,10 +63,10 @@ export class AdminComponent implements OnInit {
 
   manageOrganizations(index: number): void {
     this.actions[index].isLoading = true;
-    const query = '{ organizations { id name address { country } created approved }}';
+    const query = '{ allOrganizations { id name address { country } created approved }}';
     this.appService.queryService(query).subscribe((data) => {
-      if (!!data.organizations) {
-        this.appService.organizations.next(data.organizations.map(value => Object.assign(new Organization(), value)));
+      if (!!data.allOrganizations) {
+        this.appService.organizations.next(data.allOrganizations.map(value => Object.assign(new Organization(), value)));
       }
       this.actions[index].isLoading = false;
       this.dialog.open(OrganizationsComponent, {

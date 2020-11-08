@@ -77,6 +77,6 @@ static/
 
 ### VS Code ###
 .vscode/
-
+scripts/*
 server/src/main/resources/static/*
 application.yaml

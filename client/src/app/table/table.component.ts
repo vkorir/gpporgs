@@ -27,10 +27,10 @@ export class TableComponent implements OnInit {
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.appService.filter.subscribe(() => this.applyFilter());
     const query =
-      "{ organizations { id name type typeOther region address { country } sectors } }";
+      "{ approvedOrganizations { id name type typeOther region address { country } sectors } }";
     this.isLoading = true;
     this.appService.queryService(query).subscribe((data) => {
-      this.organizations = data.organizations.map((organization) =>
+      this.organizations = data.approvedOrganizations.map((organization) =>
         Object.assign(new Organization(), organization)
       );
       this.applyFilter();

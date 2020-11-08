@@ -38,7 +38,8 @@ input OrganizationInput {
 
 extend type Query {
 	organization(id: ID!): Organization
-	organizations: [Organization]
+	approvedOrganizations: [Organization]
+	allOrganizations: [Organization]
 }
 
 extend type Mutation {
