@@ -7,4 +7,8 @@ export class Address {
   state: string = null;
   zip: string = null;
   country: string = null;
+
+  clone(): Address {
+    return Object.assign(new Address(), deepCopy(this));
+  }
 }
