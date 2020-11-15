@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../app.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +10,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class LoginComponent implements OnInit {
 
   constructor(private appService: AppService,
-              private snackBar: MatSnackBar,
               private router: Router,
               private route: ActivatedRoute) { }
 
@@ -35,7 +33,7 @@ export class LoginComponent implements OnInit {
 
     const error = this.route.snapshot.queryParams.error;
     if (error) {
-      this.appService.openSnackBar(this.snackBar, error);
+      this.appService.openSnackBar(error);
       this.router.navigateByUrl('/login');
     }
   }

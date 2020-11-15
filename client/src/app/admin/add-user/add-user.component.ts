@@ -35,10 +35,7 @@ export class AddUserComponent implements OnInit {
           .map((value) => Object.assign(new User(), value));
         users.push(Object.assign(new User(), createUser));
         this.appService.users.next(users);
-        this.appService.openSnackBar(
-          this.snackBar,
-          `Successfully added ${createUser.email}`
-        );
+        this.appService.openSnackBar(`Successfully added ${createUser.email}`);
       }
       this.inputControl.setValue(null);
       this.inputControl.markAsUntouched();

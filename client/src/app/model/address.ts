@@ -1,3 +1,5 @@
+import { deepCopy } from 'deep-copy-ts';
+
 export class Address {
   id: number = null;
   street: string = null;
@@ -5,4 +7,8 @@ export class Address {
   state: string = null;
   zip: string = null;
   country: string = null;
+
+  clone(): Address {
+    return Object.assign(new Address(), deepCopy(this));
+  }
 }
