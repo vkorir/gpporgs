@@ -67,7 +67,7 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row
-      *matRowDef="let user; columns: displayedColumns"
+      *matRowDef="let user; columns: displayedColumns;"
       class="element-row"
       [class.expanded-row]="expandedUser === user"
       (click)="expandedUser = expandedUser === user ? null : user">

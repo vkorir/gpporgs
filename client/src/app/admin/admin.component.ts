@@ -3,8 +3,10 @@ import { AppService } from '../app.service';
 import { MatDialog } from '@angular/material';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
-import { OrganizationsComponent } from './manage-organizations/manage-organizations.component';
+import { ManageOrganizationsComponent } from './manage-organizations/manage-organizations.component';
 import { Organization } from '../model/organization';
+import { Address } from '../model/address';
+import { Contact } from '../model/contact';
 
 @Component({
   selector: 'app-admin',
@@ -52,7 +54,7 @@ export class AdminComponent implements OnInit {
   manageUsers(index: number): void {
     this.actions[index].isLoading = true;
     const query = '{ users { id email firstName lastName isAdmin created lastLogin numberOfLogin hasAccess } }';
-    this.appService.queryService(query).subscribe((data) => {
+    this.appService.queryService(query).subscribe(data => {
       this.appService.users.next(data.users);
       this.actions[index].isLoading = false;
       this.dialog.open(ManageUsersComponent, {
@@ -64,12 +66,10 @@ export class AdminComponent implements OnInit {
   manageOrganizations(index: number): void {
     this.actions[index].isLoading = true;
     const query = '{ allOrganizations { id name address { country } created approved }}';
-    this.appService.queryService(query).subscribe((data) => {
-      if (!!data.allOrganizations) {
-        this.appService.organizations.next(data.allOrganizations.map(value => Object.assign(new Organization(), value)));
-      }
+    this.appService.queryService(query).subscribe(data => {
+      this.appService.organizations.next(data.allOrganizations);
       this.actions[index].isLoading = false;
-      this.dialog.open(OrganizationsComponent, {
+      this.dialog.open(ManageOrganizationsComponent, {
         panelClass: 'mat-dialog--md'
       });
     });

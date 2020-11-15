@@ -1,23 +1,21 @@
 <h2 mat-dialog-title> Manage Organizations</h2>
 <mat-dialog-content>
-  <table mat-table [dataSource]="dataSource" fxFlexFill>
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows fxFlexFill>
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let organization">{{organization.name}}</td>
+      <td mat-cell *matCellDef="let organization">{{ organization.name }}</td>
     </ng-container>
     <ng-container matColumnDef="location">
       <th mat-header-cell *matHeaderCellDef>Location</th>
-      <td mat-cell *matCellDef="let organization">{{country(organization.address.country)}}</td>
+      <td mat-cell *matCellDef="let organization">{{ country(organization.address.country) }}</td>
     </ng-container>
     <ng-container matColumnDef="created">
       <th mat-header-cell *matHeaderCellDef>Date Added</th>
-      <td mat-cell *matCellDef="let organization">{{formatDate(organization.created)}}</td>
+      <td mat-cell *matCellDef="let organization">{{ formatDate(organization.created) }}</td>
     </ng-container>
     <ng-container matColumnDef="approved">
       <th mat-header-cell *matHeaderCellDef>Approved</th>
-      <td mat-cell *matCellDef="let organization"><p fxLayoutAlign="center">
-        <mat-checkbox color="primary" (click)="approveOrg(organization)" [checked]="organization.approved" [disabled]="organization.approved"></mat-checkbox>
-      </p></td>
+      <td mat-cell *matCellDef="let organization"><mat-checkbox color="primary" (click)="toggleApproved(organization.id, !organization.approved)" [checked]="organization.approved"></mat-checkbox></td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

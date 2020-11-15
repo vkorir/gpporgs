@@ -49,7 +49,7 @@ import { CacheRouteReuseStrategy } from "./cache-route-reuse.strategy";
 import { MainModalComponent } from "./main-modal/main-modal.component";
 import { AddUserComponent } from "./admin/add-user/add-user.component";
 import { ManageUsersComponent } from "./admin/manage-users/manage-users.component";
-import { OrganizationsComponent } from "./admin/manage-organizations/manage-organizations.component";
+import { ManageOrganizationsComponent } from "./admin/manage-organizations/manage-organizations.component";
 
 const materialModules = [
   MatButtonModule,
@@ -91,7 +91,7 @@ const materialModules = [
     MainModalComponent,
     AddUserComponent,
     ManageUsersComponent,
-    OrganizationsComponent,
+    ManageOrganizationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -125,7 +125,7 @@ const materialModules = [
     DetailsComponent,
     AddUserComponent,
     ManageUsersComponent,
-    OrganizationsComponent,
+    ManageOrganizationsComponent,
   ],
 })
 export class AppModule {}

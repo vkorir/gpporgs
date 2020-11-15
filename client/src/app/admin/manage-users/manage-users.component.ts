@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
 import { User } from "../../model/user";
 import { AppService } from "../../app.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatPaginator } from "@angular/material/paginator";
 import {
   animate,
@@ -43,10 +42,10 @@ export class ManageUsersComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  constructor(private appService: AppService, private snackBar: MatSnackBar) {
+  constructor(private appService: AppService) {
     this.appService.users.subscribe(users => {
       this.dataSource = new MatTableDataSource<User>(users);
-      setTimeout(() => (this.dataSource.paginator = this.paginator));
+      setTimeout(() => this.dataSource.paginator = this.paginator);
     });
   }
 
@@ -69,16 +68,13 @@ export class ManageUsersComponent implements OnInit {
 
   roleChanged(id: number, isAdmin: boolean): void {
     if (id === this.appService.user.getValue().id) {
-      this.appService.openSnackBar(
-        this.snackBar,
-        "Cannot change your own roles"
-      );
+      this.appService.openSnackBar("Cannot change your own roles");
       return;
     }
     const mutation = `mutation { updateUser(user: ${this.appService.queryFy({id, isAdmin})}) { id } }`;
     this.appService.mutationService(mutation).subscribe(({ updateUser }) => {
       if (updateUser && updateUser.id) {
-        const users = this.appService.users.getValue().map((value) => {
+        const users = this.appService.users.getValue().map(value => {
           if (value.id == updateUser.id) {
             const user = Object.assign(new User(), value);
             user.isAdmin = !user.isAdmin;
@@ -88,14 +84,9 @@ export class ManageUsersComponent implements OnInit {
           return value;
         });
         this.appService.users.next(users);
-        this.appService.openSnackBar(
-          this.snackBar,
-          `Updated roles for ${
-            this.expandedUser.firstName || this.expandedUser.email
-          }`
-        );
+        this.appService.openSnackBar(`Updated roles for ${this.expandedUser.firstName || this.expandedUser.email}`);
       } else {
-        this.appService.openSnackBar(this.snackBar, "An error occurred");
+        this.appService.openSnackBar( "An error occurred");
       }
     });
   }

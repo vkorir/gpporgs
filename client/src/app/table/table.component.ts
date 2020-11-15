@@ -26,8 +26,7 @@ export class TableComponent implements OnInit {
 
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.appService.filter.subscribe(() => this.applyFilter());
-    const query =
-      "{ approvedOrganizations { id name type typeOther region address { country }  sectorOther } }";
+    const query = '{ approvedOrganizations { id name type typeOther region address { country } sectors sectorOther } }';
     this.isLoading = true;
     this.appService.queryService(query).subscribe((data) => {
       this.organizations = data.approvedOrganizations.map(organization =>
@@ -75,10 +74,10 @@ export class TableComponent implements OnInit {
   openDetailsModal(id: number) {
     // tslint:disable-next-line:max-line-length
     const organization =
-      "{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } created }";
+      '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } created }';
     // tslint:disable-next-line:max-line-length
     const review =
-      "{ id created region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName email } anonymous }";
+      '{ id created region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName email } anonymous }';
     const query = `{ organization(id: ${id}) ${organization} reviews (organizationId: ${id}) ${review} }`;
     this.appService.queryService(query).subscribe((data) => {
       this.dialog.open(MainModalComponent, {

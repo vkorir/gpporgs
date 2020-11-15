@@ -50,7 +50,6 @@ export class MainModalComponent implements OnInit, OnChanges {
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(private appService: AppService,
-              private snackBar: MatSnackBar,
               private dialogRef: MatDialogRef<MainModalComponent>,
               private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -255,7 +254,7 @@ export class MainModalComponent implements OnInit, OnChanges {
 
   segue(formGroup: FormGroup, flag: boolean): void {
     if (this.reviews.length == 0 && this.disableControl) {
-      this.appService.openSnackBar(this.snackBar, 'No reviews have been submitted for this organization');
+      this.appService.openSnackBar('No reviews have been submitted for this organization');
       return;
     }
     if (this.disableControl || formGroup.valid || (flag && !this.isAddrDiffControl.value && formGroup.controls.workDone.valid
@@ -284,9 +283,9 @@ export class MainModalComponent implements OnInit, OnChanges {
     const mutation = `mutation { updateOrganization(organization: ${this.appService.queryFy(this.organization.value)}) { id name }}`;
     this.appService.mutationService(mutation).subscribe(response => {
       if (response.updateOrganization.id) {
-        this.appService.openSnackBar(this.snackBar, `${response.updateOrganization.name} successfully updated.`);
+        this.appService.openSnackBar(`${response.updateOrganization.name} successfully updated.`);
       } else {
-        this.appService.openSnackBar(this.snackBar, `Error. ${response.updateOrganization.name} could not be updated.`);
+        this.appService.openSnackBar(`Error. ${response.updateOrganization.name} could not be updated.`);
       }
       this.closeEditOrganization();
     });
@@ -317,9 +316,9 @@ export class MainModalComponent implements OnInit, OnChanges {
     const mutation = `mutation { updateReview(review: ${this.appService.queryFy(this.review.value)}) { id }}`;
     this.appService.mutationService(mutation).subscribe(response => {
       if (response.updateReview.id) {
-        this.appService.openSnackBar(this.snackBar, 'Review successfully updated.');
+        this.appService.openSnackBar('Review successfully updated.');
       } else {
-        this.appService.openSnackBar(this.snackBar, 'Error. Review could not be updated.');
+        this.appService.openSnackBar('Error. Review could not be updated.');
       }
     });
     this.closeEditReview();
@@ -384,7 +383,7 @@ export class MainModalComponent implements OnInit, OnChanges {
     const mutation = `mutation { createReview(${variables}) { id } }`;
     this.appService.mutationService(mutation).subscribe(response => {
       this.isSubmitting = response.loading;
-      this.appService.openSnackBar(this.snackBar, 'Successfully submitted');
+      this.appService.openSnackBar('Successfully submitted');
       this.dialogRef.close();
     });
   }

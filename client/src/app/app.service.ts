@@ -7,24 +7,23 @@ import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Filter } from './model/filter';
 import { baseUrl } from './baseUrl';
-import { Organization } from './model/organization';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
   private readonly tokenKey = 'token';
-  public user = new BehaviorSubject<User>(null);
-  public filter = new BehaviorSubject<Filter>(new Filter());
-  public users = new BehaviorSubject<Array<User>>(new Array());
-  public isShowSearchBar = new BehaviorSubject<boolean>(true);
-  public organizations = new BehaviorSubject<Array<Organization>>([]);
-  public regions = new Map<number, string>();
-  public countries = new Map<string, string>();
-  public affiliations = new Map<number, string>();
-  public types = new Map<number, string>();
-  public sectors = new Map<number, string>();
-  public languages = new Map<string, string>();
+  user = new BehaviorSubject<User>(null);
+  filter = new BehaviorSubject<Filter>(new Filter());
+  users = new BehaviorSubject<Array<User>>(new Array());
+  isShowSearchBar = new BehaviorSubject<boolean>(true);
+  organizations = new BehaviorSubject<Array<any>>([]);
+  regions = new Map<number, string>();
+  countries = new Map<string, string>();
+  affiliations = new Map<number, string>();
+  types = new Map<number, string>();
+  sectors = new Map<number, string>();
+  languages = new Map<string, string>();
 
   constructor(private apollo: Apollo, private snackBar: MatSnackBar) {}
 
@@ -77,7 +76,7 @@ export class AppService {
         value.sectors = new Set(this.sectors.keys());
         this.filter.next(value);
       } else {
-        this.openSnackBar(this.snackBar, data.message);
+        this.openSnackBar(data.message);
       }
     });
   }
@@ -114,8 +113,8 @@ export class AppService {
       const props = Object.keys(object)
         .filter(key => key !== '__typename')
         .map(key => `${key}: ${this.queryFy(object[key])}`)
-        .join();
-      return `{${props}}`;
+        .join(', ');
+      return `{ ${props} }`;
     }
     return JSON.stringify(object);
   }
@@ -140,8 +139,8 @@ export class AppService {
     );
   }
 
-  openSnackBar(snackBar: MatSnackBar, message: string) {
-    snackBar.open(message, '', {
+  openSnackBar(message: string) {
+    this.snackBar.open(message, '', {
       duration: 2000,
       panelClass: ['snack-bar-custom']
     });

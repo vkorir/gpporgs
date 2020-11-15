@@ -3,6 +3,7 @@ import { Contact } from "./contact";
 import { Area } from "./area";
 import { Filter } from "./filter";
 import { AppService } from "../app.service";
+import deepcopy from "ts-deepcopy";
 
 export class Organization {
   static readonly numContacts = 3;
