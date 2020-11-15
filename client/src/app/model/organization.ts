@@ -85,11 +85,4 @@ export class Organization {
     
     return false;
   }
-
-  clone(): Organization {
-    const clone = Object.assign(new Organization(), deepcopy(this));
-    clone.address = this.address.clone();
-    clone.contacts = [this.contacts[0].clone(), this.contacts[1].clone(), this.contacts[2].clone()];
-    return clone;
-  }
 }

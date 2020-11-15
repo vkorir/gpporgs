@@ -20,9 +20,10 @@ export class ManageOrganizationsComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private appService: AppService) {
-    this.appService.organizations.getValue().map(value => this.organizations.push(value));
-    this.dataSource = new MatTableDataSource(this.organizations);
-    this.approvedControl.valueChanges.subscribe(() => this.applyFilter(this.organizations));
+    this.appService.organizations.getValue().map(value => this.organizations.push(deepCopy(value)));
+    this.approvedControl.valueChanges.subscribe(() => this.applyFilter(deepCopy(this.organizations)));
+    this.dataSource = new MatTableDataSource(deepCopy(this.organizations));
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   ngOnInit() {}
@@ -39,12 +40,11 @@ export class ManageOrganizationsComponent implements OnInit {
   applyFilter(filtered: Array<any>): void {
     filtered = filtered.filter(value => this.approvedControl.value || !value.approved);
     this.dataSource.connect().next(filtered);
-    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   toggleApproved(id: number, approved: boolean): void {
     const input = this.appService.queryFy({ id, approved });
-    const mutation = `mutation { updateOrganization(organization: ${input})}) { id, name, approved } }`;
+    const mutation = `mutation { updateOrganization(organization: ${input}) { id, name, approved } }`;
     this.appService.mutationService(mutation).subscribe(({ updateOrganization }) => {
       if (updateOrganization && updateOrganization.id) {
         const updated = this.organizations.map(value => {
@@ -55,7 +55,7 @@ export class ManageOrganizationsComponent implements OnInit {
           return organization;
         });
         this.applyFilter(updated);
-        if (updateOrganization.approved) {
+        if (approved) {
           this.appService.openSnackBar(`${updateOrganization.name} is now approved.`);
         } else {
           this.appService.openSnackBar(`${updateOrganization.name} is now marked as unapproved.`);

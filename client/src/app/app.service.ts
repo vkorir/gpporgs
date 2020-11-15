@@ -129,6 +129,7 @@ export class AppService {
   }
 
   mutationService(mutation: string): Observable<any> {
+    // return this.apollo.mutate({ mutation: gql(mutation) });
     return this.apollo.mutate({ mutation: gql(mutation) }).pipe(
       map(response => {
         if (response.errors) {

@@ -4,9 +4,6 @@ import { MatDialog } from '@angular/material';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { ManageOrganizationsComponent } from './manage-organizations/manage-organizations.component';
-import { Organization } from '../model/organization';
-import { Address } from '../model/address';
-import { Contact } from '../model/contact';
 
 @Component({
   selector: 'app-admin',

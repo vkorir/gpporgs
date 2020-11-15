@@ -51,7 +51,7 @@ export class TableComponent implements OnInit {
   }
 
   sectors(organization: Organization): string {
-    const sectors = organization.sectors.map((id) =>
+    const sectors = organization.sectors.map(id =>
       this.appService.sectors.get(id)
     );
     if (!!organization.sectorOther) {

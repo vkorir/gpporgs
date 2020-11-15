@@ -6,8 +6,4 @@ export class Contact {
   role: string = null;
   phone: string = null;
   email: string = null;
-
-  clone(): Contact {
-    return Object.assign(new Contact(), deepCopy(this));
-  }
 }
