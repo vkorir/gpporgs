@@ -21,7 +21,7 @@ public class User {
     private @NonNull String email;
     private String firstName;
     private String lastName;
-    private Boolean isAdmin;
+    private Boolean isAdmin = false;
     private Boolean hasAccess;
     private String created;
     private Integer numberOfLogin = 0;

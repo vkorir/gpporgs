@@ -22,7 +22,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     static UserPrincipal create(User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if (user.getIsAdmin()) {
+        if (user.getIsAdmin() != null && user.getIsAdmin()) {
             authorities.add(new SimpleGrantedAuthority(ADMIN));
         }
         authorities.add(new SimpleGrantedAuthority(USER));
