@@ -11,12 +11,7 @@
     </span>
   </h4>
   <mat-dialog-content *ngIf="!disableControl">
-    <form
-      role="form"
-      fxLayout="row wrap"
-      fxLayoutGap="1%"
-      [formGroup]="organization"
-    >
+    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="organization">
       <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49">
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Name</mat-label>
@@ -43,12 +38,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div
-        fxLayout="column"
-        fxFlex.lt-md="100"
-        fxFlex.gt-sm="49"
-        formGroupName="address"
-      >
+      <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" formGroupName="address">
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Street</mat-label>
           <input matInput formControlName="street" />

@@ -1,11 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { AppService } from "../app.service";
-import {
-  MatDialog,
-  MatPaginator,
-  MatSort,
-  MatTableDataSource,
-} from "@angular/material";
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { Organization } from "../model/organization";
 import { MainModalComponent } from "../main-modal/main-modal.component";
 
@@ -15,26 +10,23 @@ import { MainModalComponent } from "../main-modal/main-modal.component";
   styleUrls: ["./table.component.scss"],
 })
 export class TableComponent implements OnInit {
-  displayedColumns: string[] = ["name", "type", "location", "sectors"];
+  displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
   dataSource: MatTableDataSource<any>;
   organizations: Organization[] = [];
 
   isLoading: boolean;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private appService: AppService, private dialog: MatDialog) {
-    this.appService.filter.subscribe(() => this.applyFilter());
-    const query = '{ approvedOrganizations { id name type typeOther region address { country } sectors sectorOther } }';
     this.isLoading = true;
-    this.appService.queryService(query).subscribe((data) => {
-      this.organizations = data.approvedOrganizations.map(organization =>
-        Object.assign(new Organization(), organization)
-      );
+    this.appService.approvedOrganizations.subscribe(values => {
+      this.organizations = values.map(value => Object.assign(new Organization(), value));
       this.applyFilter();
-      this.appService.filter.subscribe(() => this.applyFilter());
+      this.isLoading = false;
     });
+    this.appService.filter.subscribe(() => this.applyFilter());
   }
 
   ngOnInit() {}
@@ -66,7 +58,8 @@ export class TableComponent implements OnInit {
       organization.applyFilter(value, this.appService)
     );
     this.dataSource = new MatTableDataSource<any>(filtered);
-    this.dataSource.paginator = this.paginator;
+    setTimeout(() => this.dataSource.paginator = this.paginator);
+    //this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.isLoading = false;
   }

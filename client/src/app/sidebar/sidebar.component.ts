@@ -114,7 +114,7 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
 
 
   openLookUpDialog(): void {
-    const query = '{ organizations { id name address { country }} }';
+    const query = '{ allOrganizations { id name address { country }} }';
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(LookUpComponent, {
         panelClass: 'mat-dialog--sm',

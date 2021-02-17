@@ -24,5 +24,7 @@
     <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
   </div>
 </div>
-<mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+<div class="table-footer">
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="25" showFirstLastButtons></mat-paginator>
+</div>
 

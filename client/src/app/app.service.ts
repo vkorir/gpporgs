@@ -18,6 +18,7 @@ export class AppService {
   users = new BehaviorSubject<Array<User>>(new Array());
   isShowSearchBar = new BehaviorSubject<boolean>(true);
   organizations = new BehaviorSubject<Array<any>>([]);
+  approvedOrganizations = new BehaviorSubject<Array<any>>([]);
   regions = new Map<number, string>();
   countries = new Map<string, string>();
   affiliations = new Map<number, string>();
@@ -60,8 +61,9 @@ export class AppService {
     const regions = 'regions { id value }';
     const countries = 'countries { code value }';
     const languages = 'languages { code value }';
-    const query = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
-    this.queryService(query).subscribe(data => {
+    const approvedOrganizations = 'approvedOrganizations { id name type typeOther region address { country } sectors sectorOther }';
+    const queries = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} ${approvedOrganizations} }`;
+    this.queryService(queries).subscribe(data => {
       if (!data.message) {
         this.user.next(data.currentUser);
         this.populateDate(data.regions, this.regions);
@@ -70,6 +72,7 @@ export class AppService {
         this.populateDate(data.types, this.types);
         this.populateDate(data.sectors, this.sectors);
         this.populateDate(data.languages, this.languages);
+        this.approvedOrganizations.next(data.approvedOrganizations);
 
         const value = this.filter.getValue();
         value.regions = new Set(this.regions.keys());
@@ -138,6 +141,13 @@ export class AppService {
         return response.data || response;
       })
     );
+  }
+
+  mutation(mutation, variables: any) {
+    return this.apollo.mutate({
+      mutation,
+      variables
+    });
   }
 
   openSnackBar(message: string) {

@@ -157,7 +157,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   reviewSectors(review: any): string {
     const sectors = [];
     review.sectors.forEach(id => {
-      if (id !== this.appService.sectors.size) {
+      if (id < this.appService.sectors.size) {
         sectors.push(this.sector(id));
       } else {
         sectors.push(review.sectorOther);
@@ -381,6 +381,7 @@ export class MainModalComponent implements OnInit, OnChanges {
     }
     const variables = `organization: ${this.appService.queryFy(organization)}, review: ${this.appService.queryFy(review)}`;
     const mutation = `mutation { createReview(${variables}) { id } }`;
+    console.log(mutation);
     this.appService.mutationService(mutation).subscribe(response => {
       this.isSubmitting = response.loading;
       this.appService.openSnackBar('Successfully submitted');

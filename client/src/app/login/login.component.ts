@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
 
     const error = this.route.snapshot.queryParams.error;
     if (error) {
-      this.appService.openSnackBar(error);
+      this.appService.openSnackBar(error || 'An error occurred.');
       this.router.navigateByUrl('/login');
     }
   }
