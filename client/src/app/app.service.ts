@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from './model/user';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
-import { Filter } from './model/filter';
-import { baseUrl } from './baseUrl';
+import { Filter, Organization, User } from './models';
+import { serverUrl } from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +14,10 @@ export class AppService {
   private readonly tokenKey = 'token';
   user = new BehaviorSubject<User>(null);
   filter = new BehaviorSubject<Filter>(new Filter());
-  users = new BehaviorSubject<Array<User>>(new Array());
+  usersAll = new BehaviorSubject<Array<User>>([]);
   isShowSearchBar = new BehaviorSubject<boolean>(true);
-  organizations = new BehaviorSubject<Array<any>>([]);
-  approvedOrganizations = new BehaviorSubject<Array<any>>([]);
+  organizationsApproved = new BehaviorSubject<Array<Organization>>([]);
+  organizationsAll = new BehaviorSubject<Array<Organization>>([]);
   regions = new Map<number, string>();
   countries = new Map<string, string>();
   affiliations = new Map<number, string>();
@@ -29,7 +28,7 @@ export class AppService {
   constructor(private apollo: Apollo, private snackBar: MatSnackBar) {}
 
   loginUrl(): string {
-    return`${baseUrl}/oauth2/authorize/google?redirect_uri=${window.origin}/login`;
+    return`${serverUrl}/oauth2/authorization/google?redirect_uri=${window.origin}/login`;
   }
 
   logout(): void {
@@ -61,8 +60,8 @@ export class AppService {
     const regions = 'regions { id value }';
     const countries = 'countries { code value }';
     const languages = 'languages { code value }';
-    const approvedOrganizations = 'approvedOrganizations { id name type typeOther region address { country } sectors sectorOther }';
-    const queries = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} ${approvedOrganizations} }`;
+    const organizations = 'organizations(approved: true) { id name type { id } typeOther region { id } address { country { code } } sectors { id } sectorOther }';
+    const queries = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} ${organizations} }`;
     this.queryService(queries).subscribe(data => {
       if (!data.message) {
         this.user.next(data.currentUser);
@@ -72,20 +71,20 @@ export class AppService {
         this.populateDate(data.types, this.types);
         this.populateDate(data.sectors, this.sectors);
         this.populateDate(data.languages, this.languages);
-        this.approvedOrganizations.next(data.approvedOrganizations);
+        this.organizationsApproved.next(data.organizations);
 
         const value = this.filter.getValue();
-        value.regions = new Set(this.regions.keys());
-        value.sectors = new Set(this.sectors.keys());
+        value.regionIds = new Set(this.regions.keys());
+        value.sectorIds = new Set(this.sectors.keys());
         this.filter.next(value);
       } else {
-        this.openSnackBar(data.message);
+        this.openSnackBar(data.error);
       }
     });
   }
 
-  private populateDate(data: any, source: Map<any, any>): void {
-    data.map(item => source.set(item.id || item.code, item.value));
+  private populateDate(data: any, map: Map<any, any>): void {
+    data.map(item => map.set(item.id || item.code, item.value));
   }
 
   formatDate(date: string): string {

@@ -4,6 +4,8 @@ import { MatDialog } from '@angular/material';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { ManageOrganizationsComponent } from './manage-organizations/manage-organizations.component';
+import { Organization, User } from '../models';
+import { deepCopy } from '../util';
 
 @Component({
   selector: 'app-admin',
@@ -52,7 +54,8 @@ export class AdminComponent implements OnInit {
     this.actions[index].isLoading = true;
     const query = '{ users { id email firstName lastName isAdmin created lastLogin numberOfLogin hasAccess } }';
     this.appService.queryService(query).subscribe(data => {
-      this.appService.users.next(data.users);
+      const users = deepCopy<Array<User>>(data.users);
+      this.appService.usersAll.next(users);
       this.actions[index].isLoading = false;
       this.dialog.open(ManageUsersComponent, {
         panelClass: 'mat-dialog--md',
@@ -62,9 +65,10 @@ export class AdminComponent implements OnInit {
 
   manageOrganizations(index: number): void {
     this.actions[index].isLoading = true;
-    const query = '{ allOrganizations { id name address { country } created approved }}';
+    const query = '{ organizations(approved: false) { id name address { country { code } } created approved }}';
     this.appService.queryService(query).subscribe(data => {
-      this.appService.organizations.next(data.allOrganizations);
+      const organizations = deepCopy<Array<Organization>>(data.organizations);
+      this.appService.organizationsAll.next(organizations);
       this.actions[index].isLoading = false;
       this.dialog.open(ManageOrganizationsComponent, {
         panelClass: 'mat-dialog--md'

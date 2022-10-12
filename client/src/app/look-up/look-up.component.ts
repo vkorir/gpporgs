@@ -4,8 +4,9 @@ import { MatDialog, MatDialogRef } from "@angular/material";
 import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
-import { MainModalComponent } from "../main-modal/main-modal.component";
-import { Organization } from "../model/organization";
+import { MainModalComponent } from "src/app/main-modal/main-modal.component";
+import { Organization } from "src/app/models";
+import { deepCopy } from "../util";
 
 @Component({
   selector: "app-look-up",
@@ -25,7 +26,7 @@ export class LookUpComponent implements OnInit {
         if (!value || value.length < 2) {
           return [];
         }
-        return this.appService.approvedOrganizations.getValue().filter(organization =>
+        return this.appService.organizationsApproved.getValue().filter(organization =>
           organization.name.toLowerCase().startsWith(value.toLowerCase())
         );
       })
@@ -34,33 +35,30 @@ export class LookUpComponent implements OnInit {
 
   ngOnInit() {}
 
-  country(id: string): string {
-    if (!this.appService.countries.has(id)) {
+  country(code: string): string {
+    if (!this.appService.countries.has(code)) {
       return null;
     }
-    return ` (${this.appService.countries.get(id)})`;
+    return ` (${this.appService.countries.get(code)})`;
   }
 
   fetchOrganization(id: number) {
     // tslint:disable-next-line:max-line-length
-    const info = 'id name region phone email website description affiliations type typeOther sectors sectorOther approved created';
-    const address = 'address { id street city state zip country }';
-    const contacts = 'contacts { id name role phone email }';
-    const query = `{ organization(id: ${id}) { ${info} ${address} ${contacts} }}`;
+    const orgInfo = 'id name region { id } phone email website description affiliations { id } type { id } typeOther sectors { id } sectorOther approved created';
+    const orgAddress = 'address { id street city state zip country { code } }';
+    const orgContacts = 'contacts { id name role phone email }';
+    const query = `{ organization(id: ${id}) { ${orgInfo} ${orgAddress} ${orgContacts} }}`;
     this.appService.queryService(query).subscribe(({ organization }) => {
       this.openReviewDialog(organization);
     });
   }
 
-  openReviewDialog(organization: any) {
-    if (!organization || !organization.id) {
-      organization = new Organization();
-    }
+  openReviewDialog(org: any) {
     this.dialogRef.close();
     this.dialog.open(MainModalComponent, {
       panelClass: "mat-dialog--md",
       disableClose: true,
-      data: { organization, disableControl: false },
+      data: { organization: deepCopy<Organization>(org), disableControl: false },
     });
   }
 }

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
 import { Observable } from 'rxjs';
 import { Router} from '@angular/router';
-import { User } from '../model/user';
 import { FormControl } from '@angular/forms';
+import { User } from '../models';
 
 @Component({
   selector: 'app-header',
@@ -26,13 +26,13 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {}
 
-  private updateSearchString(): void {
+  private updateSearchString() {
     const value = this.appService.filter.getValue();
     value.searchString = this.searchControl.value.trim().toLowerCase();
     this.appService.filter.next(value);
   }
 
-  login(): void {
+  login() {
     window.location.assign(this.appService.loginUrl());
   }
 

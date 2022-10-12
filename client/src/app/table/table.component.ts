@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { AppService } from "../app.service";
+import { AppService } from "src/app/app.service";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
-import { Organization } from "../model/organization";
+import { Filter, Organization } from "src/app/models";
 import { MainModalComponent } from "../main-modal/main-modal.component";
+import { applyFilterToOrg, deepCopy } from "../util";
 
 @Component({
   selector: "app-table",
@@ -11,7 +12,7 @@ import { MainModalComponent } from "../main-modal/main-modal.component";
 })
 export class TableComponent implements OnInit {
   displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<Organization>;
   organizations: Organization[] = [];
 
   isLoading: boolean;
@@ -21,8 +22,8 @@ export class TableComponent implements OnInit {
 
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.isLoading = true;
-    this.appService.approvedOrganizations.subscribe(values => {
-      this.organizations = values.map(value => Object.assign(new Organization(), value));
+    this.appService.organizationsApproved.subscribe(orgs => {
+      this.organizations = deepCopy<Organization[]>(orgs);
       this.applyFilter();
       this.isLoading = false;
     });
@@ -31,47 +32,37 @@ export class TableComponent implements OnInit {
 
   ngOnInit() {}
 
-  type(organization: Organization): string {
-    if (organization.type === this.appService.types.size) {
-      return organization.typeOther;
+  type(org: Organization): string {
+    if (org.type.id == this.appService.types.size) {
+      return org.typeOther;
     }
-    return this.appService.types.get(organization.type);
+    return org.type.value;
   }
 
-  country(organization: Organization): string {
-    return this.appService.countries.get(organization.address.country);
-  }
-
-  sectors(organization: Organization): string {
-    const sectors = organization.sectors.map(id =>
-      this.appService.sectors.get(id)
-    );
-    if (!!organization.sectorOther) {
-      sectors.push(organization.sectorOther);
+  sectors(org: Organization): string {
+    const sectors = org.sectors.map(sector => sector.value);
+    if (!!org.sectorOther) {
+      sectors.push(org.sectorOther);
     }
     return sectors.join("\n");
   }
 
   private applyFilter(): void {
-    const value = this.appService.filter.getValue();
-    const filtered = this.organizations.filter(organization =>
-      organization.applyFilter(value, this.appService)
-    );
-    this.dataSource = new MatTableDataSource<any>(filtered);
+    const filter = deepCopy<Filter>(this.appService.filter.getValue());
+    const filtered = this.organizations.filter(org => applyFilterToOrg(filter, org));
+    this.dataSource = new MatTableDataSource<Organization>(filtered);
     setTimeout(() => this.dataSource.paginator = this.paginator);
-    //this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.isLoading = false;
   }
 
   openDetailsModal(id: number) {
     // tslint:disable-next-line:max-line-length
-    const organization =
-      '{ id name description region phone email website affiliations type typeOther sectors sectorOther approved contacts { id name role email phone } address { id street city state zip country } created }';
+    const organization = '{ id name description region { id value } phone email website affiliations { id value } type { id value } typeOther sectors { id value } sectorOther approved contacts { id name role email phone } address { id street city state zip country { code value } } created }';
     // tslint:disable-next-line:max-line-length
-    const review =
-      '{ id created region languages address { id street city state zip country } sectors sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewerId reviewer { id firstName email } anonymous }';
-    const query = `{ organization(id: ${id}) ${organization} reviews (organizationId: ${id}) ${review} }`;
+    const review = '{ id created region { id value } languages { code value } address { id street city state zip country { code value } } sectors { id value } sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewer { id firstName email } anonymous }';
+    const query = `{ organization(id: ${id}) ${organization} reviews (orgId: ${id}) ${review} }`;
     this.appService.queryService(query).subscribe((data) => {
       this.dialog.open(MainModalComponent, {
         panelClass: "mat-dialog--md",

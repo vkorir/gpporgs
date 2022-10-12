@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
-import { User } from "../../model/user";
-import { AppService } from "../../app.service";
+import { User } from "src/app/models";
+import { AppService } from "src/app/app.service";
 import { MatPaginator } from "@angular/material/paginator";
 import {
   animate,
@@ -10,6 +10,7 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
+import { deepCopy } from "src/app/util";
 
 @Component({
   selector: "app-all-users",
@@ -43,8 +44,8 @@ export class ManageUsersComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private appService: AppService) {
-    this.appService.users.subscribe(users => {
-      this.dataSource = new MatTableDataSource<User>(users);
+    this.appService.usersAll.subscribe(users => {
+      this.dataSource = new MatTableDataSource<User>(deepCopy<Array<User>>(users));
       setTimeout(() => this.dataSource.paginator = this.paginator);
     });
   }
@@ -71,19 +72,17 @@ export class ManageUsersComponent implements OnInit {
       this.appService.openSnackBar("Cannot change your own roles");
       return;
     }
-    const mutation = `mutation { updateUser(user: ${this.appService.queryFy({id, isAdmin})}) { id } }`;
+    const mutation = `mutation { updateUser(user: ${this.appService.queryFy({id, isAdmin})}) { id isAdmin } }`;
     this.appService.mutationService(mutation).subscribe(({ updateUser }) => {
       if (updateUser && updateUser.id) {
-        const users = this.appService.users.getValue().map(value => {
-          if (value.id == updateUser.id) {
-            const user = Object.assign(new User(), value);
-            user.isAdmin = !user.isAdmin;
+        const users = deepCopy<Array<User>>(this.appService.usersAll.getValue());
+        users.forEach(user => {
+          if (user.id == updateUser.id) {
+            user.isAdmin = updateUser.isAdmin;
             this.expandedUser = user;
-            return user;
           }
-          return value;
         });
-        this.appService.users.next(users);
+        this.appService.usersAll.next(users);
         this.appService.openSnackBar(`Updated roles for ${this.expandedUser.firstName || this.expandedUser.email}`);
       } else {
         this.appService.openSnackBar( "An error occurred");

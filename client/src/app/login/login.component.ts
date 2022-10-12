@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
       }
     });
     const token = this.route.snapshot.queryParams.token;
-    if (token) {
+    if (!!token) {
       this.appService.setToken(token);
     }
     if (this.appService.tokenExists()) {

@@ -1,11 +1,11 @@
 import { Component, ElementRef, Inject, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Organization } from '../model/organization';
-import { AppService } from '../app.service';
+import { Contact, Organization, Review } from 'src/app/models';
+import { AppService } from 'src/app/app.service';
 import { MAT_DIALOG_DATA, MatAutocomplete, MatAutocompleteSelectedEvent, MatDialogRef, MatSnackBar } from '@angular/material';
-import { Review } from '../model/review';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { deepCopy } from '../util';
 
 @Component({
   selector: 'app-main-modal',
@@ -43,6 +43,8 @@ export class MainModalComponent implements OnInit, OnChanges {
   orgReviewBtnText = 'Add Review for This Organization';
   orgInfoBtnText = 'Organization Info';
 
+  numContacts = 3;
+
   // tslint:disable-next-line:max-line-length
   reviewEditableFields = ['country', 'city', 'region', 'languages', 'sectors', 'sectorOther', 'cost', 'stipend', 'workDone', 'evaluation', 'typicalDay', 'difficulties', 'safety', 'responsiveness', 'duration', 'other'];
 
@@ -54,7 +56,7 @@ export class MainModalComponent implements OnInit, OnChanges {
               private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.disableControl = data.disableControl;
-    this.organization = this.buildFormGroup(data.organization, data.disableControl) as FormGroup;
+    this.organization = this.buildFormGroup(deepCopy<Organization>(data.organization), data.disableControl) as FormGroup;
     this.review = this.buildFormGroup(new Review(), data.disableControl) as FormGroup;
     this.regions = [...this.appService.regions.keys()];
     this.countries = [...this.appService.countries.keys()];
@@ -62,7 +64,7 @@ export class MainModalComponent implements OnInit, OnChanges {
     this.types = [...this.appService.types.keys()];
     this.sectors = [...this.appService.sectors.keys()];
     this.languages = [...this.appService.languages.keys()];
-    this.contacts = [...Array(Organization.numContacts).keys()];
+    this.contacts = [3];
     if (data.reviews) {
       this.reviews = data.reviews.map(review => {
         this.reviewControls.push(this.buildFormGroup(review, true));
@@ -193,7 +195,7 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   isAnonymousReview(review: Review): boolean {
-    return !!review.reviewerId && (this.appService.user.getValue().isAdmin || !review.anonymous);
+    return !!review.reviewer.id && (this.appService.user.getValue().isAdmin || !review.anonymous);
   }
 
   formatSliderLabel(value: number): string | number {
@@ -231,7 +233,7 @@ export class MainModalComponent implements OnInit, OnChanges {
       });
       return target;
     }
-    if (Array.isArray(source) && source.length == Organization.numContacts) {
+    if (Array.isArray(source) && source.length == this.numContacts) {
       const items = [];
       for (const contact of source) {
         items.push(this.buildFormGroup(contact, disableControl));
@@ -280,7 +282,7 @@ export class MainModalComponent implements OnInit, OnChanges {
 
   saveOrganization(): void {
     this.organization.markAsUntouched();
-    const mutation = `mutation { updateOrganization(organization: ${this.appService.queryFy(this.organization.value)}) { id name }}`;
+    const mutation = `mutation { updateOrganization(org: ${this.appService.queryFy(this.organization.value)}) { id name }}`;
     this.appService.mutationService(mutation).subscribe(response => {
       if (response.updateOrganization.id) {
         this.appService.openSnackBar(`${response.updateOrganization.name} successfully updated.`);
@@ -298,12 +300,12 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   canEditReview(review: Review): boolean {
-    return this.appService.user.getValue().isAdmin || this.appService.user.getValue().id === review.reviewerId;
+    return this.appService.user.getValue().isAdmin || this.appService.user.getValue().id === review.reviewer.id;
   }
 
   editReview(review: Review): void {
     this.review = this.buildFormGroup(review, false) as FormGroup;
-    this.selectedLanguages = review.languages;
+    // this.selectedLanguages = review.languages;
     this.disableControl = false;
     this.isEditReview = true;
   }
@@ -313,7 +315,7 @@ export class MainModalComponent implements OnInit, OnChanges {
     this.disableControl = true;
     this.isEditReview = false;
     setTimeout(() => this.updateReviewFields(), 1000);
-    const mutation = `mutation { updateReview(review: ${this.appService.queryFy(this.review.value)}) { id }}`;
+    const mutation = `mutation { updateReview(rev: ${this.appService.queryFy(this.review.value)}) { id }}`;
     this.appService.mutationService(mutation).subscribe(response => {
       if (response.updateReview.id) {
         this.appService.openSnackBar('Review successfully updated.');

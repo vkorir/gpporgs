@@ -4,11 +4,11 @@ import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { baseUrl } from './baseUrl';
+import { serverUrl } from './util';
 
 export function createApollo(httpLink: HttpLink) {
   return {
-    link: httpLink.create({ uri: `${baseUrl}/graphql` }),
+    link: httpLink.create({ uri: `${serverUrl}/graphql` }),
     cache: new InMemoryCache()
   };
 }

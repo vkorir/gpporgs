@@ -3,7 +3,8 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { AppService } from "../../app.service";
 import { FormControl } from "@angular/forms";
-import { deepCopy } from 'deep-copy-ts';
+import { Organization } from "src/app/models";
+import { deepCopy } from "src/app/util";
 
 @Component({
   selector: "app-manage-organizations",
@@ -11,7 +12,7 @@ import { deepCopy } from 'deep-copy-ts';
   styleUrls: ["./manage-organizations.component.scss"],
 })
 export class ManageOrganizationsComponent implements OnInit {
-  organizations: Array<any> = new Array();
+  organizations: Array<Organization> = [];
   dataSource: MatTableDataSource<any>;
   displayedColumns = ["name", "location", "created", "approved"];
 
@@ -20,9 +21,9 @@ export class ManageOrganizationsComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private appService: AppService) {
-    this.appService.organizations.getValue().map(value => this.organizations.push(deepCopy(value)));
-    this.approvedControl.valueChanges.subscribe(() => this.applyFilter(deepCopy(this.organizations)));
-    this.dataSource = new MatTableDataSource(deepCopy(this.organizations));
+    this.organizations = deepCopy<Array<Organization>>(this.appService.organizationsAll.getValue());
+    this.approvedControl.valueChanges.subscribe(() => this.applyFilter(this.organizations));
+    this.dataSource = new MatTableDataSource(this.organizations);
     setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
@@ -39,22 +40,24 @@ export class ManageOrganizationsComponent implements OnInit {
 
   applyFilter(filtered: Array<any>): void {
     filtered = filtered.filter(value => this.approvedControl.value || !value.approved);
-    this.dataSource.connect().next(filtered);
+    this.dataSource.connect().next(deepCopy<Array<Organization>>(filtered));
   }
 
-  toggleApproved(id: number, approved: boolean): void {
-    const input = this.appService.queryFy({ id, approved });
-    const mutation = `mutation { updateOrganization(organization: ${input}) { id, name, approved } }`;
+  toggleApproved(org: Organization, approved: boolean): void {
+    const organization = deepCopy<Organization>(org);
+    organization.approved = approved;
+    org.approved = approved;
+    const mutation = `mutation { updateOrganization(org: ${this.appService.queryFy(organization)}) { id name approved } }`;
     this.appService.mutationService(mutation).subscribe(({ updateOrganization }) => {
       if (updateOrganization && updateOrganization.id) {
-        const updated = this.organizations.map(value => {
-          const organization = deepCopy(value);
-          if (organization.id == updateOrganization.id) {
-            organization.approved = updateOrganization.approved;
+        const organizations = deepCopy<Array<Organization>>(this.organizations);
+        organizations.forEach(org => {
+          if (org.id == updateOrganization.id) {
+            org.approved = updateOrganization.approved;
           }
-          return organization;
         });
-        this.applyFilter(updated);
+        // may need to update behaviorsubject.
+        this.applyFilter(organizations);
         if (approved) {
           this.appService.openSnackBar(`${updateOrganization.name} is now approved.`);
         } else {

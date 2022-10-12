@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AppService } from '../app.service';
+import { AppService } from 'src/app/app.service';
 import { MatDialog, MatPaginator, MatSort } from '@angular/material';
-import { Area } from '../model/area';
 import { FormBuilder } from '@angular/forms';
 import { LookUpComponent } from '../look-up/look-up.component';
+import { Area, Filter } from 'src/app/models';
+import { deepCopy } from '../util';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,8 +19,8 @@ export class SidebarComponent implements OnInit {
   areaControl = this.fb.control(Area.ALL);
   masterSelectedRegion: boolean;
   masterSelectedSector: boolean;
-  checklistRegion = [];
-  checklistSector = [];
+  checklistRegion:any[] = [];
+  checklistSector:any[] = [];
   checkedRegions = new Set<number>();
   checkedSectors = new Set<number>();
 
@@ -30,9 +31,9 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
     this.masterSelectedRegion = true;
     this.masterSelectedSector = true;
     this.areaControl.valueChanges.subscribe(() => {
-      const value = this.appService.filter.getValue();
-      value.area = this.areaControl.value;
-      this.appService.filter.next(value);
+      const filter = deepCopy<Filter>(this.appService.filter.getValue());
+      filter.area = this.areaControl.value;
+      this.appService.filter.next(filter);
     });
     appService.regions.forEach((value, id) => {
       this.checklistRegion.push({ id, value, isSelected: true });
@@ -89,9 +90,9 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   private updateFilterRegion(): void {
-    const value = this.appService.filter.getValue();
-    value.regions = new Set(this.checkedRegions);
-    this.appService.filter.next(value);
+    const filter = deepCopy<Filter>(this.appService.filter.getValue());
+    filter.regionIds = new Set(this.checkedRegions);
+    this.appService.filter.next(filter);
   }
 
   onSectorChange(index: number): void {
@@ -107,14 +108,14 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   private updateFilterSectors(): void {
-    const value = this.appService.filter.getValue();
-    value.sectors = new Set<number>(this.checkedSectors);
-    this.appService.filter.next(value);
+    const filter = deepCopy<Filter>(this.appService.filter.getValue());
+    filter.sectorIds = new Set<number>(this.checkedSectors);
+    this.appService.filter.next(filter);
   }
 
 
   openLookUpDialog(): void {
-    const query = '{ allOrganizations { id name address { country }} }';
+    const query = '{ organizations { id name address { country { code } }} }';
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(LookUpComponent, {
         panelClass: 'mat-dialog--sm',
