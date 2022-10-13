@@ -20,20 +20,32 @@ export class TableComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
+  private readonly organizationsQeury = '{ organizations(approved: true) { id name type { id value } typeOther region { id } address { country { code value } } sectors { id value } sectorOther } }';
+
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.isLoading = true;
+    const filter = this.appService.filter.getValue().clone();
+    filter.regionIds = new Set(this.appService.regions.map(region => region.id));
+    filter.sectorIds = new Set(this.appService.sectors.map(sector => sector.id));
+    this.appService.filter.next(filter);
+    this.appService.filter.subscribe(() => this.applyFilter());
+
     this.appService.organizationsApproved.subscribe(orgs => {
       this.organizations = deepCopy<Organization[]>(orgs);
       this.applyFilter();
-      this.isLoading = false;
     });
-    this.appService.filter.subscribe(() => this.applyFilter());
+    this.appService.queryService(this.organizationsQeury).subscribe(data => {
+      if (data.organizations) {
+        this.appService.organizationsApproved.next(deepCopy<Organization[]>(data.organizations));
+        this.isLoading = false;
+      }
+    });
   }
 
   ngOnInit() {}
 
   type(org: Organization): string {
-    if (org.type.id == this.appService.types.size) {
+    if (org.type.id == this.appService.types.length) {
       return org.typeOther;
     }
     return org.type.value;
@@ -48,8 +60,7 @@ export class TableComponent implements OnInit {
   }
 
   private applyFilter(): void {
-    const filter = deepCopy<Filter>(this.appService.filter.getValue());
-    const filtered = this.organizations.filter(org => applyFilterToOrg(filter, org));
+    const filtered = this.organizations.filter(org => applyFilterToOrg(this.appService.filter.getValue(), org));
     this.dataSource = new MatTableDataSource<Organization>(filtered);
     setTimeout(() => this.dataSource.paginator = this.paginator);
     this.dataSource.paginator = this.paginator;

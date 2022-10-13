@@ -104,6 +104,16 @@ export class Filter {
     regionIds = new Set<number>();
     sectorIds = new Set<number>();
     searchString = '';
+
+	clone() {
+		const clone = new Filter();
+		clone.area = this.area;
+		clone.sort = this.sort;
+		clone.regionIds = new Set(this.regionIds);
+		clone.sectorIds = new Set(this.sectorIds);
+		clone.searchString = this.searchString;
+		return clone;
+	}
 }
 
 export enum Area {

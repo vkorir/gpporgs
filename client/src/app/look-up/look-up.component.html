@@ -13,7 +13,7 @@
       <mat-option *ngFor="let organization of lookUpResults | async" (click)="fetchOrganization(organization.id)">
         {{ organization.name }}{{ country(organization.address.country.code) }}
       </mat-option>
-      <mat-option id="option-create-org" (click)="openReviewDialog(new Organization())">
+      <mat-option id="option-create-org" (click)="openReviewDialog(null)">
         Create New Organization
       </mat-option>
     </mat-autocomplete>

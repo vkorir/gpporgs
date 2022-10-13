@@ -3,40 +3,34 @@ import { Area, Filter, Organization } from "./models";
 export const serverUrl = window.origin.includes('4200') ? 'http://localhost:8080' : window.origin;
 
 export function applyFilterToOrg(filter: Filter, org: Organization): boolean {
-  const subString = filter.searchString;
-  if (subString) {
-    const targetStrings = [org.name, org.type.value, org.region.value, ...org.sectors.map(s => s.value), org.address.country.value];
-    targetStrings.forEach(str => {
-      if (!!str && str.toLowerCase().includes(filter.searchString)) {
-        return true;
+  let searchMatch = !filter.searchString;
+  let areaMatch = filter.area == Area.ALL;
+  let regionMatch = false;
+  let sectorMatch = org.sectors.length == 0;
+  if (filter.searchString) {
+    const targetStrings = [org.name, org.type.value, org.typeOther, org.region.value, org.address.country.value, org.sectorOther, ...org.sectors.map(s => s.value)];
+    for (let idx = 0; idx < targetStrings.length; idx++) {
+      if (!!targetStrings[idx] && targetStrings[idx].toLowerCase().includes(filter.searchString)) {
+        searchMatch = true;
+        break;
       }
-    });
-    return false;
+    }
   }
-
-  let filterArea = false;
-  let filterRegions = false;
-  let filterSectors = false;
-  if (filter.area == Area.ALL) {
-    filterArea = true;
-  } else if (filter.area == Area.INTERNATIONAL && org.address.country.code != 'US') {
-    filterArea = true;
+  if (filter.area == Area.INTERNATIONAL && org.address.country.code != 'US') {
+    areaMatch = true;
   } else if (filter.area == Area.DOMESTIC && org.address.country.code == 'US') {
-    filterArea = true;
+    areaMatch = true;
   }
   if (!org.region || (filter.regionIds.has(org.region.id))) {
-    filterRegions = true;
+    regionMatch = true;
   }
-  if (org.sectors.length == 0) {
-    filterSectors = true;
-  } else {
-    org.sectors.forEach(sector => {
-      if (filter.sectorIds.has(sector.id)) {
-        filterSectors = true;
-      }
-    });
+  for (let idx = 0; idx < org.sectors.length; idx++) {
+    if (filter.sectorIds.has(org.sectors[idx].id)) {
+      sectorMatch = true;
+      break;
+    }
   }
-  return filterArea && filterRegions && filterSectors;
+  return searchMatch && areaMatch && regionMatch && sectorMatch;
 }
 
 export function deepCopy<Tp>(tgt: Tp): Tp {
@@ -44,8 +38,10 @@ export function deepCopy<Tp>(tgt: Tp): Tp {
   let ptn: number = 0;
   if (tgt === null) {
     cp = tgt;
-  } else if (tgt instanceof Date) {
-    cp = new Date((tgt as any).getTime()) as any;
+  } else if (tgt instanceof Set) {
+    cp = new Set() as any;
+    (tgt as any).forEach(elem => { (cp as any).add(elem); });
+    cp = (cp as any).map((n: any) => deepCopy<any>(n));
   } else if (Array.isArray(tgt)) {
     cp = [] as any;
     (tgt as any[]).forEach((v, i, arr) => { (cp as any).push(v); });

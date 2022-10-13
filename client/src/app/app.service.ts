@@ -4,8 +4,8 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
-import { Filter, Organization, User } from './models';
-import { serverUrl } from './util';
+import { Affiliation, Contact, Country, Filter, Language, Organization, Region, Sector, Type, User } from './models';
+import { deepCopy, serverUrl } from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +18,12 @@ export class AppService {
   isShowSearchBar = new BehaviorSubject<boolean>(true);
   organizationsApproved = new BehaviorSubject<Array<Organization>>([]);
   organizationsAll = new BehaviorSubject<Array<Organization>>([]);
-  regions = new Map<number, string>();
-  countries = new Map<string, string>();
-  affiliations = new Map<number, string>();
-  types = new Map<number, string>();
-  sectors = new Map<number, string>();
-  languages = new Map<string, string>();
+  affiliations: Affiliation[] = [];
+  sectors: Sector[] = [];
+  regions: Region[] = [];
+  types: Type[] = [];
+  languages: Language[] = [];
+  countries: Country[] = [];
 
   constructor(private apollo: Apollo, private snackBar: MatSnackBar) {}
 
@@ -60,31 +60,20 @@ export class AppService {
     const regions = 'regions { id value }';
     const countries = 'countries { code value }';
     const languages = 'languages { code value }';
-    const organizations = 'organizations(approved: true) { id name type { id } typeOther region { id } address { country { code } } sectors { id } sectorOther }';
-    const queries = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} ${organizations} }`;
+    const queries = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
     this.queryService(queries).subscribe(data => {
       if (!data.message) {
+        this.affiliations = data.affiliations;
+        this.regions = data.regions;
+        this.sectors = data.sectors;
+        this.types = data.types;
+        this.countries = data.countries;
+        this.languages = data.languages;
         this.user.next(data.currentUser);
-        this.populateDate(data.regions, this.regions);
-        this.populateDate(data.countries, this.countries);
-        this.populateDate(data.affiliations, this.affiliations);
-        this.populateDate(data.types, this.types);
-        this.populateDate(data.sectors, this.sectors);
-        this.populateDate(data.languages, this.languages);
-        this.organizationsApproved.next(data.organizations);
-
-        const value = this.filter.getValue();
-        value.regionIds = new Set(this.regions.keys());
-        value.sectorIds = new Set(this.sectors.keys());
-        this.filter.next(value);
       } else {
         this.openSnackBar(data.error);
       }
     });
-  }
-
-  private populateDate(data: any, map: Map<any, any>): void {
-    data.map(item => map.set(item.id || item.code, item.value));
   }
 
   formatDate(date: string): string {

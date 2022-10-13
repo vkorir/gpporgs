@@ -16,9 +16,9 @@
 <p class="overflow-y" id="filter-regions">
   <mat-checkbox class="bold" color ="primary" fxLayout="row"[checked]="masterSelectedRegion" (change)="toggleSelectAllRegions()" > Select / Deselect All</mat-checkbox>
   <mat-checkbox color="primary" fxLayout="row"
-                *ngFor="let item of checklistRegion; let i = index"
+                *ngFor="let item of checklistRegion; let idx = index"
                 [checked]="item.isSelected"
-                (change)="onRegionChange(i)">
+                (change)="onRegionChange(idx)">
     {{ item.value }}
   </mat-checkbox>
   
@@ -27,9 +27,9 @@
 <p class="overflow-y" id="filter-sectors">
   <mat-checkbox class="bold" color ="primary" fxLayout="row" [checked]="masterSelectedSector" (change)="toggleSelectAllSectors()" > Select / Deselect All</mat-checkbox>
   <mat-checkbox color="primary" fxLayout="row"
-                *ngFor="let item of checklistSector; let i = index"
+                *ngFor="let item of checklistSector; let idx = index"
                 [checked]="item.isSelected"
-                (change)="onSectorChange(i)">
+                (change)="onSectorChange(idx)">
     {{ item.value }}
   </mat-checkbox>
 </p>
