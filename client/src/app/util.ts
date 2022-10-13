@@ -49,7 +49,11 @@ export function deepCopy<Tp>(tgt: Tp): Tp {
   } else if ((typeof(tgt) === 'object') && (tgt !== {})) {
     cp = { ...(tgt as Object) } as Tp;
     Object.keys(cp).forEach(k => {
-      (cp as any)[k] = deepCopy<any>((cp as any)[k]);
+      if (k == 'id') {
+        (cp as any)[k] = parseInt(tgt[k]);
+      } else {
+        (cp as any)[k] = deepCopy<any>((cp as any)[k]);
+      }
     });
   } else {
     cp = tgt;

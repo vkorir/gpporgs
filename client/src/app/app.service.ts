@@ -63,31 +63,31 @@ export class AppService {
     const queries = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
     this.queryService(queries).subscribe(data => {
       if (!data.message) {
-        this.affiliations = data.affiliations;
-        this.regions = data.regions;
-        this.sectors = data.sectors;
-        this.types = data.types;
-        this.countries = data.countries;
-        this.languages = data.languages;
-        this.user.next(data.currentUser);
+        this.affiliations = deepCopy(data.affiliations);
+        this.regions = deepCopy(data.regions);
+        this.sectors = deepCopy(data.sectors);
+        this.types = deepCopy(data.types);
+        this.countries = deepCopy(data.countries);
+        this.languages = deepCopy(data.languages);
+        this.user.next(deepCopy(data.currentUser));
       } else {
         this.openSnackBar(data.error);
       }
     });
   }
 
-  formatDate(date: string): string {
-    if (!date) {
+  formatDate(dateStr: string): string {
+    if (!dateStr) {
       return '-';
     }
-    const lastLogin = new Date(date);
+    const date = new Date(dateStr);
     const formatNum = value => { return value < 10 ? `0${value}` : value; }
-    let month = formatNum(lastLogin.getMonth() + 1);
-    const day = formatNum(lastLogin.getDate());
-    const year = formatNum(lastLogin.getFullYear());
-    const hours = formatNum(lastLogin.getHours());
-    const minutes = formatNum(lastLogin.getMinutes());
-    return `${month}/${day}/${year} ${hours}:${minutes}`;
+    let month = formatNum(date.getMonth() + 1);
+    const day = formatNum(date.getDate());
+    const year = formatNum(date.getFullYear());
+    const hours = formatNum(date.getHours());
+    const minutes = formatNum(date.getMinutes());
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   }
 
   queryFy(object: any): any {

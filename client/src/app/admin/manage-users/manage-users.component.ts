@@ -75,7 +75,7 @@ export class ManageUsersComponent implements OnInit {
     const mutation = `mutation { updateUser(user: ${this.appService.queryFy({id, isAdmin})}) { id isAdmin } }`;
     this.appService.mutationService(mutation).subscribe(({ updateUser }) => {
       if (updateUser && updateUser.id) {
-        const users = deepCopy<Array<User>>(this.appService.usersAll.getValue());
+        const users = deepCopy<User[]>(this.appService.usersAll.getValue());
         users.forEach(user => {
           if (user.id == updateUser.id) {
             user.isAdmin = updateUser.isAdmin;

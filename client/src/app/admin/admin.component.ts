@@ -54,7 +54,7 @@ export class AdminComponent implements OnInit {
     this.actions[index].isLoading = true;
     const query = '{ users { id email firstName lastName isAdmin created lastLogin numberOfLogin hasAccess } }';
     this.appService.queryService(query).subscribe(data => {
-      const users = deepCopy<Array<User>>(data.users);
+      const users = deepCopy<User[]>(data.users);
       this.appService.usersAll.next(users);
       this.actions[index].isLoading = false;
       this.dialog.open(ManageUsersComponent, {
@@ -65,9 +65,9 @@ export class AdminComponent implements OnInit {
 
   manageOrganizations(index: number): void {
     this.actions[index].isLoading = true;
-    const query = '{ organizations(approved: false) { id name address { country { code } } created approved }}';
+    const query = '{ organizations(approved: false) { id name address { id country { code value } } type { id value } region { id value } created approved }}';
     this.appService.queryService(query).subscribe(data => {
-      const organizations = deepCopy<Array<Organization>>(data.organizations);
+      const organizations = deepCopy<Organization[]>(data.organizations);
       this.appService.organizationsAll.next(organizations);
       this.actions[index].isLoading = false;
       this.dialog.open(ManageOrganizationsComponent, {

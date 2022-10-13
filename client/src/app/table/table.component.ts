@@ -20,7 +20,7 @@ export class TableComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  private readonly organizationsQeury = '{ organizations(approved: true) { id name type { id value } typeOther region { id } address { country { code value } } sectors { id value } sectorOther } }';
+  private readonly organizationsQeury = '{ organizations(approved: true) { id name type { id value } typeOther region { id value } address { id country { code value } } sectors { id value } sectorOther } }';
 
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.isLoading = true;

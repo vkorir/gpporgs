@@ -1,3 +1,5 @@
+import { deepCopy } from "./util";
+
 export class User {
     id: number;
 	email: string;
@@ -26,7 +28,11 @@ export class Organization {
 	sectorOther: string;
 	approved: boolean;
 	contacts: Contact[];
-	created: Date;
+	created: string;
+
+	prepare() {
+		delete this['created'];
+	}
 }
 
 export class Review {

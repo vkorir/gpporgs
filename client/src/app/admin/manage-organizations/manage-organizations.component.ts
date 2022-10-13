@@ -29,13 +29,8 @@ export class ManageOrganizationsComponent implements OnInit {
 
   ngOnInit() {}
 
-  country(id: string): string {
-    return this.appService.countries.get(id);
-  }
-
   formatDate(creationDate: string): string {
-    const date = this.appService.formatDate(creationDate);
-    return date.substring(0, date.length - 6);
+    return this.appService.formatDate(creationDate);
   }
 
   applyFilter(filtered: Array<any>): void {
@@ -47,12 +42,13 @@ export class ManageOrganizationsComponent implements OnInit {
     const organization = deepCopy<Organization>(org);
     organization.approved = approved;
     org.approved = approved;
+    delete organization['created'];
     const mutation = `mutation { updateOrganization(org: ${this.appService.queryFy(organization)}) { id name approved } }`;
     this.appService.mutationService(mutation).subscribe(({ updateOrganization }) => {
       if (updateOrganization && updateOrganization.id) {
         const organizations = deepCopy<Array<Organization>>(this.organizations);
         organizations.forEach(org => {
-          if (org.id == updateOrganization.id) {
+          if (org.id == parseInt(updateOrganization.id)) {
             org.approved = updateOrganization.approved;
           }
         });

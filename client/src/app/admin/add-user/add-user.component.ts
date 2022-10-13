@@ -20,7 +20,7 @@ export class AddUserComponent implements OnInit {
 
   addUser(): void {
     const user = {
-      id: null,
+      id: 0,
       email: `${this.inputControl.value}${this.domain}`,
       hasAccess: true
     };
