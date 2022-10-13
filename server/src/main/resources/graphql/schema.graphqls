@@ -1,0 +1,210 @@
+type Query {
+    # User Queries
+    currentUser: UserInfo!
+    user(id: ID!): UserInfo
+    users: [UserInfo!]
+    # Organization Queries
+    organization(id: ID!): OrganizationInfo
+	organizations(approved: Boolean!): [OrganizationInfo!]
+	# Review Queries
+	review(id: ID!): ReviewInfo
+	reviews(orgId: ID!): [ReviewInfo!]
+    # Other
+    affiliations: [Affiliation!]
+    countries: [Country!]
+    languages: [Language!]
+    regions: [Region!]
+    sectors: [Sector!]
+    types: [Type!]
+}
+
+type Mutation {
+    # User Mutations
+    createUser(user: UserInput!): UserInfo
+    updateUser(user: UserInput!): UserInfo
+	# Organization Mutations
+	createOrganization(org: OrganizationInput!): OrganizationInfo
+	updateOrganization(org: OrganizationInput!): OrganizationInfo
+	# Review Mutations
+	createReview(orgId: ID!, rev: ReviewInput!): ReviewInfo
+	updateReview(rev: ReviewInput!): ReviewInfo
+}
+
+type UserInfo {
+	id: ID
+	email: String
+	firstName: String
+	lastName: String
+	isAdmin: Boolean
+	created: String
+	numberOfLogin: Int
+	lastLogin: String
+	hasAccess: Boolean
+}
+input UserInput {
+	id: ID!
+	email: String
+	isAdmin: Boolean
+	hasAccess: Boolean
+}
+
+type OrganizationInfo {
+	id: ID
+	name: String
+	description: String
+	address: AddressInfo
+	phone: String
+	email: String
+	website: String
+	affiliations: [Affiliation]
+	type: Type
+	typeOther: String
+	region: Region
+	sectors: [Sector]
+	sectorOther: String
+	approved: Boolean
+	contacts: [ContactInfo]
+	created: String
+}
+input OrganizationInput {
+	id: ID!
+	name: String!
+	description: String
+	address: AddressInput!
+	phone: String
+	email: String
+	website: String
+	affiliations: [AffiliationInput!]
+	type: TypeInput!
+	typeOther: String
+	region: RegionInput!
+	sectors: [SectorInput!]
+	sectorOther: String
+	approved: Boolean
+	contacts: [ContactInput!]
+}
+
+type ReviewInfo {
+	id: ID
+	created: String
+	address: AddressInfo
+	region: Region
+	languages: [Language]
+	difficulties: String
+	sectors: [Sector]
+	sectorOther: String
+	stipend: Int
+	cost: Int
+	duration: String
+	workDone: String
+	typicalDay: String
+	evaluation: String
+	other: String
+	safety: Int
+	responsiveness: Int
+	anonymous: Boolean
+	reviewer: UserInfo
+}
+input ReviewInput {
+	id: ID!
+	address: AddressInput!
+	region: RegionInput!
+	languages: [LanguageInput!]
+	difficulties: String
+	sectors: [SectorInput!]
+	sectorOther: String
+	stipend: Int
+	cost: Int
+	duration: String
+	workDone: String
+	typicalDay: String
+	evaluation: String
+	other: String
+	safety: Int
+	responsiveness: Int
+	anonymous: Boolean
+	reviewer: UserInput!
+}
+
+type AddressInfo {
+    id: ID
+    street: String
+    city: String
+    state: String
+    zip: String
+    country: Country
+}
+input AddressInput {
+    id: ID!
+    street: String
+    city: String
+    state: String
+    zip: String
+    country: CountryInput!
+}
+
+type ContactInfo {
+    id: ID
+    name: String
+    role: String
+    email: String
+    phone: String
+}
+input ContactInput {
+    id: ID!
+    name: String!
+    role: String
+    email: String
+    phone: String
+}
+
+# Other Types
+
+type Affiliation {
+    id: ID
+    value: String
+}
+input AffiliationInput {
+	id: ID!
+	value: String!
+}
+type Country {
+    code: String
+    value: String
+}
+input CountryInput {
+	code: String!
+	value: String!
+}
+type Language {
+    code: String
+    value: String
+}
+input LanguageInput {
+	code: String!
+	value: String!
+}
+type Region {
+    id: ID
+    value: String
+}
+input RegionInput {
+	id: ID!
+	value: String!
+}
+type Sector {
+    id: ID
+    value: String
+}
+input SectorInput {
+	id: ID!
+	value: String!
+}
+type Type {
+    id: ID
+    value: String
+}
+input TypeInput {
+	id: ID!
+	value: String!
+}

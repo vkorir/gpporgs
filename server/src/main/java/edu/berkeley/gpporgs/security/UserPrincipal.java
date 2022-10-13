@@ -8,6 +8,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.*;
 
+/**
+ * @author Victor Korir
+ * @Date 10/01/2020
+ */
+
 public class UserPrincipal implements OAuth2User, UserDetails {
     private String email;
     private Collection<? extends GrantedAuthority> authorities;

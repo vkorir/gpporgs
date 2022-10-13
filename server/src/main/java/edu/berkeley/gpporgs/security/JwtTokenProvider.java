@@ -9,15 +9,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+/**
+ * @author Victor Korir
+ * @Date 10/01/2020
+ */
+
 @Service
 public class JwtTokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value("${app.auth.jwt-secret}")
+    @Value("${app.auth.token-secret}")
     private String jwtSecret;
 
-    @Value("${app.auth.jwt-expiration-ms}")
+    @Value("${app.auth.token-expiration-ms}")
     private int jwtExpirationMs;
 
     public String generateToken(Authentication authentication) {

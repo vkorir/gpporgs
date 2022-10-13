@@ -1,9 +1,5 @@
-package edu.berkeley.gpporgs.security.oauth2;
+package edu.berkeley.gpporgs.security;
 
-import edu.berkeley.gpporgs.exception.OAuth2AuthenticationProcessingException;
-import edu.berkeley.gpporgs.model.User;
-import edu.berkeley.gpporgs.repository.UserRepository;
-import edu.berkeley.gpporgs.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -12,18 +8,26 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+
+import edu.berkeley.gpporgs.model.User;
+import edu.berkeley.gpporgs.repository.UserRepository;
+
 import java.util.Date;
 import java.util.TimeZone;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+/**
+ * @author Victor Korir
+ * @Date 10/01/2020
+ */
 
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
-
+    
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
@@ -39,8 +43,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User processOAuth2User(OAuth2User oAuth2User) throws Exception {
         OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(oAuth2User.getAttributes());
-        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
-            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
+        if(oAuth2UserInfo.getEmail().isEmpty()) {
+            throw new Exception("Email not found from OAuth2 provider");
         }
         User user = userRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
         if (user == null || !user.getHasAccess()) {

@@ -1,9 +1,14 @@
-package edu.berkeley.gpporgs.security.oauth2;
+package edu.berkeley.gpporgs.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Map;
+
+/**
+ * @author Victor Korir
+ * @Date 10/01/2020
+ */
 
 @Getter
 @AllArgsConstructor
