@@ -11,10 +11,10 @@
     </button>
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option *ngFor="let organization of lookUpResults | async" (click)="fetchOrganization(organization.id)">
-        {{ organization.name }}{{ country(organization.address.country.code) }}
+        {{ organization.name }}  ({{ organization.address.country.value }})
       </mat-option>
-      <mat-option id="option-create-org" (click)="openReviewDialog(null)">
-        Create New Organization
+      <mat-option id="option-create-org" (click)="openReviewDialog()">
+        Add New Organization
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

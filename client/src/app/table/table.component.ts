@@ -3,7 +3,7 @@ import { AppService } from "src/app/app.service";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { Filter, Organization } from "src/app/models";
 import { MainModalComponent } from "../main-modal/main-modal.component";
-import { applyFilterToOrg, deepCopy } from "../util";
+import { applyFilterToOrg } from "../util";
 
 @Component({
   selector: "app-table",
@@ -24,19 +24,19 @@ export class TableComponent implements OnInit {
 
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.isLoading = true;
-    const filter = this.appService.filter.getValue().clone();
+    const filter = new Filter(this.appService.filter.getValue());
     filter.regionIds = new Set(this.appService.regions.map(region => region.id));
     filter.sectorIds = new Set(this.appService.sectors.map(sector => sector.id));
     this.appService.filter.next(filter);
     this.appService.filter.subscribe(() => this.applyFilter());
 
     this.appService.organizationsApproved.subscribe(orgs => {
-      this.organizations = deepCopy<Organization[]>(orgs);
+      this.organizations = orgs.map(org => new Organization(org));
       this.applyFilter();
     });
     this.appService.queryService(this.organizationsQeury).subscribe(data => {
       if (data.organizations) {
-        this.appService.organizationsApproved.next(deepCopy<Organization[]>(data.organizations));
+        this.appService.organizationsApproved.next(data.organizations.map(org => new Organization(org)));
         this.isLoading = false;
       }
     });

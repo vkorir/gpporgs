@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Affiliation, Contact, Country, Filter, Language, Organization, Region, Sector, Type, User } from './models';
-import { deepCopy, serverUrl } from './util';
+import { serverUrl } from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -63,13 +63,13 @@ export class AppService {
     const queries = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
     this.queryService(queries).subscribe(data => {
       if (!data.message) {
-        this.affiliations = deepCopy(data.affiliations);
-        this.regions = deepCopy(data.regions);
-        this.sectors = deepCopy(data.sectors);
-        this.types = deepCopy(data.types);
-        this.countries = deepCopy(data.countries);
-        this.languages = deepCopy(data.languages);
-        this.user.next(deepCopy(data.currentUser));
+        this.affiliations = data.affiliations.map(aff => Object.assign(new Affiliation(), aff));
+        this.regions = data.regions.map(reg => Object.assign(new Region(), reg));
+        this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
+        this.types = data.types.map(typ => Object.assign(new Type(), typ));
+        this.countries = data.countries.map(cou => Object.assign(new Country(), cou));
+        this.languages = data.languages.map(lan => Object.assign(new Language(), lan));
+        this.user.next(Object.assign(new User(), data.currentUser));
       } else {
         this.openSnackBar(data.error);
       }

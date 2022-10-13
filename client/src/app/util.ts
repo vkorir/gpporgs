@@ -32,31 +32,3 @@ export function applyFilterToOrg(filter: Filter, org: Organization): boolean {
   }
   return searchMatch && areaMatch && regionMatch && sectorMatch;
 }
-
-export function deepCopy<Tp>(tgt: Tp): Tp {
-  let cp: Tp;
-  let ptn: number = 0;
-  if (tgt === null) {
-    cp = tgt;
-  } else if (tgt instanceof Set) {
-    cp = new Set() as any;
-    (tgt as any).forEach(elem => { (cp as any).add(elem); });
-    cp = (cp as any).map((n: any) => deepCopy<any>(n));
-  } else if (Array.isArray(tgt)) {
-    cp = [] as any;
-    (tgt as any[]).forEach((v, i, arr) => { (cp as any).push(v); });
-    cp = (cp as any).map((n: any) => deepCopy<any>(n));
-  } else if ((typeof(tgt) === 'object') && (tgt !== {})) {
-    cp = { ...(tgt as Object) } as Tp;
-    Object.keys(cp).forEach(k => {
-      if (k == 'id') {
-        (cp as any)[k] = parseInt(tgt[k]);
-      } else {
-        (cp as any)[k] = deepCopy<any>((cp as any)[k]);
-      }
-    });
-  } else {
-    cp = tgt;
-  }
-  return cp;
-}

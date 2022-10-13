@@ -4,7 +4,6 @@ import { MatDialog, MatPaginator, MatSort } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 import { LookUpComponent } from '../look-up/look-up.component';
 import { Area, Filter, Region } from 'src/app/models';
-import { deepCopy } from '../util';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,8 +16,8 @@ export class SidebarComponent implements OnInit {
 
   area = Area;
   areaControl = this.fb.control(Area.ALL);
-  masterSelectedRegion: boolean;
-  masterSelectedSector: boolean;
+  masterSelectedRegion: boolean = true;
+  masterSelectedSector: boolean = true;
   checklistRegion: any[] = [];
   checklistSector: any[] = [];
 
@@ -26,21 +25,21 @@ export class SidebarComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
 constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) {
-    this.masterSelectedRegion = true;
-    this.masterSelectedSector = true;
     this.areaControl.valueChanges.subscribe(() => {
-      const filter = this.appService.filter.getValue().clone();
+      const filter = new Filter(this.appService.filter.getValue());
       filter.area = this.areaControl.value;
       this.appService.filter.next(filter);
     });
     appService.regions.forEach(region => this.checklistRegion.push({ ...region, isSelected: true }));
     appService.sectors.forEach(sector => this.checklistSector.push({ ...sector, isSelected: true }));
   }
+
+  ngOnInit() {}
   
   toggleSelectAllRegions() {
     this.masterSelectedRegion = !this.masterSelectedRegion;
     this.checklistRegion.forEach(region => region.isSelected = this.masterSelectedRegion);
-    const filter = this.appService.filter.getValue().clone();
+    const filter = new Filter(this.appService.filter.getValue());
     if (this.masterSelectedRegion) {
       filter.regionIds = new Set(this.checklistRegion.map(reg => reg.id));
     } else {
@@ -52,7 +51,7 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   toggleSelectAllSectors() {
     this.masterSelectedSector = !this.masterSelectedSector;
     this.checklistSector.forEach(sector => sector.isSelected = this.masterSelectedSector);
-    const filter = this.appService.filter.getValue().clone();
+    const filter = new Filter(this.appService.filter.getValue());
     if (this.masterSelectedSector) {
       filter.sectorIds = new Set(this.checklistSector.map(sector => sector.id));
     } else {
@@ -66,7 +65,7 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   onRegionChange(idx: number): void {
-    const filter = this.appService.filter.getValue().clone();
+    const filter = new Filter(this.appService.filter.getValue());
     if (filter.regionIds.has(this.checklistRegion[idx].id)) {
       filter.regionIds.delete(this.checklistRegion[idx].id);
     } else {
@@ -78,7 +77,7 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   onSectorChange(idx: number): void {
-    const filter = this.appService.filter.getValue().clone();
+    const filter = new Filter(this.appService.filter.getValue());
     if (filter.sectorIds.has(this.checklistSector[idx].id)) {
       filter.sectorIds.delete(this.checklistSector[idx].id);
     } else {
@@ -90,12 +89,8 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   openLookUpDialog(): void {
-    const query = '{ organizations { id name address { country { code } }} }';
-    this.appService.queryService(query).subscribe(data => {
-      this.dialog.open(LookUpComponent, {
-        panelClass: 'mat-dialog--sm',
-        data
-      });
+    this.dialog.open(LookUpComponent, {
+      panelClass: 'mat-dialog--sm'
     });
   }
 }

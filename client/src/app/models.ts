@@ -1,107 +1,140 @@
-import { deepCopy } from "./util";
-
 export class User {
-    id: number;
-	email: string;
-	firstName: string;
-	lastName: string;
-	isAdmin: boolean;
-	created: string;
-	numberOfLogin: number;
-	lastLogin: string;
-	hasAccess: boolean;
+    id: number = 0;
+	email: string = '';
+	firstName: string = '';
+	lastName: string = '';
+	isAdmin: boolean = false;
+	created: string = '';
+	numberOfLogin: number = 0;
+	lastLogin: string = '';
+	hasAccess: boolean = false;
 }
 
 export class Organization {
-    id: number;
-	name: string;
-	description: string;
-	address: Address;
-	phone: string;
-	email: string;
-	website: string;
-	affiliations: Affiliation[];
-	type: Type;
-	typeOther: string;
-	region: Region;
-	sectors: Sector[];
-	sectorOther: string;
-	approved: boolean;
-	contacts: Contact[];
-	created: string;
+    id: number = 0;
+	name: string = '';
+	description: string = '';
+	address: Address = new Address();
+	phone: string = '';
+	email: string = '';
+	website: string = '';
+	affiliations: Affiliation[] = [];
+	type: Type = new Type();
+	typeOther: string = '';
+	region: Region = new Region();
+	sectors: Sector[] = [];
+	sectorOther: string = '';
+	approved: boolean = false;
+	contacts: Contact[] = [new Contact(), new Contact(), new Contact()];
+	created: string = '';
 
-	prepare() {
-		delete this['created'];
+	constructor(data: any = {}) {
+		Object.assign(this, data);
+		Object.assign(this.type, data.type);
+		Object.assign(this.region, data.region);
+		this.address = new Address(data.address);
+		if (!!data.affiliations) {
+			this.affiliations = data.affiliations.map(aff => Object.assign(new Affiliation(), aff));
+		}
+		if (!!data.sectors) {
+			this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
+		}
+		if (!!data.contacts) {
+			for (let i = 0; i < data.contacts.length; i++) {
+				Object.assign(this.contacts[i], data.contacts[i]);
+			}
+		}
 	}
 }
 
 export class Review {
-    id: number;
-	created: string;
-	address: Address;
-	region: Region;
-	languages: Language[];
-	difficulties: string;
-	sectors: Sector[];
-	sectorOther: string;
-	stipend: number;
-	cost: number;
-	duration: string;
-	workDone: string;
-	typicalDay: string;
-	evaluation: string;
-	other: string;
-	safety: number;
-	responsiveness: number;
-	anonymous: boolean;
-	reviewer: User;
+    id: number = 0;
+	created: string = '';
+	address: Address = new Address();
+	region: Region = new Region();
+	languages: Language[] = [];
+	difficulties: string = '';
+	sectors: Sector[] = [];
+	sectorOther: string = '';
+	stipend: number = 0;
+	cost: number = 0;
+	duration: string = '';
+	workDone: string = '';
+	typicalDay: string = '';
+	evaluation: string = '';
+	other: string = '';
+	safety: number = 0;
+	responsiveness: number = 0;
+	anonymous: boolean = true;
+	reviewer: User = new User();
+
+	constructor(data: any = {}) {
+		Object.assign(this, data);
+		Object.assign(this.region, data.region);
+		Object.assign(this.address, data.address);
+		Object.assign(this.reviewer, data.reviewer);
+		if (!!data.address) {
+			Object.assign(this.address.country, data.address.country);
+		}
+		if (!!data.languages) {
+			this.languages = data.languages.map(lan => Object.assign(new Language(), lan));
+		}
+		if (!!data.sectors) {
+			this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
+		}
+	}
 }
 
 export class Address {
-    id: number;
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: Country;
+    id: number = 0;
+    street: string = '';
+    city: string = '';
+    state: string = '';
+    zip: string = '';
+    country: Country = new Country();
+
+	constructor(data: any = {}) {
+		Object.assign(this, data);
+		Object.assign(this.country, data.country);
+	}
 }
 
 export class Contact {
-    id: number;
-    name: string;
-    role: string;
-    email: string;
-    phone: string;
+    id: number = 0;
+    name: string = '';
+    role: string = '';
+    email: string = '';
+    phone: string = '';
 }
 
 export class Affiliation {
-    id: number;
-    value: string;
+    id: number = 0;
+    value: string = '';
 }
 
 export class Region {
-    id: number;
-    value: string;
+    id: number = 0;
+    value: string = '';
 }
 
 export class Type {
-    id: number;
-    value: string;
+    id: number = 0;
+    value: string = '';
 }
 
 export class Sector {
-    id: number;
-    value: string;
+    id: number = 0;
+    value: string = '';
 }
 
 export class Country {
-    code: string;
-    value: string;
+    code: string = '';
+    value: string = '';
 }
 
 export class Language {
-    code: string;
-    value: string;
+    code: string = '';
+    value: string = '';
 }
 
 export class Filter {
@@ -111,14 +144,14 @@ export class Filter {
     sectorIds = new Set<number>();
     searchString = '';
 
-	clone() {
-		const clone = new Filter();
-		clone.area = this.area;
-		clone.sort = this.sort;
-		clone.regionIds = new Set(this.regionIds);
-		clone.sectorIds = new Set(this.sectorIds);
-		clone.searchString = this.searchString;
-		return clone;
+	constructor(data: any = {}) {
+		Object.assign(this, data);
+		if (!!data.regionIds) {
+			this.regionIds = new Set(data.regionIds);
+		}
+		if (!!data.sectorIds) {
+			this.sectorIds = new Set(data.sectorIds);
+		}
 	}
 }
 

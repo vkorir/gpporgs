@@ -5,7 +5,6 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { ManageOrganizationsComponent } from './manage-organizations/manage-organizations.component';
 import { Organization, User } from '../models';
-import { deepCopy } from '../util';
 
 @Component({
   selector: 'app-admin',
@@ -54,7 +53,7 @@ export class AdminComponent implements OnInit {
     this.actions[index].isLoading = true;
     const query = '{ users { id email firstName lastName isAdmin created lastLogin numberOfLogin hasAccess } }';
     this.appService.queryService(query).subscribe(data => {
-      const users = deepCopy<User[]>(data.users);
+      const users = data.users.map(usr => Object.assign(new User(), usr));
       this.appService.usersAll.next(users);
       this.actions[index].isLoading = false;
       this.dialog.open(ManageUsersComponent, {
@@ -67,7 +66,7 @@ export class AdminComponent implements OnInit {
     this.actions[index].isLoading = true;
     const query = '{ organizations(approved: false) { id name address { id country { code value } } type { id value } region { id value } created approved }}';
     this.appService.queryService(query).subscribe(data => {
-      const organizations = deepCopy<Organization[]>(data.organizations);
+      const organizations = data.organizations.map(org => new Organization(org));
       this.appService.organizationsAll.next(organizations);
       this.actions[index].isLoading = false;
       this.dialog.open(ManageOrganizationsComponent, {

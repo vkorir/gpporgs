@@ -10,7 +10,6 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
-import { deepCopy } from "src/app/util";
 
 @Component({
   selector: "app-all-users",
@@ -45,7 +44,7 @@ export class ManageUsersComponent implements OnInit {
 
   constructor(private appService: AppService) {
     this.appService.usersAll.subscribe(users => {
-      this.dataSource = new MatTableDataSource<User>(deepCopy<Array<User>>(users));
+      this.dataSource = new MatTableDataSource<User>(users.map(usr => Object.assign(new User(), usr)));
       setTimeout(() => this.dataSource.paginator = this.paginator);
     });
   }
@@ -75,7 +74,7 @@ export class ManageUsersComponent implements OnInit {
     const mutation = `mutation { updateUser(user: ${this.appService.queryFy({id, isAdmin})}) { id isAdmin } }`;
     this.appService.mutationService(mutation).subscribe(({ updateUser }) => {
       if (updateUser && updateUser.id) {
-        const users = deepCopy<User[]>(this.appService.usersAll.getValue());
+        const users = this.appService.usersAll.getValue().map(usr => Object.assign(new User(), usr));
         users.forEach(user => {
           if (user.id == updateUser.id) {
             user.isAdmin = updateUser.isAdmin;

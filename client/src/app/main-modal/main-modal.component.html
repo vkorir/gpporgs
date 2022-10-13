@@ -32,8 +32,8 @@
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Region</mat-label>
           <mat-select formControlName="region" required>
-            <mat-option *ngFor="let id of regions" [value]="id">
-              {{ region(id) }}
+            <mat-option *ngFor="let region of regions" [value]="region">
+              {{ region.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -58,8 +58,8 @@
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Country</mat-label>
           <mat-select formControlName="country" required>
-            <mat-option *ngFor="let id of countries" [value]="id">
-              {{ country(id) }}
+            <mat-option *ngFor="let country of countries" [value]="country">
+              {{ country.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -85,18 +85,15 @@
       </p>
       <p fxLayout="row wrap" fxFlexFill>
         <mat-checkbox
-          *ngFor="let id of affiliations"
-          [checked]="checked(organization.controls.affiliations, id)"
-          [hidden]="
-            disableControl && !checked(organization.controls.affiliations, id)
-          "
-          (change)="onCheckboxChange(organization.controls.affiliations, id)"
+          *ngFor="let affiliation of affiliations"
+          [checked]="checked(organization.controls.affiliations.value, affiliation.id)"
+          [hidden]="disableControl && !checked(organization.controls.affiliations, affiliation.id)"
+          (change)="onCheckboxChange(organization.controls.affiliations, affiliation.id)"
           [disabled]="disableControl"
           fxFlex.lt-md="100"
           fxFlex.gt-sm="50"
-          color="primary"
-        >
-          {{ affiliation(id) }}
+          color="primary">
+          {{ affiliation.value }}
         </mat-checkbox>
       </p>
       <p fxFlexFill>
@@ -104,14 +101,13 @@
       </p>
       <div>
         <mat-radio-group fxLayout="row wrap" formControlName="type">
-          <ng-container *ngFor="let id of filteredTypes()">
+          <ng-container *ngFor="let type of filteredTypes()">
             <mat-radio-button
               fxFlex.lt-md="100"
               fxFlex.gt-sm="50"
               color="primary"
-              [value]="id"
-            >
-              {{ type(id) }}
+              [value]="type">
+              {{ type.value }}
             </mat-radio-button>
           </ng-container>
         </mat-radio-group>
@@ -119,13 +115,11 @@
       <p fxFlexFill>
         <mat-form-field
           fxFlex="60"
-          *ngIf="organization.controls.type.value === numTypes"
-        >
+          *ngIf="organization.controls.type.value === numTypes">
           <input
             matInput
             placeholder="Describe here"
-            formControlName="typeOther"
-          />
+            formControlName="typeOther"/>
         </mat-form-field>
       </p>
       <p fxFlexFill>
@@ -133,22 +127,19 @@
       </p>
       <p fxLayout="row wrap" fxFlexFill>
         <mat-checkbox
-          *ngFor="let id of sectors"
-          [checked]="checked(organization.controls.sectors, id)"
-          [hidden]="
-            disableControl && !checked(organization.controls.sectors, id)
-          "
-          (change)="onCheckboxChange(organization.controls.sectors, id)"
+          *ngFor="let sector of sectors"
+          [checked]="checked(organization.controls.sectors.value, sector.id)"
+          [hidden]="disableControl && !checked(organization.controls.sectors.value, sector.id)"
+          (change)="onCheckboxChange(organization.controls.sectors, sector.id)"
           [disabled]="disableControl"
           fxFlex.lt-md="100"
           fxFlex.gt-sm="50"
-          color="primary"
-        >
-          {{ sector(id) }}
+          color="primary">
+          {{ sector.value }}
         </mat-checkbox>
         <mat-form-field
           fxFlex="60"
-          *ngIf="checked(organization.controls.sectors, numSectors)"
+          *ngIf="checked(organization.controls.sectors.value, numSectors)"
         >
           <input
             matInput
@@ -158,23 +149,23 @@
         </mat-form-field>
       </p>
       <h4 class="mat-dialog-title primary">Contact Information</h4>
-      <div fxLayout="row wrap">
-        <ng-container *ngFor="let i of contacts">
+      <div fxLayout="row wrap" formArrayName="contacts">
+        <ng-container *ngFor="let contact of contacts.controls" [formGroup]="contact" >
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Name</mat-label>
-            <input matInput [formControl]="contactControl(i, 'name')" />
+            <input matInput formControlName="name" />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Role</mat-label>
-            <input matInput [formControl]="contactControl(i, 'role')" />
+            <input matInput formControlName="role" />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Email</mat-label>
-            <input matInput [formControl]="contactControl(i, 'email')" />
+            <input matInput formControlName="email" />
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label>Phone</mat-label>
-            <input matInput [formControl]="contactControl(i, 'phone')" />
+            <input matInput formControlName="phone" />
           </mat-form-field>
         </ng-container>
       </div>
@@ -182,12 +173,7 @@
   </mat-dialog-content>
 
   <mat-dialog-content *ngIf="disableControl">
-    <form
-      role="form"
-      fxLayout="row wrap"
-      fxLayoutGap="1%"
-      [formGroup]="organization"
-    >
+    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="organization">
       <div fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49">
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Name</mat-label>
@@ -228,8 +214,8 @@
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Region</mat-label>
           <mat-select formControlName="region" required>
-            <mat-option *ngFor="let id of regions" [value]="id">
-              {{ region(id) }}
+            <mat-option *ngFor="let region of regions" [value]="region.id">
+              {{ region.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -259,8 +245,8 @@
         <mat-form-field fxFlex>
           <mat-label class="labelColor">Country</mat-label>
           <mat-select formControlName="country" required>
-            <mat-option *ngFor="let id of countries" [value]="id">
-              {{ country(id) }}
+            <mat-option *ngFor="let country of countries" [value]="country.id">
+              {{ country.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -279,8 +265,8 @@
       </p>
       <p fxFlexFill>
         Type: <i>{{ !disableControl ? " Select one" : "" }}</i>
-        <ng-container *ngFor="let id of filteredTypes()">
-          {{ type(id) }}
+        <ng-container *ngFor="let type of filteredTypes()">
+          {{ type.value }}
         </ng-container>
       </p>
       <p fxFlexFill>
@@ -290,30 +276,24 @@
       </p>
       <p fxLayout="row wrap" fxFlexFill>
         <mat-checkbox
-          *ngFor="let id of affiliations"
-          [checked]="checked(organization.controls.affiliations, id)"
-          [hidden]="
-            disableControl && !checked(organization.controls.affiliations, id)
-          "
+          *ngFor="let affiliation of affiliations"
+          [checked]="checked(organization.controls.affiliations.value, id)"
+          [hidden]=" disableControl && !checked(organization.controls.affiliations.value, id)"
           (change)="onCheckboxChange(organization.controls.affiliations, id)"
           [disabled]="disableControl"
           fxFlex.lt-md="100"
           fxFlex.gt-sm="50"
-          color="primary"
-        >
-          {{ affiliation(id) }}
+          color="primary">{{ affiliation.value }}
         </mat-checkbox>
       </p>
       <p fxFlexFill>
         <mat-form-field
           fxFlex="60"
-          *ngIf="organization.controls.type.value === numTypes"
-        >
+          *ngIf="organization.controls.type.controls.value === numTypes">
           <input
             matInput
             placeholder="Describe here"
-            formControlName="typeOther"
-          />
+            formControlName="typeOther"/>
         </mat-form-field>
       </p>
       <p fxFlexFill>
@@ -321,10 +301,10 @@
       </p>
       <p fxLayout="row wrap" fxFlexFill>
         <mat-checkbox
-          *ngFor="let id of sectors"
-          [checked]="checked(organization.controls.sectors, id)"
+          *ngFor="let sector of sectors"
+          [checked]="checked(organization.controls.sectors.value, id)"
           [hidden]="
-            disableControl && !checked(organization.controls.sectors, id)
+            disableControl && !checked(organization.controls.sectors.value, id)
           "
           (change)="onCheckboxChange(organization.controls.sectors, id)"
           [disabled]="disableControl"
@@ -332,11 +312,11 @@
           fxFlex.gt-sm="50"
           color="primary"
         >
-          {{ sector(id) }}
+          {{ sector.value }}
         </mat-checkbox>
         <mat-form-field
           fxFlex="60"
-          *ngIf="checked(organization.controls.sectors, numSectors)"
+          *ngIf="checked(organization.controls.sectors.value, numSectors)"
         >
           <input
             matInput
@@ -346,39 +326,23 @@
         </mat-form-field>
       </p>
       <h4 class="mat-dialog-title primary">Contact Information</h4>
-      <div fxLayout="row wrap">
-        <ng-container *ngFor="let i of contacts">
+      <div fxLayout="row wrap" formArrayName="contacts">
+        <ng-container *ngFor="let contact of contacts.controls" [formGroup]="contact">
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label class="labelColor">Name</mat-label>
-            <input
-              matInput
-              [formControl]="contactControl(i, 'name')"
-              style="color: black"
-            />
+            <input matInput formControlName="name" style="color: black"/>
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label class="labelColor">Role</mat-label>
-            <input
-              matInput
-              [formControl]="contactControl(i, 'role')"
-              style="color: black"
-            />
+            <input matInput formControlName="role" style="color: black"/>
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label class="labelColor">Email</mat-label>
-            <input
-              matInput
-              [formControl]="contactControl(i, 'email')"
-              style="color: black"
-            />
+            <input matInput formControlName="email" style="color: black"/>
           </mat-form-field>
           <mat-form-field appearance="legacy" fxFlex="25">
             <mat-label class="labelColor">Phone</mat-label>
-            <input
-              matInput
-              [formControl]="contactControl(i, 'phone')"
-              style="color: black"
-            />
+            <input matInput formControlName="phone" style="color: black"/>
           </mat-form-field>
         </ng-container>
       </div>
@@ -387,48 +351,13 @@
 
   <mat-divider></mat-divider>
   <mat-dialog-actions fxLayout="row" style="padding-right: 100px">
-    <button
-      mat-button
-      class="edit-btn warn"
-      *ngIf="disableControl && isAdmin()"
-      (click)="editOrganization()"
-    >
-      Edit
-    </button>
-    <button
-      mat-button
-      class="save"
-      *ngIf="isEditOrganization"
-      (click)="saveOrganization()"
-      [disabled]="!organization.dirty"
-    >
-      Save
-    </button>
-    <button
-      mat-button
-      class="warn"
-      *ngIf="isEditOrganization"
-      (click)="closeEditOrganization()"
-    >
-      Cancel
-    </button>
+    <button mat-button class="edit-btn warn" *ngIf="disableControl && isAdmin()" (click)="editOrganization()">Edit</button>
+    <button mat-button class="save" *ngIf="isEditOrganization" (click)="saveOrganization()" [disabled]="!organization.dirty">Save</button>
+    <button mat-button class="warn" *ngIf="isEditOrganization" (click)="closeEditOrganization()"> Cancel</button>
     <span fxFlex="1 1 auto"></span>
-    <button
-      mat-button
-      class="warn"
-      mat-dialog-close
-      *ngIf="!isEditOrganization"
-    >
-      Cancel
-    </button>
-    <button
-      mat-button
-      style="width: auto"
-      (click)="segue(organization, false)"
-      *ngIf="!isEditOrganization"
-    >
-      {{ orgReviewBtnText }} <mat-icon>navigate_next</mat-icon>
-    </button>
+    <button mat-button class="save" *ngIf="!isEditOrganization" (click)="saveOrganization()">Create</button>
+    <button mat-button class="warn" mat-dialog-close *ngIf="!isEditOrganization">Cancel</button>
+    <button mat-button style="width: auto" (click)="segue(organization, false)" *ngIf="!isEditOrganization">{{ orgReviewBtnText }} <mat-icon>navigate_next</mat-icon></button>
     <span fxFlex="1 1 auto"></span>
   </mat-dialog-actions>
 </ng-container>
@@ -484,8 +413,8 @@
             [formControl]="review.controls.region"
             [required]="isAddrDiffControl.value"
           >
-            <mat-option *ngFor="let id of regions" [value]="id">
-              {{ region(id) }}
+            <mat-option *ngFor="let region of regions" [value]="region.id">
+              {{ region.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -495,8 +424,8 @@
             formControlName="country"
             [required]="isAddrDiffControl.value"
           >
-            <mat-option *ngFor="let id of countries" [value]="id">
-              {{ country(id) }}
+            <mat-option *ngFor="let country of countries" [value]="country.id">
+              {{ country.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -505,12 +434,12 @@
         <mat-form-field fxFlex.gt-sm="70">
           <mat-chip-list #chipList>
             <mat-chip
-              *ngFor="let id of selectedLanguages"
+              *ngFor="let language of selectedLanguages"
               [selectable]="true"
               [removable]="true"
               (removed)="removeLanguage(id)"
             >
-              {{ language(id) }}
+              {{ language.value }}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input
@@ -526,8 +455,8 @@
           #auto="matAutocomplete"
           (optionSelected)="addLanguage($event)"
         >
-          <mat-option *ngFor="let id of filteredLanguages | async" [value]="id">
-            {{ language(id) }}
+          <mat-option *ngFor="let language of filteredLanguages | async" [value]="language.id">
+            {{ language.value }}
           </mat-option>
         </mat-autocomplete>
       </p>
@@ -544,14 +473,14 @@
       <p>What were the sectors of your PE? <i>Check all that may apply</i></p>
       <p fxLayout="row wrap">
         <mat-checkbox
-          *ngFor="let id of sectors"
+          *ngFor="let sector of sectors"
           [checked]="checked(review.controls.sectors, id)"
           (change)="onCheckboxChange(review.controls.sectors, id)"
           fxFlex.lt-md="100"
           fxFlex.gt-sm="50"
           color="primary"
         >
-          {{ sector(id) }}
+          {{ sector.value }}
         </mat-checkbox>
         <mat-form-field
           fxFlex="60"
@@ -792,7 +721,7 @@
       </p>
       <p fxFlexFill>
         <strong>Sectors:</strong><br />
-        <span [innerText]="reviewSectors(review)" id="sectors"></span>
+        <span [innerText]="reviewSectors(review.sectors, review.sectorOther)" id="sectors"></span>
       </p>
       <p fxFlexFill>
         <strong>How safe did you feel during your experience? </strong

@@ -5,8 +5,6 @@ import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { MainModalComponent } from "src/app/main-modal/main-modal.component";
-import { Organization } from "src/app/models";
-import { deepCopy } from "../util";
 
 @Component({
   selector: "app-look-up",
@@ -27,7 +25,7 @@ export class LookUpComponent implements OnInit {
           return [];
         }
         return this.appService.organizationsApproved.getValue().filter(organization =>
-          organization.name.toLowerCase().startsWith(value.toLowerCase())
+          organization.name.toLowerCase().includes(value.toLowerCase())
         );
       })
     );
@@ -35,17 +33,11 @@ export class LookUpComponent implements OnInit {
 
   ngOnInit() {}
 
-  country(code: string): string {
-    if (!this.appService.countries.has(code)) {
-      return null;
-    }
-    return ` (${this.appService.countries.get(code)})`;
-  }
-
   fetchOrganization(id: number) {
     // tslint:disable-next-line:max-line-length
-    const orgInfo = 'id name region { id } phone email website description affiliations { id } type { id } typeOther sectors { id } sectorOther approved created';
-    const orgAddress = 'address { id street city state zip country { code } }';
+    const orgInfo = 'id name region { id value } phone email website description affiliations { id value } type { id value } typeOther sectors { id value } sectorOther approved created';
+    const revInfo = 'id '
+    const orgAddress = 'address { id street city state zip country { code value } }';
     const orgContacts = 'contacts { id name role phone email }';
     const query = `{ organization(id: ${id}) { ${orgInfo} ${orgAddress} ${orgContacts} }}`;
     this.appService.queryService(query).subscribe(({ organization }) => {
@@ -53,12 +45,12 @@ export class LookUpComponent implements OnInit {
     });
   }
 
-  openReviewDialog(org: any) {
+  openReviewDialog(organization: any = {}) {
     this.dialogRef.close();
     this.dialog.open(MainModalComponent, {
       panelClass: "mat-dialog--md",
       disableClose: true,
-      data: { organization: deepCopy<Organization>(org), disableControl: false },
+      data: { organization, disableControl: false },
     });
   }
 }

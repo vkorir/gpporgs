@@ -3,7 +3,6 @@ import { FormControl, Validators } from "@angular/forms";
 import { AppService } from "src/app/app.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { User } from "src/app/models";
-import { deepCopy } from "src/app/util";
 
 @Component({
   selector: "app-add-user",
@@ -28,8 +27,8 @@ export class AddUserComponent implements OnInit {
     const mutation = `mutation { createUser(user: ${this.appService.queryFy(user)}) ${details}}`;
     this.appService.mutationService(mutation).subscribe(({ createUser }) => {
       if (createUser && createUser.id) {
-        const users = deepCopy<Array<User>>(this.appService.usersAll.getValue());
-        users.push(deepCopy<User>(createUser));
+        const users = this.appService.usersAll.getValue().map(usr => Object.assign(new User(), usr));
+        users.push(Object.assign(new User(), createUser));
         this.appService.usersAll.next(users);
         this.appService.openSnackBar(`Successfully added ${createUser.email}`);
       }

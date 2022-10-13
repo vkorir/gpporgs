@@ -1,11 +1,10 @@
 import { Component, ElementRef, Inject, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Contact, Organization, Review } from 'src/app/models';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Address, Affiliation, Contact, Country, Language, Organization, Region, Review, Sector, Type } from 'src/app/models';
 import { AppService } from 'src/app/app.service';
 import { MAT_DIALOG_DATA, MatAutocomplete, MatAutocompleteSelectedEvent, MatDialogRef, MatSnackBar } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { deepCopy } from '../util';
 
 @Component({
   selector: 'app-main-modal',
@@ -19,22 +18,22 @@ export class MainModalComponent implements OnInit, OnChanges {
   reviews: Review[] = [];
   reviewControls: FormArray = new FormArray([]);
 
-  regions: number[];
-  countries: string[];
-  affiliations: number[];
-  types: number[];
-  sectors: number[];
-  languages: string[];
-  contacts: number[];
+  regions: Region[];
+  countries: Country[];
+  affiliations: Affiliation[];
+  types: Type[];
+  sectors: Sector[];
+  languages: Language[];
+  contacts: Contact[];
   disableControl: boolean;
 
   isAddrDiffControl = this.fb.control(true);
   languageControl = this.fb.control(null);
-  selectedLanguages: string[];
-  filteredLanguages: Observable<string[]>;
+  selectedLanguages: Set<string>;
+  filteredLanguages: Observable<Language[]>;
   organizationView = true;
-  numTypes = this.appService.types.size;
-  numSectors = this.appService.sectors.size;
+  numTypes = this.appService.types.length;
+  numSectors = this.appService.sectors.length;
 
   isSubmitting = false;
   isEditOrganization = false;
@@ -42,8 +41,6 @@ export class MainModalComponent implements OnInit, OnChanges {
 
   orgReviewBtnText = 'Add Review for This Organization';
   orgInfoBtnText = 'Organization Info';
-
-  numContacts = 3;
 
   // tslint:disable-next-line:max-line-length
   reviewEditableFields = ['country', 'city', 'region', 'languages', 'sectors', 'sectorOther', 'cost', 'stipend', 'workDone', 'evaluation', 'typicalDay', 'difficulties', 'safety', 'responsiveness', 'duration', 'other'];
@@ -56,19 +53,20 @@ export class MainModalComponent implements OnInit, OnChanges {
               private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.disableControl = data.disableControl;
-    this.organization = this.buildFormGroup(deepCopy<Organization>(data.organization), data.disableControl) as FormGroup;
+    this.organization = this.buildFormGroup(new Organization(data.organization), data.disableControl) as FormGroup;
     this.review = this.buildFormGroup(new Review(), data.disableControl) as FormGroup;
-    this.regions = [...this.appService.regions.keys()];
-    this.countries = [...this.appService.countries.keys()];
-    this.affiliations = [...this.appService.affiliations.keys()];
-    this.types = [...this.appService.types.keys()];
-    this.sectors = [...this.appService.sectors.keys()];
-    this.languages = [...this.appService.languages.keys()];
-    this.contacts = [3];
+    this.regions = this.appService.regions.map(reg => Object.assign(new Region(), reg));
+    this.countries = this.appService.countries.map(cou => Object.assign(new Country(), cou));
+    this.affiliations = this.appService.affiliations.map(aff => Object.assign(new Affiliation(), aff));
+    this.types = this.appService.types.map(typ => Object.assign(new Type(), typ));
+    this.sectors = this.appService.sectors.map(sec => Object.assign(new Sector(), sec));
+    this.languages = this.appService.languages.map(lan => Object.assign(new Language(), lan));
+    this.contacts = [new Contact(), new Contact(), new Contact()];
     if (data.reviews) {
       this.reviews = data.reviews.map(review => {
-        this.reviewControls.push(this.buildFormGroup(review, true));
-        return review;
+        const rev = Object.assign(new Review(), review);
+        this.reviewControls.push(this.buildFormGroup(rev, true));
+        return rev;
       });
     }
 
@@ -89,12 +87,12 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.review.controls.reviewerId.setValue(this.appService.user.getValue().id);
-    this.selectedLanguages = this.review.controls.languages.value;
-    this.filteredLanguages = this.languageControl.valueChanges.pipe(
-      startWith(null),
-      map(value => value ? this.filter(value) : this.languages.slice())
-    );
+    // (this.review.controls.reviewer as FormGroup).controls.id.setValue(this.appService.user.getValue().id);
+    // this.selectedLanguages = new Set(); //this.review.controls.);
+    // this.filteredLanguages = this.languageControl.valueChanges.pipe(
+    //   startWith(null),
+    //   map(value => value ? this.filter(value) : this.languages.slice())
+    // );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -105,34 +103,11 @@ export class MainModalComponent implements OnInit, OnChanges {
     return this.appService.user.getValue().isAdmin;
   }
 
-  region(id: number): string {
-    return this.appService.regions.get(id);
-  }
-
-  country(id: string): string {
-    return this.appService.countries.get(id);
-  }
-
-  affiliation(id: number): string {
-    return this.appService.affiliations.get(id);
-  }
-
-  type(id: number): string {
-    return this.appService.types.get(id);
-  }
-
-  filteredTypes(): number[] {
-    return this.types.filter(id => {
-      return !this.disableControl || (this.disableControl && this.organization.controls.type.value === id);
+  filteredTypes(): Type[] {
+    return this.types.filter(type => {
+      return !this.disableControl || (this.disableControl && this.organization.controls.type.value === type.id);
     });
-  }
-
-  sector(id: number): string {
-    return this.appService.sectors.get(id);
-  }
-
-  language(id: string): string {
-    return this.appService.languages.get(id);
+    return [];
   }
 
   formatDate(creationDate: string): string {
@@ -152,24 +127,25 @@ export class MainModalComponent implements OnInit, OnChanges {
     return `${day}, ${month} ${date}, ${year} ${hours}:${minutes}`;
   }
 
-  reviewLanguages(ids: string[]): string {
-    return ids.map(id => this.language(id)).join(', ');
+  reviewLanguages(languages: Language[]): string {
+    return languages.map(lan => lan.value).join(', ');
   }
 
-  reviewSectors(review: any): string {
-    const sectors = [];
-    review.sectors.forEach(id => {
-      if (id < this.appService.sectors.size) {
-        sectors.push(this.sector(id));
-      } else {
-        sectors.push(review.sectorOther);
-      }
-    });
+  reviewSectors(sectors: Sector[], other: string): string {
+    const result = sectors.map(sec => sec.value);
+    if (!!other) {
+      result.push(other);
+    }
     return sectors.join('\n');
   }
 
-  checked(formControl: AbstractControl, id: number): boolean {
-    return formControl.value.includes(id);
+  checked(formControl: FormArray, id: number | string): boolean {
+    for (let idx = 0; idx < formControl.length; idx++) {
+      if ((formControl[idx].id || formControl[idx].id) == id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   onCheckboxChange(formControl: AbstractControl, id: number): void {
@@ -189,9 +165,9 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   contactControl(index: number, field: string): FormControl {
-    const contacts = this.organization.controls.contacts as FormArray;
-    const contact = contacts.controls[index] as FormGroup;
-    return contact.controls[field] as FormControl;
+    // const contacts = this.organization.controls.contacts as FormArray;
+    // const contact = contacts.controls[index] as FormGroup;
+    // return contact.controls[field] as FormControl;
   }
 
   isAnonymousReview(review: Review): boolean {
@@ -225,32 +201,32 @@ export class MainModalComponent implements OnInit, OnChanges {
     }
   }
 
-  private buildFormGroup(source: any, disableControl: boolean): AbstractControl {
-    if (source instanceof Object && !Array.isArray(source)) {
-      const target = this.fb.group({});
-      Object.keys(source).forEach(key => {
-        target.setControl(key, this.buildFormGroup(source[key], disableControl));
-      });
-      return target;
+  private buildFormGroup(data: any, disableControl: boolean): AbstractControl {
+    if (Array.isArray(data)) {
+      return this.fb.array(data.map((item, index) => this.buildFormGroup(item, disableControl)));
     }
-    if (Array.isArray(source) && source.length == this.numContacts) {
-      const items = [];
-      for (const contact of source) {
-        items.push(this.buildFormGroup(contact, disableControl));
-      }
-      return this.fb.array(items);
+    if (data instanceof Organization || data instanceof Review || data instanceof Address || data instanceof Contact) {
+      const fgContent = {};
+      Object.keys(data).forEach(key => fgContent[key] = this.buildFormGroup(data[key], disableControl));
+      return this.fb.group(fgContent);
     }
-    return this.fb.control({ value: source, disabled: disableControl });
+    return this.fb.control({ value: data, disabled: disableControl });
   }
 
-  private filter(filterValue: string): string[] {
+  private filter(filterValue: string): Language[] {
     const filtered = [];
-    this.appService.languages.forEach((value, key, _) => {
-      if (value.toLowerCase().indexOf(filterValue.toLowerCase()) === 0
-        && !this.selectedLanguages.includes(key)) {
-        filtered.push(key);
+    this.languages.forEach(lan => {
+      if (lan.value.toLowerCase().indexOf(filterValue.toLowerCase()) === 0
+        && !this.selectedLanguages.has(lan.code)) {
+        filtered.push(lan);
       }
-    });
+    })
+    // this.appService.languages.forEach((value, key, _) => {
+    //   if (value.toLowerCase().indexOf(filterValue.toLowerCase()) === 0
+    //     && !this.selectedLanguages.includes(key)) {
+    //     filtered.push(key);
+    //   }
+    // });
     return filtered;
   }
 
@@ -281,16 +257,18 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   saveOrganization(): void {
-    this.organization.markAsUntouched();
-    const mutation = `mutation { updateOrganization(org: ${this.appService.queryFy(this.organization.value)}) { id name }}`;
-    this.appService.mutationService(mutation).subscribe(response => {
-      if (response.updateOrganization.id) {
-        this.appService.openSnackBar(`${response.updateOrganization.name} successfully updated.`);
-      } else {
-        this.appService.openSnackBar(`Error. ${response.updateOrganization.name} could not be updated.`);
-      }
-      this.closeEditOrganization();
-    });
+    console.log(this.organization.getRawValue());
+    console.log(this.organization.controls.affiliations);
+    // this.organization.markAsUntouched();
+    // const mutation = `mutation { updateOrganization(org: ${this.appService.queryFy(this.organization.value)}) { id name }}`;
+    // this.appService.mutationService(mutation).subscribe(response => {
+    //   if (response.updateOrganization.id) {
+    //     this.appService.openSnackBar(`${response.updateOrganization.name} successfully updated.`);
+    //   } else {
+    //     this.appService.openSnackBar(`Error. ${response.updateOrganization.name} could not be updated.`);
+    //   }
+    //   this.closeEditOrganization();
+    // });
   }
 
   closeEditOrganization(): void {
@@ -305,7 +283,7 @@ export class MainModalComponent implements OnInit, OnChanges {
 
   editReview(review: Review): void {
     this.review = this.buildFormGroup(review, false) as FormGroup;
-    // this.selectedLanguages = review.languages;
+    // this.selectedLanguages = new Set(review.languages);
     this.disableControl = false;
     this.isEditReview = true;
   }
@@ -327,42 +305,42 @@ export class MainModalComponent implements OnInit, OnChanges {
   }
 
   private updateReviewFields(): void {
-    const review = this.review.value;
-    let index = -1;
-    for (let i = 0; i < this.reviews.length; i++) {
-      if (this.reviews[i].id === review.id) {
-        index = i;
-      }
-    }
-    if (index >= 0) {
-      this.reviews.splice(index, 1, review);
-    }
-    for (const field of this.reviewEditableFields) {
-      let value = review[field];
-      switch (field) {
-        case 'country':
-          value = this.country(review.address.country);
-          break;
-        case 'city':
-          value = review.address.city;
-          break;
-        case 'region':
-          value = this.region(review.region);
-          break;
-        case 'languages':
-          value = this.reviewLanguages(review.languages);
-          break;
-        case 'sectors':
-          value = review.sectors.map(id => {
-            if (id === this.numSectors) {
-              return review.sectorOther;
-            }
-            return this.sector(id);
-          });
-          break;
-      }
-      document.querySelector(`#review-${review.id} #${field}`).innerHTML = value;
-    }
+    // const review = this.review.value;
+    // let index = -1;
+    // for (let i = 0; i < this.reviews.length; i++) {
+    //   if (this.reviews[i].id === review.id) {
+    //     index = i;
+    //   }
+    // }
+    // if (index >= 0) {
+    //   this.reviews.splice(index, 1, review);
+    // }
+    // for (const field of this.reviewEditableFields) {
+    //   let value = review[field];
+    //   switch (field) {
+    //     case 'country':
+    //       value = this.country(review.address.country);
+    //       break;
+    //     case 'city':
+    //       value = review.address.city;
+    //       break;
+    //     case 'region':
+    //       value = this.region(review.region);
+    //       break;
+    //     case 'languages':
+    //       value = this.reviewLanguages(review.languages);
+    //       break;
+    //     case 'sectors':
+    //       value = review.sectors.map(id => {
+    //         if (id === this.numSectors) {
+    //           return review.sectorOther;
+    //         }
+    //         return this.sector(id);
+    //       });
+    //       break;
+    //   }
+    //   document.querySelector(`#review-${review.id} #${field}`).innerHTML = value;
+    // }
   }
 
   closeEditReview(): void {
