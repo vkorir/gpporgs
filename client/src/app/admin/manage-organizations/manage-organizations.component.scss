@@ -1,0 +1,11 @@
+.table-footer {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+
+    .mat-paginator {
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+}

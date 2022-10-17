@@ -34,10 +34,10 @@ export class Organization {
 		Object.assign(this.region, data.region);
 		this.address = new Address(data.address);
 		if (!!data.affiliations) {
-			this.affiliations = data.affiliations.map((aff: any) => Object.assign(new Affiliation(), aff));
+			this.affiliations = data.affiliations.map(aff => Object.assign(new Affiliation(), aff));
 		}
 		if (!!data.sectors) {
-			this.sectors = data.sectors.map((sec: any) => Object.assign(new Sector(), sec));
+			this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
 		}
 		if (!!data.contacts) {
 			for (let i = 0; i < data.contacts.length; i++) {
@@ -77,10 +77,10 @@ export class Review {
 			Object.assign(this.address.country, data.address.country);
 		}
 		if (!!data.languages) {
-			this.languages = data.languages.map((lan: any) => Object.assign(new Language(), lan));
+			this.languages = data.languages.map(lan => Object.assign(new Language(), lan));
 		}
 		if (!!data.sectors) {
-			this.sectors = data.sectors.map((sec: any) => Object.assign(new Sector(), sec));
+			this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
 		}
 	}
 }

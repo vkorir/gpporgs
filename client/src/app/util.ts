@@ -1,7 +1,6 @@
 import { Area, Filter, Organization } from "./models";
 
 export const serverUrl = window.origin.includes('4200') ? 'http://localhost:8080' : window.origin;
-export const loginUrl = `${serverUrl}/oauth2/authorization/google?redirect_uri=${window.origin}/login`
 
 export function applyFilterToOrg(filter: Filter, org: Organization): boolean {
   let searchMatch = !filter.searchString;

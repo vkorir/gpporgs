@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Add User</h2>
+<mat-dialog-content>
+  <mat-form-field fxFlexFill>
+    <input matInput id="add-user-input" [formControl]="inputControl" placeholder="Enter CalNet ID" data-lpignore="true" required/>
+    <span matSuffix>{{domain}}</span>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="center center">
+  <button mat-button class="warn" mat-dialog-close>Close</button>
+  <button mat-button style="background: #3a7200 !important;" [disabled]="!inputControl.valid" (click)="addUser()">Add User</button>
+</mat-dialog-actions>

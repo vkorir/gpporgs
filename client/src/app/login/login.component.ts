@@ -1,49 +1,44 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { AppService } from 'src/app/app.service';
-import { AuthService } from 'src/app/auth.service';
-import { User } from '../models';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
 
-  private subscriptions: Subscription[] = [];
+  constructor(private appService: AppService,
+              private router: Router,
+              private route: ActivatedRoute) { }
 
-  constructor(private authService: AuthService, private appService: AppService, private router: Router, private route: ActivatedRoute) { }
-
-  ngOnInit(): void {
-    this.subscriptions.push(this.authService.currentUser.subscribe(user => {
-      if (user.id != 0) {
-        let redirectUrl = ''
-        if (user.isAdmin) {
-          redirectUrl = 'admin'
+  ngOnInit() {
+    this.appService.user.subscribe(user => {
+      if (!!user) {
+        let redirectUrl = '/';
+        if (this.appService.user.getValue().isAdmin) {
+          redirectUrl = '/admin';
         }
-        this.router.navigate([redirectUrl]);
+        this.router.navigateByUrl(redirectUrl);
       }
-    }));
-    if (!!this.route.snapshot.queryParams[this.authService.tokenKey]) {
-      this.authService.setToken(this.route.snapshot.queryParams[this.authService.tokenKey]);
+    });
+    const token = this.route.snapshot.queryParams.token;
+    if (!!token) {
+      this.appService.setToken(token);
     }
-    if (this.authService.tokenExists()) {
-      this.subscriptions.push(this.appService.queryService('{ currentUser { id firstName isAdmin }}').subscribe(({ currentUser }) => {
-        if (!!currentUser) {
-          this.authService.currentUser.next(Object.assign(new User(), currentUser));
-        }
-      }));
+    if (this.appService.tokenExists()) {
+      this.appService.initializeState();
     }
-  }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    const error = this.route.snapshot.queryParams.error;
+    if (error) {
+      this.appService.openSnackBar(error || 'An error occurred.');
+      this.router.navigateByUrl('/login');
+    }
   }
 
   login(): void {
-    window.location.assign(this.authService.getLoginUrl());
+    window.location.assign(this.appService.loginUrl());
   }
-
 }

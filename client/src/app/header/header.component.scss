@@ -1,38 +1,37 @@
 .mat-toolbar {
+  padding: 0;
+
+  .mat-toolbar-row {
     padding: 0;
-  
-    .mat-toolbar-row {
-      padding: 0;
-  
-      .mat-form-field {
-        width: 50%;
-        color: #ffffff;
-  
-        .mat-form-field-wrapper {
-          padding: 0 2px;
-        }
-  
-        .mat-form-field-prefix .mat-icon,
-        .mat-form-field-suffix .mat-icon {
-          font-size: 200%;
-          background: transparent !important;
-        }
-  
-        .mat-button {
-          box-shadow: none;
-          background: transparent !important;
-  
-          .mat-icon {
-            color: rgba(0, 0, 0, 0.54);
-          }
-        }
+
+    .mat-form-field {
+      width: 50%;
+      color: #ffffff;
+
+      .mat-form-field-wrapper {
+        padding: 0 2px;
       }
-  
+
+      .mat-form-field-prefix .mat-icon,
+      .mat-form-field-suffix .mat-icon {
+        font-size: 200%;
+        background: transparent !important;
+      }
+
       .mat-button {
-        box-shadow: 0 4px 6px #05365b;
-        color: #ffffff;
-        padding: 8px;
+        box-shadow: none;
+        background: transparent !important;
+
+        .mat-icon {
+          color: rgba(0, 0, 0, 0.54);
+        }
       }
     }
+
+    .mat-button {
+      box-shadow: 0 4px 6px #05365b;
+      color: #ffffff;
+      padding: 8px;
+    }
   }
-  
+}

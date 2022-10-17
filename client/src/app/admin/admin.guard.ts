@@ -1,34 +1,22 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree, Route, UrlSegment, Router, CanLoad } from '@angular/router';
-import { map, Observable } from 'rxjs';
-import { AuthService } from '../auth.service';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate } from '@angular/router';
+import { AppService } from '../app.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AdminGuard implements CanActivate, CanLoad {
+export class AdminGuard implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private appService: AppService, private router: Router) {}
 
   canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean> {
-    return this.checkAuthentication();
-  }
-
-  canLoad(
-    route: Route,
-    segments: UrlSegment[]): Observable<boolean> {
-    return this.checkAuthentication();
-  }
-
-  checkAuthentication(): Observable<boolean> {
-    return this.authService.currentUser.asObservable().pipe(map(user => {
-      if (user.id == 0 || !user.isAdmin) {
-        this.router.navigate(['']);
-        return false;
-      }
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): boolean {
+    if (this.appService.user.getValue() && this.appService.user.getValue().isAdmin) {
+      this.appService.isShowSearchBar.next(false);
       return true;
-    }));
+    }
+    this.router.navigateByUrl('/');
+    return false;
   }
 }

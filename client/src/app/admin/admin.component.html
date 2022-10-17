@@ -1,1 +1,27 @@
-<p>admin works!</p>
+<div class="container" fxLayoutAlign="center">
+  <div class="inner-container" fxFlex.gt-md="1140px" fxFlex.md="960px" fxFlex.lt-md="98%">
+    <div>
+      <h2 fxFlexFill fxLayoutAlign="center">Admin actions</h2>
+    </div>
+    <p><mat-divider></mat-divider></p>
+    <div fxLayout="row wrap" fxLayoutGap.gt-sm="2%" fxLayoutGap.lt-md="8px">
+      <mat-card fxFlex.gt-sm="32" fxFlex.lt-md="100" *ngFor="let item of actions; let i = index">
+        <mat-card-title style="font-size: 16px; font-weight: 400;">{{item.title}}</mat-card-title>
+        <mat-divider></mat-divider>
+        <mat-card-content style="height: 100px;">
+          <div fxLayoutAlign="center center" style="height: 50px;">
+            <mat-icon color="primary" style="font-size: 32px">{{item.icon}}</mat-icon>
+          </div>
+          {{item.description}}
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions fxLayoutAlign="center center">
+          <button mat-button class="warn" (click)="item.action(i)" [disabled]="item.isLoading">
+            <mat-progress-bar color="primary" *ngIf="item.isLoading" mode="indeterminate"></mat-progress-bar>
+            {{item.title}}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

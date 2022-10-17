@@ -1,34 +1,38 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanLoad, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
-import { map, Observable } from 'rxjs';
-import { AuthService } from '../auth.service';
+import { CanActivate, CanLoad, Route, UrlSegment, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { AppService } from '../app.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HomeGuard implements CanActivate, CanLoad {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private appService: AppService, private router: Router) { }
 
   canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean> {
     return this.checkAuthentication();
   }
 
   canLoad(
     route: Route,
-    segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    segments: UrlSegment[]): Observable<boolean> {
     return this.checkAuthentication();
   }
 
   checkAuthentication(): Observable<boolean> {
-    return this.authService.currentUser.asObservable().pipe(map(user => {
-      if (user.id == 0) {
-        this.router.navigate(['/login']);
-        return false;
+    return this.appService.user.asObservable().pipe(map(user => {
+      if (user == null) {
+        this.router.navigateByUrl('/login');
       }
-      return true;
+      if (!!user) {
+        this.appService.isShowSearchBar.next(true);
+        return true;
+      }
+      return false;
     }));
   }
 }

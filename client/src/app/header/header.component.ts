@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AppService } from '../app.service';
 import { Observable } from 'rxjs';
-import { AuthService } from 'src/app/auth.service';
-import { User } from '../models';
+import { Router} from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { Filter, User } from '../models';
 
 @Component({
   selector: 'app-header',
@@ -11,24 +12,32 @@ import { User } from '../models';
 })
 export class HeaderComponent implements OnInit {
 
-  searchControl: FormControl;
-  user: User;
+  user: Observable<User>;
+  searchControl = new FormControl();
+  isShowSearchBar: boolean;
 
-  constructor(private authService: AuthService) {
-    this.searchControl = new FormControl();
-    this.user = new User();
+  constructor(private appService: AppService, private router: Router) {
+    this.user = this.appService.user.asObservable();
+    this.searchControl.valueChanges.subscribe(() => this.updateSearchString());
+    this.appService.isShowSearchBar.subscribe(value => {
+      this.isShowSearchBar = value;
+    });
   }
 
-  ngOnInit(): void {
-    this.authService.currentUser.subscribe(user => this.user = user);
+  ngOnInit() {}
+
+  private updateSearchString() {
+    const filter = new Filter(this.appService.filter.getValue());
+    filter.searchString = this.searchControl.value.trim().toLowerCase();
+    this.appService.filter.next(filter);
   }
 
-  login(): void {
-    window.location.assign(this.authService.getLoginUrl());
+  login() {
+    window.location.assign(this.appService.loginUrl());
   }
 
-  logout(): void {
-    this.authService.logout();
+  logout() {
+    this.appService.logout();
+    this.router.navigateByUrl('/login');
   }
-
 }

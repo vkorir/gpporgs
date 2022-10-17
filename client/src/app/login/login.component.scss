@@ -1,17 +1,16 @@
 .container {
-    height: 50%;
-  
-    .inner-container {
-      height: auto;
-      min-height: 0;
-  
-      .mat-divider {
-        margin-bottom: 8px !important;
-      }
-  
-      .mat-button {
-         width: 100px;
-       }
+  height: 50%;
+
+  .inner-container {
+    height: auto;
+    min-height: 0;
+
+    .mat-divider {
+      margin-bottom: 8px !important;
     }
+
+    .mat-button {
+       width: 100px;
+     }
   }
-  
+}
