@@ -1,0 +1,73 @@
+.container {
+  min-height: 400px;
+  padding: 4px 0;
+}
+
+.mat-toolbar {
+  .mat-form-field-underline {
+    display: none;
+  }
+}
+
+.inner-container {
+  border-radius: $border-radius;
+  background: $container-background;
+  border: 1px solid $container-border-color;
+  padding: $container-padding;
+  height: calc(100vh - #{$header-height} - 8px);
+  min-height: 400px;
+
+  .filter-sectors {
+    margin-left: $container-padding;
+    padding-left: $container-padding;
+  }
+}
+
+.mat-toolbar {
+  background: $berkeley-blue;
+  height: $header-height;
+}
+
+.mat-divider {
+  margin: 0 auto !important;
+  border-color: $container-border-color;
+  width: 50%;
+}
+
+.snack-bar-custom {
+  background: $berkeley-blue-light;
+}
+
+::ng-deep .mat-checkbox.mat-accent {
+  .mat-checkbox-frame {
+    border: 1px solid $berkeley-blue-dark;
+  }
+
+  &.mat-checkbox-checked .mat-checkbox-background {
+    background-color: white;
+    border: 1px solid $berkeley-blue-dark;
+  }
+
+  .mat-checkbox-checkmark-path {
+    stroke: $berkeley-blue-dark !important;
+  }
+}
+
+::ng-deep .mat-radio-button, .mat-checkbox {
+  color: #000000;
+}
+
+#filter-subheading {
+  border-bottom: 1px solid $container-border-color;
+}
+
+p i, span i {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+p strong {
+  color: $berkeley-blue;
+}
+
+
