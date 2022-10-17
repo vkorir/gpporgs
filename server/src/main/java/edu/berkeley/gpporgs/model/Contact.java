@@ -2,7 +2,6 @@ package edu.berkeley.gpporgs.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -29,7 +28,6 @@ public class Contact implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     private String name;
 
     private String role;
