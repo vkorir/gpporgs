@@ -1,14 +1,14 @@
 type Query {
     # User Queries
     currentUser: UserInfo!
-    user(id: ID!): UserInfo
+    user(id: Int!): UserInfo
     users: [UserInfo!]
     # Organization Queries
-    organization(id: ID!): OrganizationInfo
+    organization(id: Int!): OrganizationInfo
 	organizations(approved: Boolean!): [OrganizationInfo!]
 	# Review Queries
-	review(id: ID!): ReviewInfo
-	reviews(orgId: ID!): [ReviewInfo!]
+	review(id: Int!): ReviewInfo
+	reviews(orgid: Int!): [ReviewInfo!]
     # Other
     affiliations: [Affiliation!]
     countries: [Country!]
@@ -26,12 +26,12 @@ type Mutation {
 	createOrganization(org: OrganizationInput!): OrganizationInfo
 	updateOrganization(org: OrganizationInput!): OrganizationInfo
 	# Review Mutations
-	createReview(orgId: ID!, rev: ReviewInput!): ReviewInfo
+	createReview(orgid: Int!, rev: ReviewInput!): ReviewInfo
 	updateReview(rev: ReviewInput!): ReviewInfo
 }
 
 type UserInfo {
-	id: ID
+	id: Int
 	email: String
 	firstName: String
 	lastName: String
@@ -42,14 +42,14 @@ type UserInfo {
 	hasAccess: Boolean
 }
 input UserInput {
-	id: ID!
+	id: Int!
 	email: String
 	isAdmin: Boolean
 	hasAccess: Boolean
 }
 
 type OrganizationInfo {
-	id: ID
+	id: Int
 	name: String
 	description: String
 	address: AddressInfo
@@ -67,7 +67,7 @@ type OrganizationInfo {
 	created: String
 }
 input OrganizationInput {
-	id: ID!
+	id: Int!
 	name: String!
 	description: String
 	address: AddressInput!
@@ -85,7 +85,7 @@ input OrganizationInput {
 }
 
 type ReviewInfo {
-	id: ID
+	id: Int
 	created: String
 	address: AddressInfo
 	region: Region
@@ -106,7 +106,7 @@ type ReviewInfo {
 	reviewer: UserInfo
 }
 input ReviewInput {
-	id: ID!
+	id: Int!
 	address: AddressInput!
 	region: RegionInput!
 	languages: [LanguageInput!]
@@ -127,7 +127,7 @@ input ReviewInput {
 }
 
 type AddressInfo {
-    id: ID
+    id: Int
     street: String
     city: String
     state: String
@@ -135,7 +135,7 @@ type AddressInfo {
     country: Country
 }
 input AddressInput {
-    id: ID!
+    id: Int!
     street: String
     city: String
     state: String
@@ -144,14 +144,14 @@ input AddressInput {
 }
 
 type ContactInfo {
-    id: ID
+    id: Int
     name: String
     role: String
     email: String
     phone: String
 }
 input ContactInput {
-    id: ID!
+    id: Int!
     name: String!
     role: String
     email: String
@@ -161,11 +161,11 @@ input ContactInput {
 # Other Types
 
 type Affiliation {
-    id: ID
+    id: Int
     value: String
 }
 input AffiliationInput {
-	id: ID!
+	id: Int!
 	value: String!
 }
 type Country {
@@ -185,26 +185,26 @@ input LanguageInput {
 	value: String!
 }
 type Region {
-    id: ID
+    id: Int
     value: String
 }
 input RegionInput {
-	id: ID!
+	id: Int!
 	value: String!
 }
 type Sector {
-    id: ID
+    id: Int
     value: String
 }
 input SectorInput {
-	id: ID!
+	id: Int!
 	value: String!
 }
 type Type {
-    id: ID
+    id: Int
     value: String
 }
 input TypeInput {
-	id: ID!
+	id: Int!
 	value: String!
 }
