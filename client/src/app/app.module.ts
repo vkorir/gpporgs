@@ -48,6 +48,8 @@ import { MainModalComponent } from "./main-modal/main-modal.component";
 import { AddUserComponent } from "./admin/add-user/add-user.component";
 import { ManageUsersComponent } from "./admin/manage-users/manage-users.component";
 import { ManageOrganizationsComponent } from "./admin/manage-organizations/manage-organizations.component";
+import { OrganizationComponent } from "./main-modal/organization/organization.component";
+import { ReviewComponent } from "./main-modal/review/review.component";
 
 const materialModules = [
   MatButtonModule,
@@ -90,6 +92,8 @@ const materialModules = [
     AddUserComponent,
     ManageUsersComponent,
     ManageOrganizationsComponent,
+    OrganizationComponent,
+    ReviewComponent
   ],
   imports: [
     BrowserModule,

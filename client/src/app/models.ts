@@ -8,6 +8,12 @@ export class User {
 	numberOfLogin: number = 0;
 	lastLogin: string = '';
 	hasAccess: boolean = false;
+
+	constructor(data: any = {}) {
+		Object.keys(data).forEach(key => {
+			this[key] = data[key];
+		});
+	}
 }
 
 export class Organization {
@@ -29,21 +35,23 @@ export class Organization {
 	created: string = '';
 
 	constructor(data: any = {}) {
-		Object.assign(this, data);
-		Object.assign(this.type, data.type);
-		Object.assign(this.region, data.region);
-		this.address = new Address(data.address);
-		if (!!data.affiliations) {
-			this.affiliations = data.affiliations.map(aff => Object.assign(new Affiliation(), aff));
-		}
-		if (!!data.sectors) {
-			this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
-		}
-		if (!!data.contacts) {
-			for (let i = 0; i < data.contacts.length; i++) {
-				Object.assign(this.contacts[i], data.contacts[i]);
+		Object.keys(data).forEach(key => {
+			if (key == 'type') {
+				this[key] = Object.assign(new Type(), data[key]);
+			} else if (key == 'region') {
+				this[key] = Object.assign(new Region(), data[key]);
+			} else if (key == 'address') {
+				this[key] = new Address(data[key]);
+			} else if (key == 'affiliations') {
+				data[key].forEach(aff => this[key].push(Object.assign(new Affiliation(), aff)));
+			} else if (key == 'sectors') {
+				data[key].forEach(sec => this[key].push(Object.assign(new Sector(), sec)));
+			} else if (key == 'contacts') {
+				data[key].forEach((con, idx) => Object.assign(this[key][idx], con));
+			} else {
+				this[key] = data[key];
 			}
-		}
+		});
 	}
 }
 
@@ -69,19 +77,21 @@ export class Review {
 	reviewer: User = new User();
 
 	constructor(data: any = {}) {
-		Object.assign(this, data);
-		Object.assign(this.region, data.region);
-		Object.assign(this.address, data.address);
-		Object.assign(this.reviewer, data.reviewer);
-		if (!!data.address) {
-			Object.assign(this.address.country, data.address.country);
-		}
-		if (!!data.languages) {
-			this.languages = data.languages.map(lan => Object.assign(new Language(), lan));
-		}
-		if (!!data.sectors) {
-			this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
-		}
+		Object.keys(data).forEach(key => {
+			if (key == 'region') {
+				Object.assign(this[key], data[key]);
+			} else if (key == 'address') {
+				this[key] = new Address(data[key]);
+			} else if (key == 'reviewer') {
+				this[key] = new User(data[key]);
+			} else if (key == 'languages') {
+				data[key].forEach(lan => this[key].push(Object.assign(new Language(), lan)));
+			} else if (key == 'sectors') {
+				data[key].forEach(sec => this[key].push(Object.assign(new Sector(), sec)));
+			} else {
+				this[key] = data[key];
+			}
+		});
 	}
 }
 
@@ -94,8 +104,14 @@ export class Address {
     country: Country = new Country();
 
 	constructor(data: any = {}) {
-		Object.assign(this, data);
-		Object.assign(this.country, data.country);
+		Object.keys(data).forEach(key => {
+			if (key == 'country') {
+				this[key].code = data[key].code || this[key].code;
+				this[key].value = data[key].value || this[key].value;
+			} else {
+				this[key] = data[key];
+			}
+		});
 	}
 }
 
@@ -145,13 +161,15 @@ export class Filter {
     searchString = '';
 
 	constructor(data: any = {}) {
-		Object.assign(this, data);
-		if (!!data.regionIds) {
-			this.regionIds = new Set(data.regionIds);
-		}
-		if (!!data.sectorIds) {
-			this.sectorIds = new Set(data.sectorIds);
-		}
+		Object.keys(data).forEach(key => {
+			if (key == 'regionIds') {
+				this[key] = new Set(data.regionIds);
+			} else if (key == 'sectorIds') {
+				this[key] = new Set(data.sectorIds);
+			} else {
+				this[key] = data[key];
+			}
+		});
 	}
 }
 
@@ -161,4 +179,8 @@ export enum Area {
 
 export enum Sort {
     NAME, TYPE, LOCATION
+}
+
+export enum Mode {
+	EDIT, VIEW
 }

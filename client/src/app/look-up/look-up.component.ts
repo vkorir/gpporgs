@@ -5,6 +5,7 @@ import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { MainModalComponent } from "src/app/main-modal/main-modal.component";
+import { Mode } from "../models";
 
 @Component({
   selector: "app-look-up",
@@ -41,16 +42,16 @@ export class LookUpComponent implements OnInit {
     const orgContacts = 'contacts { id name role phone email }';
     const query = `{ organization(id: ${id}) { ${orgInfo} ${orgAddress} ${orgContacts} }}`;
     this.appService.queryService(query).subscribe(({ organization }) => {
-      this.openReviewDialog(organization);
+      this.openReviewDialog(organization, Mode.VIEW);
     });
   }
 
-  openReviewDialog(organization: any = {}) {
+  openReviewDialog(organization: any = {}, mode: Mode = Mode.EDIT) {
     this.dialogRef.close();
     this.dialog.open(MainModalComponent, {
       panelClass: "mat-dialog--md",
       disableClose: true,
-      data: { organization, disableControl: false },
+      data: { organization, mode },
     });
   }
 }

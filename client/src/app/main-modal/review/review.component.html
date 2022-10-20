@@ -1,0 +1,137 @@
+<mat-dialog-content>
+    <form role="form" fxLayout="row wrap" fxLayoutGap="1%" [formGroup]="review">
+        <div fxLayout="row" fxLayoutGap="8px" *ngIf="!isEditReview">
+            <p>Was your PE site different from your organization address?</p>
+            <mat-radio-group fxLayoutGap="8px" [formControl]="addressCtrl">
+                <mat-radio-button color="primary" [value]="true">Yes</mat-radio-button>
+                <mat-radio-button color="primary" [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div *ngIf="addressCtrl.value" fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" formGroupName="address">
+            <mat-form-field appearance="outline">
+                <mat-label>Street</mat-label>
+                <input matInput formControlName="street" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="city" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>State</mat-label>
+                <input matInput formControlName="state" />
+            </mat-form-field>
+        </div>
+        <div *ngIf="addressCtrl.value" fxLayout="column" fxFlex.lt-md="100" fxFlex.gt-sm="49" formGroupName="address">
+            <mat-form-field appearance="outline">
+                <mat-label>Zip</mat-label>
+                <input matInput formControlName="zip" />
+            </mat-form-field>
+            <!-- <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Region</mat-label>
+                <mat-select formControlName="region" [compareWith]="compareId">
+                    <mat-option *ngFor="let region of regions" [value]="region">
+                        {{ region.value }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> -->
+            <mat-form-field appearance="outline">
+                <mat-select formControlName="country" [compareWith]="compareCode" required>
+                    <mat-option *ngFor="let country of countries" [value]="country">
+                      {{ country.value }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <p fxFlexFill>
+            <mat-form-field fxFlex.gt-sm="70">
+                <mat-chip-list #chipList>
+                    <mat-chip *ngFor="let language of selectedLanguages" [selectable]="true" [removable]="true" (removed)="removeLanguage(language)">
+                        {{ language.value }}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Please list the languages spoken at your PE location" #languageInput [formControl]="languageCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList" />
+                </mat-chip-list>
+            </mat-form-field>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addLanguage($event)">
+                <mat-option *ngFor="let language of filteredLanguages | async" [value]="language.id">{{ language.value }}</mat-option>
+            </mat-autocomplete>
+        </p>
+        <p fxFlexFill>
+            <mat-form-field appearance="legacy" fxFlexFill>
+                <textarea matInput formControlName="difficulties" placeholder="Did you have any language difficulties?" rows="4"></textarea>
+            </mat-form-field>
+        </p>
+        <p>What were the sectors of your PE? <i>Check all that may apply</i></p>
+        <p fxLayout="row wrap" fxFlexFill>
+            <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
+                *ngFor="let sector of sectors"
+                [checked]="contains(review.controls.sectors.value, sector.id)"
+                [hidden]="mode == Mode.VIEW && !contains(review.controls.sectors.value, sector.id)"
+                [disabled]="mode == Mode.VIEW"
+                (change)="update(review.controls.sectors, value)">
+                {{ sector.value }}
+            </mat-checkbox>
+            <mat-form-field fxFlex="60" *ngIf="">
+                <input matInput placeholder="Describe here" formControlName="sectorOther" />
+            </mat-form-field>
+        </p>
+        <p fxFlexFill>What was the cost of your PE?<i> All incurred costs (i.e. transportation, housing, etc)</i></p>
+        <div fxFlexFill>
+            <div fxLayout="column" fxFlex.gt-sm="50">
+                <span fxFlex>Cost of PE <i>(drag the slider)</i></span>
+                <mat-slider color="primary" min="0" max="10000" step="100" [value]="review.controls.cost.value" [displayWith]="formatSliderLabel" thumbLabel (valueChange)="onSliderChange(review.controls.cost, $event)"></mat-slider>
+            </div>
+            <div fxLayout="column" fxFlex.gt-sm="50">
+                <span>Stipend paid by organization<i>(drag the slider)</i></span>
+                <mat-slider color="primary" min="0" max="10000" [value]="review.controls.stipend.value" [displayWith]="formatSliderLabel" thumbLabel (valueChange)="onSliderChange(review.controls.stipend, $event)"></mat-slider>
+            </div>
+        </div>
+        <p>What was the duration of your PE?</p>
+        <p fxFlexFill>
+            <mat-radio-group fxFlexFill formControlName="duration">
+                <mat-radio-button color="primary" fxFlex="25" [value]="duration" *ngFor="let duration of ['<2 months', '2-4 months', '4-6 months', '6-12 months', '6-12 months', '>1 year']">{{ duration }}</mat-radio-button>
+            </mat-radio-group>
+        </p>
+        <p fxLayout="column" fxFlexFill>
+            <mat-form-field appearance="legacy">
+                <textarea matInput formControlName="workDone" placeholder="Please describe the work that you did with your organization (2 paragraphs)" rows="4" required></textarea>
+            </mat-form-field>
+        </p>
+        <p fxLayout="column" fxFlexFill>
+            <mat-form-field appearance="legacy">
+                <textarea matInput formControlName="typicalDay" placeholder="What was a typical day like while on your PE? (please consider housing, food, travel, weather, etc)" rows="4"></textarea>
+            </mat-form-field>
+        </p>
+        <p fxLayout="column" fxFlexFill>
+            <mat-form-field appearance="legacy">
+                <textarea matInput formControlName="evaluation" placeholder="What were your organization's strengths and weaknesses? (2 paragraphs)" rows="4"></textarea>
+            </mat-form-field>
+        </p>
+        <p fxLayout="column" fxFlexFill>
+            <mat-form-field appearance="legacy">
+                <textarea matInput formControlName="other" placeholder="Is there anything else you would like to share with other students who may work with this organization?" rows="4"></textarea>
+            </mat-form-field>
+        </p>
+        <p>How safe did you feel?</p>
+        <p fxLayout="row" fxFlex="100">
+            <mat-radio-group fxFlexFill formControlName="safety">
+                <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                    <mat-radio-button color="primary" fxFlex="25" [value]="i">
+                        {{ i }}{{ i == 1 ? ' (very unsafe)' : ( i == 5 ? ' (very safe)' : '') }}
+                    </mat-radio-button>
+                </ng-container>
+            </mat-radio-group>
+        </p>
+        <p>How responsive was your organization?</p>
+        <p fxLayout="row" fxFlex="100">
+            <mat-radio-group fxFlexFill formControlName="responsiveness">
+                <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                    <mat-radio-button color="primary" fxFlex="25" [value]="i">
+                        {{ i }}{{ i == 1 ? ' (snail)' : ( i == 5 ? ' (hare)' : '') }}
+                    </mat-radio-button>
+                </ng-container>
+            </mat-radio-group>
+        </p>
+        <mat-slide-toggle labelPosition="before" formControlName="anonymous" [checked]>Post as anonymous?</mat-slide-toggle>
+    </form>
+</mat-dialog-content>
