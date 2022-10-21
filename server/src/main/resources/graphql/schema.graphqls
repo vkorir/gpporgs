@@ -8,7 +8,7 @@ type Query {
 	organizations(approved: Boolean!): [OrganizationInfo!]
 	# Review Queries
 	review(id: Int!): ReviewInfo
-	reviews(orgid: Int!): [ReviewInfo!]
+	reviews(orgId: Int!): [ReviewInfo!]
     # Other
     affiliations: [Affiliation!]
     countries: [Country!]
@@ -26,7 +26,7 @@ type Mutation {
 	createOrganization(org: OrganizationInput!): OrganizationInfo
 	updateOrganization(org: OrganizationInput!): OrganizationInfo
 	# Review Mutations
-	createReview(orgid: Int!, rev: ReviewInput!): ReviewInfo
+	createReview(orgId: Int!, rev: ReviewInput!): ReviewInfo
 	updateReview(rev: ReviewInput!): ReviewInfo
 }
 
