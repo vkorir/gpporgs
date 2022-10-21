@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatRadioChange, MAT_DIALOG_DATA } from '@angular/material';
+import { Subject } from 'rxjs';
 import { AppService } from 'src/app/app.service';
 import { Address, Affiliation, Contact, Country, Language, Mode, Organization, Region, Sector, Type } from 'src/app/models';
 import { buildForm } from '../main-modal-util';
@@ -10,7 +11,7 @@ import { buildForm } from '../main-modal-util';
   templateUrl: './organization.component.html',
   styleUrls: ['../main-modal.component.scss']
 })
-export class OrganizationComponent implements OnInit {
+export class OrganizationComponent implements OnInit, OnDestroy {
   
   organization: FormGroup;
   
@@ -33,6 +34,9 @@ export class OrganizationComponent implements OnInit {
     sectors: [Validators.required]
   }
 
+  @Input()
+  orgAction: Subject<Mode>;
+
   constructor(private fb: FormBuilder, private appService: AppService, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {
@@ -43,7 +47,18 @@ export class OrganizationComponent implements OnInit {
     this.countries = this.appService.countries.slice();
     this.isAdmin = this.appService.user.getValue().isAdmin;
     this.mode = this.data.mode;
+    this.orgAction.subscribe(mode => {
+      if (mode == Mode.EDIT) {
+        this.edit();
+      } else if (mode == Mode.VIEW) {
+        this.save();
+      }
+    });
     this.organization = this.buildForm(new Organization(this.data.organization), this.mode != Mode.EDIT, this.validationSchema) as FormGroup;
+  }
+
+  ngOnDestroy() {
+    this.orgAction.unsubscribe();
   }
 
   contacts(): FormGroup[] {

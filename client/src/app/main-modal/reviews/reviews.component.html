@@ -3,11 +3,7 @@
     <div fxLayout="row wrap" fxLayoutGap="1%" *ngFor="let review of reviews; let idx = index" id="review-{{ review.id }}">
         <h4 fxFlexFill>
             Review #{{ idx + 1 }}
-            <ng-container>&nbsp;by&nbsp;
-                <strong>
-                    {{!!review.reviewer.firstName ? review.reviewer.firstName + ' (' + review.reviewer.email + ')' : review.reviewer.email}}
-                </strong>
-            </ng-container>
+            <ng-container>&nbsp;by&nbsp;<strong>{{ reviewer(review.reviewer) }}</strong></ng-container>
             <span fxFlex="1 1 auto"></span>
             <span style="font-size: 0.95rem">Submitted on: {{ formatDate(review.created) }}</span>
         </h4>
@@ -27,7 +23,7 @@
             <span id="city">{{ review.address.city }}</span>
         </p>
         <p fxFlexFill>
-            <strong>Languages spoken at PE location:</strong>
+            <strong>Languages spoken at PE location: </strong>
             <span id="languages">{{ languages(review.languages) }}</span>
         </p>
         <p fxFlexFill>
@@ -74,5 +70,8 @@
         <p fxFlexFill>
             <mat-divider fxFlexFill></mat-divider>
         </p>
+    </div>
+    <div fxLayout="row wrap" fxLayoutGap="1%" *ngIf="reviews.length == 0">
+        <p fxFlexFill>No reviews yet for this organization.</p>
     </div>
 </mat-dialog-content>

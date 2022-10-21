@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppService } from 'src/app/app.service';
 import { MatDialog, MatPaginator, MatSort } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 import { LookUpComponent } from '../look-up/look-up.component';
 import { Area, Filter, Region } from 'src/app/models';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,7 +13,9 @@ import { Area, Filter, Region } from 'src/app/models';
 })
 
  
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
+
+  name: string;
 
   area = Area;
   areaControl = this.fb.control(Area.ALL);
@@ -21,20 +24,29 @@ export class SidebarComponent implements OnInit {
   checklistRegion: any[] = [];
   checklistSector: any[] = [];
 
+  subscriptions: Subscription[] = [];
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) {
-    this.areaControl.valueChanges.subscribe(() => {
+constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.subscriptions.push(this.appService.user.subscribe(user => {
+      this.name = user.firstName || user.lastName;
+    }));
+    this.subscriptions.push(this.areaControl.valueChanges.subscribe(() => {
       const filter = new Filter(this.appService.filter.getValue());
       filter.area = this.areaControl.value;
       this.appService.filter.next(filter);
-    });
-    appService.regions.forEach(region => this.checklistRegion.push({ ...region, isSelected: true }));
-    appService.sectors.forEach(sector => this.checklistSector.push({ ...sector, isSelected: true }));
+    }));
+    this.appService.regions.forEach(region => this.checklistRegion.push({ ...region, isSelected: true }));
+    this.appService.sectors.forEach(sector => this.checklistSector.push({ ...sector, isSelected: true }));
   }
 
-  ngOnInit() {}
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
   
   toggleSelectAllRegions() {
     this.masterSelectedRegion = !this.masterSelectedRegion;

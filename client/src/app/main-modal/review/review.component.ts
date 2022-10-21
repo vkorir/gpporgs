@@ -1,7 +1,7 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MAT_DIALOG_DATA } from '@angular/material';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { AppService } from 'src/app/app.service';
 import { Address, Contact, Country, Language, Mode, Region, Review, Sector } from 'src/app/models';
@@ -12,7 +12,7 @@ import { MainModalComponent } from '../main-modal.component';
   templateUrl: './review.component.html',
   styleUrls: ['../main-modal.component.scss']
 })
-export class ReviewComponent implements OnInit {
+export class ReviewComponent implements OnInit, OnDestroy {
 
   review: FormGroup;
   addressCtrl: FormControl;
@@ -32,6 +32,9 @@ export class ReviewComponent implements OnInit {
   @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
+  @Input()
+  revAction: Subject<any>;
+
   constructor(private fb: FormBuilder, private appService: AppService, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
@@ -41,15 +44,20 @@ export class ReviewComponent implements OnInit {
     this.languages = this.appService.languages.slice();
     this.isAdmin = this.appService.user.getValue().isAdmin;
     this.mode = this.data.mode;
-    const reviewObject = new Review(this.data.review);
+    const reviewObject = new Review(this.data.review || {});
     this.review = this.buildForm(reviewObject, this.mode == Mode.VIEW) as FormGroup;
     this.addressCtrl = this.fb.control(true);
     this.languageCtrl = this.fb.control(null);
     this.selectedLanguages = new Set(reviewObject.languages);
+    this.revAction.subscribe(() => this.save());
     this.filteredLanguages = this.languageCtrl.valueChanges.pipe(
       startWith(null),
       map(value => value ? this.filter(value) : this.languages.slice())
     );
+  }
+
+  ngOnDestroy() {
+    this.revAction.unsubscribe();
   }
 
   compareId(object: Region | Sector, other: Region | Sector): boolean {
@@ -121,6 +129,10 @@ export class ReviewComponent implements OnInit {
       return Math.round(amount / 100) * 100;
     }
     return amount;
+  }
+
+  private save(): void {
+    console.log(this.review);
   }
 
 }

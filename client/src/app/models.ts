@@ -10,6 +10,7 @@ export class User {
 	hasAccess: boolean = false;
 
 	constructor(data: any = {}) {
+		data = data || {};
 		Object.keys(data).forEach(key => {
 			this[key] = data[key];
 		});
@@ -35,6 +36,7 @@ export class Organization {
 	created: string = '';
 
 	constructor(data: any = {}) {
+		data = data || {};
 		Object.keys(data).forEach(key => {
 			if (key == 'type') {
 				this[key] = Object.assign(new Type(), data[key]);
@@ -77,6 +79,7 @@ export class Review {
 	reviewer: User = new User();
 
 	constructor(data: any = {}) {
+		data = data || {};
 		Object.keys(data).forEach(key => {
 			if (key == 'region') {
 				Object.assign(this[key], data[key]);
@@ -104,6 +107,7 @@ export class Address {
     country: Country = new Country();
 
 	constructor(data: any = {}) {
+		data = data || {};
 		Object.keys(data).forEach(key => {
 			if (key == 'country') {
 				this[key].code = data[key].code || this[key].code;
@@ -161,6 +165,7 @@ export class Filter {
     searchString = '';
 
 	constructor(data: any = {}) {
+		data = data || {};
 		Object.keys(data).forEach(key => {
 			if (key == 'regionIds') {
 				this[key] = new Set(data.regionIds);
@@ -183,4 +188,8 @@ export enum Sort {
 
 export enum Mode {
 	EDIT, VIEW, READONLY
+}
+
+export enum View {
+	ORG, REV
 }

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { AppService } from 'src/app/app.service';
-import { Language, Region, Review, Sector } from 'src/app/models';
+import { Language, Region, Review, Sector, User } from 'src/app/models';
 
 @Component({
   selector: 'app-reviews',
@@ -16,7 +16,14 @@ export class ReviewsComponent implements OnInit {
   constructor(private fb: FormBuilder, private appService: AppService, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    this.data.reviews.forEach(rev => this.reviews.push(Object.assign(new Review(rev))));
+    (this.data.reviews || []).forEach(rev => this.reviews.push(Object.assign(new Review(rev))));
+  }
+
+  reviewer(reviewer: User): string {
+    if (reviewer.id == 0) {
+      return 'anonymous';
+    }
+    return reviewer.firstName ? reviewer.firstName + ' (' + reviewer.email + ')' : reviewer.email;
   }
 
   languages(languages: Language[]): string {

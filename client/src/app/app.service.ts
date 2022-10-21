@@ -52,28 +52,18 @@ export class AppService {
     localStorage.removeItem(this.tokenKey);
   }
 
-  initializeState(): void {
-    const user = 'currentUser { id firstName isAdmin }';
-    const affiliations = 'affiliations { id value }';
-    const types = 'types { id value }';
-    const sectors = 'sectors { id value }';
-    const regions = 'regions { id value }';
-    const countries = 'countries { code value }';
-    const languages = 'languages { code value }';
-    const queries = `{ ${user} ${affiliations} ${types} ${sectors} ${regions} ${countries} ${languages} }`;
-    this.queryService(queries).subscribe(data => {
-      if (!data.message) {
-        this.affiliations = data.affiliations.map(aff => Object.assign(new Affiliation(), aff));
-        this.regions = data.regions.map(reg => Object.assign(new Region(), reg));
-        this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
-        this.types = data.types.map(typ => Object.assign(new Type(), typ));
-        this.countries = data.countries.map(cou => Object.assign(new Country(), cou));
-        this.languages = data.languages.map(lan => Object.assign(new Language(), lan));
-        this.user.next(Object.assign(new User(), data.currentUser));
-      } else {
-        this.openSnackBar(data.error);
-      }
-    });
+  initializeState(data: any): void {
+    if (!data.message) {
+      this.affiliations = data.affiliations.map(aff => Object.assign(new Affiliation(), aff));
+      this.regions = data.regions.map(reg => Object.assign(new Region(), reg));
+      this.sectors = data.sectors.map(sec => Object.assign(new Sector(), sec));
+      this.types = data.types.map(typ => Object.assign(new Type(), typ));
+      this.countries = data.countries.map(cou => Object.assign(new Country(), cou));
+      this.languages = data.languages.map(lan => Object.assign(new Language(), lan));
+      this.user.next(Object.assign(new User(), data.currentUser));
+    } else {
+      this.openSnackBar(data.error);
+    }
   }
 
   formatDate(dateString: string): string {
