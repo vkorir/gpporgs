@@ -78,5 +78,10 @@ static/
 ### VS Code ###
 .vscode/
 scripts/*
+
+### server dir ###
 server/src/main/resources/static/*
-application.yaml
+server/src/main/resources/application.yml
+
+### client dir ###
+client/node_modules
