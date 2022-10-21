@@ -34,7 +34,7 @@ export class LookUpComponent implements OnInit {
 
   ngOnInit() {}
 
-  fetchOrganization(id: number) {
+  addReviewToOrg(id: number) {
     // tslint:disable-next-line:max-line-length
     const orgInfo = 'id name region { id value } phone email website description affiliations { id value } type { id value } typeOther sectors { id value } sectorOther approved created';
     const revInfo = 'id '
@@ -42,15 +42,14 @@ export class LookUpComponent implements OnInit {
     const orgContacts = 'contacts { id name role phone email }';
     const query = `{ organization(id: ${id}) { ${orgInfo} ${orgAddress} ${orgContacts} }}`;
     this.appService.queryService(query).subscribe(({ organization }) => {
-      this.openReviewDialog(organization, Mode.VIEW);
+      this.openAddReviewModal(organization, Mode.VIEW);
     });
   }
 
-  openReviewDialog(organization: any = {}, mode: Mode = Mode.EDIT) {
+  openAddReviewModal(organization: any = {}, mode: Mode = Mode.EDIT) {
     this.dialogRef.close();
     this.dialog.open(MainModalComponent, {
       panelClass: "mat-dialog--md",
-      disableClose: true,
       data: { organization, mode },
     });
   }

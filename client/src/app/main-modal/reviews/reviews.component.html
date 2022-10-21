@@ -1,0 +1,78 @@
+<h2 class="mat-dialog-title primary">Organization Reviews</h2>
+<mat-dialog-content>
+    <div fxLayout="row wrap" fxLayoutGap="1%" *ngFor="let review of reviews; let idx = index" id="review-{{ review.id }}">
+        <h4 fxFlexFill>
+            Review #{{ idx + 1 }}
+            <ng-container>&nbsp;by&nbsp;
+                <strong>
+                    {{!!review.reviewer.firstName ? review.reviewer.firstName + ' (' + review.reviewer.email + ')' : review.reviewer.email}}
+                </strong>
+            </ng-container>
+            <span fxFlex="1 1 auto"></span>
+            <span style="font-size: 0.95rem">Submitted on: {{ formatDate(review.created) }}</span>
+        </h4>
+        <p fxFlexFill>
+            <mat-divider fxFlexFill></mat-divider>
+        </p>
+        <p fxFlexFill>
+            <strong>Country: </strong>
+            <span id="country">{{ review.address.country.value }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Region: </strong>
+            <span id="region">{{ review.region.value }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>City: </strong>
+            <span id="city">{{ review.address.city }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Languages spoken at PE location:</strong>
+            <span id="languages">{{ languages(review.languages) }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Language difficulties experienced</strong><br />
+            <span id="difficulties">{{ review.difficulties }}</span></p>
+        <p fxFlexFill>
+            <strong>Sectors:</strong><br />
+            <span [innerText]="sectors(review.sectors, review.sectorOther)" id="sectors"></span></p>
+        <p fxFlexFill>
+            <strong>Safety score during PE experience: </strong>
+            <span id="safety">{{ review.safety }}</span>/5
+        </p>
+        <p fxFlexFill>
+            <strong>Responsiveness of the organization: </strong>
+            <span id="responsiveness">{{ review.responsiveness }}</span>/5</p>
+        <p fxFlexFill>
+            <strong>Cost of PE: </strong>
+            $<span id="cost">{{ review.cost }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Stipend paid by the organization: </strong>
+            $<span id="stipend">{{ review.stipend }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Duration of the PE: </strong>
+            <span id="duration">{{ review.duration }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Work done with organization</strong><br />
+            <span id="workDone">{{ review.workDone }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Typical day while on PE</strong><br />
+            <span id="typicalDay">{{ review.typicalDay }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Organization's strengths and weaknesses</strong><br />
+            <span id="evaluation">{{ review.evaluation }}</span>
+        </p>
+        <p fxFlexFill>
+            <strong>Other things to share with students who may work with the organization</strong><br />
+            <span id="other">{{ review.other }}</span>
+        </p>
+        <p fxFlexFill>
+            <mat-divider fxFlexFill></mat-divider>
+        </p>
+    </div>
+</mat-dialog-content>

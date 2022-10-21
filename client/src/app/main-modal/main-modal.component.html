@@ -5,18 +5,15 @@
 
 <ng-container>
 <ng-container *ngIf="organizationView">
-  <h4 class="mat-dialog-title primary">
-    Organization Information
-    <span fxFlex="1 1 auto"></span>
-    <span *ngIf="disableControl && !!organization.controls.created.value">
-      Created on: {{ formatDate(organization.controls.created.value) }}
-    </span>
-  </h4>
-
   <app-organization data="data"></app-organization>
 </ng-container>
 <ng-container *ngIf="!organizationView">
-  <app-review data="data"></app-review>
+  <ng-container *ngIf="mode == Mode.READONLY">
+    <app-reviews data="data"></app-reviews>
+  </ng-container>
+  <ng-container *ngIf="mode != Mode.READONLY">
+    <app-review data="data"></app-review>
+  </ng-container>
 </ng-container>
 
   <mat-dialog-actions fxLayout="row" style="padding-right: 100px">
@@ -25,8 +22,8 @@
     <!-- <button mat-button class="warn" *ngIf="isEditOrganization" (click)="closeEditOrganization()"> Cancel</button> -->
     <span fxFlex="1 1 auto"></span>
     <!-- <button mat-button class="save" *ngIf="!isEditOrganization" (click)="saveOrganization()">Create</button> -->
-    <button mat-button class="warn" mat-dialog-close>Cancel</button>
-    <button mat-button style="width: auto" (click)="segue()" *ngIf="!isEditOrganization">{{ orgReviewBtnText }} <mat-icon>navigate_next</mat-icon></button>
-    <!-- <span fxFlex="1 1 auto"></span> -->
+    <button mat-button style="width: auto" (click)="segue()" *ngIf="organizationView && mode != Mode.EDIT">{{ mode == Mode.READONLY ? 'View Reviews for This Organization' : 'Add Review for This Organization' }}<mat-icon>navigate_next</mat-icon></button>
+    <button mat-button style="width: auto" (click)="segue()" *ngIf="!organizationView && mode == Mode.READONLY"><mat-icon>navigate_before</mat-icon> Organization Information</button>
+    <button mat-button class="warn" mat-dialog-close>Close</button>
   </mat-dialog-actions>
 </ng-container>

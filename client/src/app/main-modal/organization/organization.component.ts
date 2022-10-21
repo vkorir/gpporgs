@@ -43,7 +43,7 @@ export class OrganizationComponent implements OnInit {
     this.countries = this.appService.countries.slice();
     this.isAdmin = this.appService.user.getValue().isAdmin;
     this.mode = this.data.mode;
-    this.organization = this.buildForm(new Organization(this.data.organization), this.mode == Mode.VIEW, this.validationSchema) as FormGroup;
+    this.organization = this.buildForm(new Organization(this.data.organization), this.mode != Mode.EDIT, this.validationSchema) as FormGroup;
   }
 
   contacts(): FormGroup[] {

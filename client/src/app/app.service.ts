@@ -76,11 +76,11 @@ export class AppService {
     });
   }
 
-  formatDate(dateStr: string): string {
-    if (!dateStr) {
+  formatDate(dateString: string): string {
+    if (!dateString) {
       return '-';
     }
-    const date = new Date(dateStr);
+    const date = new Date(dateString);
     const formatNum = value => { return value < 10 ? `0${value}` : value; }
     let month = formatNum(date.getMonth() + 1);
     const day = formatNum(date.getDate());

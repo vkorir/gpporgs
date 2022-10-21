@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { AppService } from "src/app/app.service";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
-import { Filter, Organization } from "src/app/models";
+import { Filter, Mode, Organization, Sector, Type } from "src/app/models";
 import { MainModalComponent } from "../main-modal/main-modal.component";
 import { applyFilterToOrg } from "../util";
 
@@ -11,6 +11,7 @@ import { applyFilterToOrg } from "../util";
   styleUrls: ["./table.component.scss"],
 })
 export class TableComponent implements OnInit {
+
   displayedColumns: string[] = ['name', 'type', 'location', 'sectors'];
   dataSource: MatTableDataSource<Organization>;
   organizations: Organization[] = [];
@@ -44,19 +45,19 @@ export class TableComponent implements OnInit {
 
   ngOnInit() {}
 
-  type(org: Organization): string {
-    if (org.type.id == this.appService.types.length) {
-      return org.typeOther;
+  type(type: Type, typeOther: string): string {
+    if (type.id == this.appService.types.length) {
+      return typeOther;
     }
-    return org.type.value;
+    return type.value;
   }
 
-  sectors(org: Organization): string {
-    const sectors = org.sectors.map(sector => sector.value);
-    if (!!org.sectorOther) {
-      sectors.push(org.sectorOther);
+  sectors(sectors: Sector[], sectorOther: string): string {
+    const sectorVals = sectors.map(sec => sec.value);
+    if (!!sectorOther) {
+      sectorVals.push(sectorOther);
     }
-    return sectors.join("\n");
+    return sectorVals.join("\n");
   }
 
   private applyFilter(): void {
@@ -68,16 +69,16 @@ export class TableComponent implements OnInit {
     this.isLoading = false;
   }
 
-  openDetailsModal(id: number) {
+  openOrgReviewsModal(id: number) {
     // tslint:disable-next-line:max-line-length
-    const organization = '{ id name description region { id value } phone email website affiliations { id value } type { id value } typeOther sectors { id value } sectorOther approved contacts { id name role email phone } address { id street city state zip country { code value } } created }';
+    const orgInfo = '{ id name description region { id value } phone email website affiliations { id value } type { id value } typeOther sectors { id value } sectorOther approved contacts { id name role email phone } address { id street city state zip country { code value } } created }';
     // tslint:disable-next-line:max-line-length
-    const review = '{ id created region { id value } languages { code value } address { id street city state zip country { code value } } sectors { id value } sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewer { id firstName email } anonymous }';
-    const query = `{ organization(id: ${id}) ${organization} reviews (orgId: ${id}) ${review} }`;
-    this.appService.queryService(query).subscribe((data) => {
+    const revInfo = '{ id created region { id value } languages { code value } address { id street city state zip country { code value } } sectors { id value } sectorOther cost stipend workDone evaluation typicalDay difficulties safety responsiveness duration other reviewer { id firstName email } anonymous }';
+    const query = `{ organization(id: ${id}) ${orgInfo} reviews(orgId: ${id}) ${revInfo} }`;
+    this.appService.queryService(query).subscribe(data => {
       this.dialog.open(MainModalComponent, {
         panelClass: "mat-dialog--md",
-        data: { ...data, disableControl: true },
+        data: { ...data, mode: Mode.READONLY },
       });
     });
   }
