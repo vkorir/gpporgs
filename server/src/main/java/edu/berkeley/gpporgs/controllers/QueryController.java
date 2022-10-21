@@ -1,5 +1,8 @@
 package edu.berkeley.gpporgs.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -109,7 +112,16 @@ public class QueryController {
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
     public Iterable<Review> reviews(@Argument long orgId) {
-        return reviewRepository.findAllByOrganizationIdOrderByCreatedDesc(orgId);
+        List<Review> reviews = new ArrayList<>();
+        User currentUser = currentUser();
+        for (Review review : reviewRepository.findAllByOrganizationIdOrderByCreatedDesc(orgId)) {
+            if (!currentUser.getIsAdmin() && currentUser.getId() != review.getReviewer().getId() && review.getAnonymous()) {
+                // hide reviewer if current user is not admin nor the reviewer.
+                review.setReviewer(null);
+            }
+            reviews.add(review);
+        }
+        return reviews;
     }
     
     // Publicly accessible without authentication
