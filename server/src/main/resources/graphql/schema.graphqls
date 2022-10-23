@@ -68,20 +68,20 @@ type OrganizationInfo {
 }
 input OrganizationInput {
 	id: Int!
-	name: String!
+	name: String
 	description: String
-	address: AddressInput!
+	address: AddressInput
 	phone: String
 	email: String
 	website: String
-	affiliations: [AffiliationInput!]
-	type: TypeInput!
+	affiliations: [AffiliationInput]
+	type: TypeInput
 	typeOther: String
-	region: RegionInput!
-	sectors: [SectorInput!]
+	region: RegionInput
+	sectors: [SectorInput]
 	sectorOther: String
 	approved: Boolean
-	contacts: [ContactInput!]
+	contacts: [ContactInput]
 }
 
 type ReviewInfo {
@@ -107,11 +107,11 @@ type ReviewInfo {
 }
 input ReviewInput {
 	id: Int!
-	address: AddressInput!
-	region: RegionInput!
-	languages: [LanguageInput!]
+	address: AddressInput
+	region: RegionInput
+	languages: [LanguageInput]
 	difficulties: String
-	sectors: [SectorInput!]
+	sectors: [SectorInput]
 	sectorOther: String
 	stipend: Int
 	cost: Int
@@ -123,7 +123,7 @@ input ReviewInput {
 	safety: Int
 	responsiveness: Int
 	anonymous: Boolean
-	reviewer: UserInput!
+	reviewer: UserInput
 }
 
 type AddressInfo {
@@ -140,7 +140,7 @@ input AddressInput {
     city: String
     state: String
     zip: String
-    country: CountryInput!
+    country: CountryInput
 }
 
 type ContactInfo {
@@ -152,7 +152,7 @@ type ContactInfo {
 }
 input ContactInput {
     id: Int!
-    name: String!
+    name: String
     role: String
     email: String
     phone: String
