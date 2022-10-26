@@ -187,7 +187,7 @@ export enum Sort {
 }
 
 export enum Mode {
-	EDIT, VIEW, READONLY
+	CREATE, EDIT, VIEW
 }
 
 export enum View {

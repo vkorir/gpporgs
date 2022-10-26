@@ -42,11 +42,11 @@ export class LookUpComponent implements OnInit {
     const orgContacts = 'contacts { id name role phone email }';
     const query = `{ organization(id: ${id}) { ${orgInfo} ${orgAddress} ${orgContacts} }}`;
     this.appService.queryService(query).subscribe(({ organization }) => {
-      this.openAddReviewModal(organization, Mode.VIEW);
+      this.openAddReviewModal(organization, Mode.EDIT);
     });
   }
 
-  openAddReviewModal(organization: any = {}, mode: Mode = Mode.EDIT) {
+  openAddReviewModal(organization: any = {}, mode: Mode = Mode.CREATE) {
     this.dialogRef.close();
     this.dialog.open(MainModalComponent, {
       panelClass: "mat-dialog--md",

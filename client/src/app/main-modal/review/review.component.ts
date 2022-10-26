@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -28,6 +28,13 @@ export class ReviewComponent implements OnInit, OnDestroy {
   isAdmin: boolean;
   mode: Mode;
   Mode = Mode;
+
+  validationSchema = {
+    address: { country: [Validators.required] },
+    region: [Validators.required],
+    sectors: [Validators.required],
+    reviewer: [Validators.required]
+  }
 
   @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;

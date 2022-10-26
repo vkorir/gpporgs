@@ -1,7 +1,7 @@
 <h2 class="mat-dialog-title primary">
     Organization Information
     <span fxFlex="1 1 auto"></span>
-    <span *ngIf="disableControl && !!organization.controls.created.value">
+    <span ng-show="organization.controls.created.value">
       Created on: {{ formatDate(organization.controls.created.value) }}
     </span>
   </h2>
@@ -24,9 +24,9 @@
           <mat-label>Website</mat-label>
           <input matInput formControlName="website" />
         </mat-form-field>
-        <mat-form-field fxFlex appearance="outline" required>
+        <mat-form-field fxFlex appearance="outline">
           <mat-label>Region</mat-label>
-          <mat-select formControlName="region" [compareWith]="compareId">
+          <mat-select formControlName="region" [compareWith]="compare" required>
             <mat-option *ngFor="let region of regions" [value]="region">
               {{ region.value }}
             </mat-option>
@@ -52,7 +52,7 @@
         </mat-form-field>
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Country</mat-label>
-          <mat-select formControlName="country" [compareWith]="compareCode" required>
+          <mat-select formControlName="country" [compareWith]="compare" required>
             <mat-option *ngFor="let country of countries" [value]="country">
               {{ country.value }}
             </mat-option>
@@ -61,61 +61,73 @@
     </div>
     <p fxFlexFill>
         <mat-form-field appearance="legacy" fxFlexFill>
-            <textarea matInput formControlName="description" placeholder="{{ mode == Mode.EDIT ? 'Write about your organization' : 'Organization description'}}" rows="4"></textarea>
+            <textarea matInput formControlName="description" placeholder="Organization description" rows="4"></textarea>
         </mat-form-field>
     </p>
-    <p fxFlexFill>Affiliations: <i>{{ mode == Mode.EDIT ? 'Check all that may apply' : '' }}</i></p>
-    <p fxLayout="row wrap" fxFlexFill>
-        <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
+
+    <ng-container [ngSwitch]="mode">
+      <p *ngSwitchCase="Mode.VIEW" fxFlexFill>Affiliations: {{values(organization.controls.affiliations.value)}}</p>
+      <ng-container *ngSwitchCase="Mode.EDIT">
+        <p fxFlexFill>Affiliations: <i>Check all that may apply</i></p>
+        <div fxLayout="row wrap" fxFlexFill>
+          <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
             *ngFor="let affiliation of affiliations"
-            [checked]="contains(organization.controls.affiliations.value, affiliation.id)"
-            [hidden]="mode != Mode.EDIT && !contains(organization.controls.affiliations.value, affiliation.id)"
-            [disabled]="mode != Mode.EDIT"
-            (change)="update(organization.controls.affiliation, affiliation)">
+            [checked]="affiliation.checked"
+            (change)="onCheckboxChange(organization.controls.affiliations, affiliation)">
             {{ affiliation.value }}
-        </mat-checkbox>
-    </p>
-    <p fxFlexFill>Type:<i>{{ mode == Mode.EDIT ? ' Select one' : '' }}</i></p>
-    <div>
-        <mat-radio-group fxLayout="row wrap" (change)="radioChange($event)">
-            <ng-container *ngIf="mode == Mode.EDIT">
-                <ng-container *ngFor="let type of types">
-                    <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
-                        [checked]="organization.controls.type.value.id == type.id"
-                        [value]="type">
-                        {{ type.value }}
-                    </mat-radio-button>
-                </ng-container>
+          </mat-checkbox>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <br>
+
+    <ng-container [ngSwitch]="mode">
+      <p *ngSwitchCase="Mode.VIEW" fxFlexFill>Type: {{values([organization.controls.type.value], organization.controls.typeOther.value)}}</p>
+      <ng-container *ngSwitchCase="Mode.EDIT">
+        <p fxFlexFill>Type: <i>Select one</i></p>
+        <div>
+          <mat-radio-group fxLayout="row wrap" (change)="onRadioChange($event)">
+            <ng-container *ngFor="let type of types">
+              <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
+                [value]="type"
+                [checked]="type.checked">
+                {{ type.value }}
+              </mat-radio-button>
             </ng-container>
-            <ng-container *ngIf="mode != Mode.EDIT">
-                <mat-radio-button fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary" [value]="organization.controls.type.value" disabled>
-                    {{ organization.controls.type.value.value }}
-                </mat-radio-button>
-            </ng-container>
-        </mat-radio-group>
-    </div>
-    <p fxFlexFill>
-        <mat-form-field fxFlex="60" *ngIf="organization.controls.type.value.value === this.types.length">
-            <input matInput placeholder="Describe here" formControlName="typeOther" />
-        </mat-form-field>
-    </p>
-    <p fxFlexFill>Sectors:<i>{{ mode == Mode.EDIT ? 'Check all that may apply' : '' }}</i></p>
-    <p fxLayout="row wrap" fxFlexFill>
-        <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
-            *ngFor="let sector of sectors"
-            [checked]="contains(organization.controls.sectors.value, sector.id)"
-            [hidden]="mode != Mode.EDIT && !contains(organization.controls.sectors.value, sector.id)"
-            [disabled]="mode != Mode.EDIT"
-            (change)="update(organization.controls.sectors, value)">
-            {{ sector.value }}
-        </mat-checkbox>
-        <mat-form-field fxFlex="60" *ngIf="">
-            <input matInput placeholder="Describe here" formControlName="sectorOther" />
-        </mat-form-field>
-    </p>
+          </mat-radio-group>
+        </div>
+        <div *ngIf="typeOther" fxFlexFill>
+          <mat-form-field fxFlex="60"><input matInput placeholder="Describe here" formControlName="typeOther" /></mat-form-field>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <br>
+
+    <ng-container [ngSwitch]="mode">
+      <p *ngSwitchCase="Mode.VIEW" fxFlexFill>Sectors: {{values(organization.controls.sectors.value)}}</p>
+      <ng-container *ngSwitchCase="Mode.EDIT">
+        <p fxFlexFill>Sectors: <i>Check all that may apply</i></p>
+        <p fxLayout="row wrap" fxFlexFill>
+          <mat-checkbox fxFlex.lt-md="100" fxFlex.gt-sm="50" color="primary"
+              *ngFor="let sector of sectors"
+              [checked]="sector.checked"
+              (change)="onSectorChange(organization.controls.sectors, sector)">
+              {{ sector.value }}
+          </mat-checkbox>
+        </p>
+        <div *ngIf="sectorOther" fxFlexFill>
+          <mat-form-field fxFlex="60"><input matInput placeholder="Describe here" formControlName="sectorOther" /></mat-form-field>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <br>
+
     <h4 class="mat-dialog-title primary">Contact Information</h4>
     <div fxLayout="row wrap">
-        <ng-container *ngFor="let contact of contacts()" [formGroup]="contact">
+        <ng-container *ngFor="let contact of organization.controls.contacts.controls" [formGroup]="contact">
             <mat-form-field appearance="legacy" fxFlex="25">
                 <mat-label>Name</mat-label>
                 <input matInput formControlName="name" />
@@ -138,10 +150,3 @@
 </mat-dialog-content>
 
 <mat-divider></mat-divider>
-
-<!-- <mat-dialog-actions fxLayout="row" style="padding-right: 100px">
-    <span fxFlex="1 1 auto"></span>
-    <button mat-button class="edit-btn" *ngIf="mode == Mode.VIEW" (click)="edit()">Edit</button>
-    <button mat-button class="save" *ngIf="mode == Mode.EDIT" (click)="save()">Save</button>
-    <span fxFlex="1 1 auto"></span>
-</mat-dialog-actions> -->

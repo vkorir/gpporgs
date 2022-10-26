@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="center center">
-  <h3 [hidden]="initial == Mode.READONLY">Add Your Practice Experience</h3>
-  <h3 [hidden]="initial != Mode.READONLY">Organization Info & Reviews</h3>
+  <h3 [hidden]="initial == Mode.CREATE || initial.mode == Mode.EDIT">Add Your Practice Experience</h3>
+  <h3 [hidden]="initial == Mode.VIEW">Organization Info & Reviews</h3>
 </div>
 
 
@@ -8,10 +8,10 @@
   <app-organization data="data" [orgAction]="orgAction"></app-organization>
 </div>
 <div [hidden]="view == View.ORG">
-  <div [hidden]="initial == Mode.READONLY">
+  <div [hidden]="initial == Mode.CREATE || initial.mode == Mode.EDIT">
     <app-review data="data" [revAction]="revAction"></app-review>
   </div>
-  <div [hidden]="initial != Mode.READONLY">
+  <div [hidden]="initial == Mode.VIEW">
     <app-reviews data="data"></app-reviews>
   </div>
 </div>
@@ -19,9 +19,9 @@
 <mat-dialog-actions fxLayout="row" style="padding-right: 100px">
   <span fxFlex="1 1 auto"></span>
   <button mat-button *ngIf="canEditOrg()" class="edit-btn" (click)="onOrgAction(Mode.EDIT)">Edit</button>
-  <button mat-button *ngIf="canSaveOrg()" class="save" (click)="onOrgAction(initial)">Save</button>
+  <button mat-button *ngIf="canSaveOrg()" class="save" (click)="onOrgAction(Mode.VIEW)">Save</button>
   <button mat-button *ngIf="canAddRev()" style="width: auto" (click)="onRevAction(Mode.EDIT)">Add Review for This Organization <mat-icon>navigate_next</mat-icon></button>
-  <button mat-button *ngIf="canSaveRev()" class="save" (click)="onRevAction(initial)">Save</button>
+  <button mat-button *ngIf="canSaveRev()" class="save" (click)="onRevAction(Mode.VIEW)">Save</button>
   <button mat-button *ngIf="canViewRevs()" style="width: auto" (click)="segue(View.REV)">View Reviews for This Organization <mat-icon>navigate_next</mat-icon></button>
   <button mat-button *ngIf="canViewOrgInfo()" style="width: auto" (click)="segue(View.ORG)"><mat-icon>navigate_before</mat-icon> Organization Information</button>
   <button mat-button class="warn" mat-dialog-close>Close</button>

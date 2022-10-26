@@ -78,7 +78,7 @@ export class TableComponent implements OnInit {
     this.appService.queryService(query).subscribe(data => {
       this.dialog.open(MainModalComponent, {
         panelClass: "mat-dialog--md",
-        data: { ...data, mode: Mode.READONLY },
+        data: { ...data, mode: Mode.VIEW },
       });
     });
   }

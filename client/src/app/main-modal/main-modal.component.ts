@@ -21,7 +21,7 @@ export class MainModalComponent implements OnInit, OnDestroy, AfterViewInit {
   Mode = Mode;
   
   view: View = View.ORG;
-  initial: Mode = Mode.VIEW;
+  initial: Mode;
   mode: Mode;
 
   orgAction: Subject<Mode> = new Subject();
@@ -33,10 +33,8 @@ export class MainModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.subscription = this.appService.user.subscribe(user => this.isAdmin = user.isAdmin);
-    this.mode = this.data.mode;
-    if (this.mode == Mode.READONLY) {
-      this.initial = this.mode;
-    }
+    this.initial = this.data.mode;
+    this.mode = this.initial == Mode.CREATE ? Mode.EDIT : this.initial;
   }
 
   ngAfterViewInit() {
@@ -48,15 +46,15 @@ export class MainModalComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   canEditOrg(): boolean {
-    return this.isAdmin && this.view == View.ORG && this.mode != Mode.EDIT;
+    return (this.isAdmin || this.initial == Mode.CREATE) && this.view == View.ORG && this.mode == Mode.VIEW;
   }
 
   canSaveOrg(): boolean {
-    return this.isAdmin && this.view == View.ORG && this.mode == Mode.EDIT;
+    return this.view == View.ORG && this.mode == Mode.EDIT;
   }
 
   canAddRev(): boolean {
-    return this.view == View.ORG && this.mode == Mode.VIEW;
+    return this.view == View.ORG && this.mode == Mode.VIEW && (this.initial == Mode.CREATE || this.initial == Mode.EDIT);
   }
 
   canSaveRev(): boolean {
@@ -64,11 +62,11 @@ export class MainModalComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   canViewRevs(): boolean {
-    return this.view == View.ORG && this.mode == Mode.READONLY;
+    return this.view == View.ORG && this.mode == Mode.VIEW && this.initial == Mode.VIEW;
   }
 
   canViewOrgInfo(): boolean {
-    return this.view == View.REV && this.mode != Mode.EDIT;
+    return this.view == View.REV && this.mode == Mode.VIEW;
   }
 
   onOrgAction(mode: Mode): void {

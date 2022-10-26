@@ -2,11 +2,11 @@
   padding: 8px 20px;
 }
 
-.mat-select-disabled {
-  ::ng-deep .mat-select-value {
-    color: black /*!important*/;
-  }
-}
+// .mat-select-disabled {
+//   ::ng-deep .mat-select-value {
+//     color: black /*!important*/;
+//   }
+// }
 
 ::ng-deep .mat-checkbox-checked .mat-checkbox-background, .mat-checkbox-indeterminate .mat-checkbox-background {
   background-color: #084e83 !important;

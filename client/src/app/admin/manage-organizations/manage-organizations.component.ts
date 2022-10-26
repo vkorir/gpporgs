@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
-import { AppService } from "../../app.service";
+import { AppService } from "src/app/app.service";
 import { FormControl } from "@angular/forms";
 import { Organization } from "src/app/models";
 
@@ -42,7 +42,7 @@ export class ManageOrganizationsComponent implements OnInit {
     organization.approved = approved;
     org.approved = approved;
     delete organization['created'];
-    const mutation = `mutation { updateOrganization(org: ${this.appService.queryFy(organization)}) { id name approved } }`;
+    const mutation = `mutation { updateOrganization(org: ${this.appService.queryFy(organization)}) { id approved } }`;
     this.appService.mutationService(mutation).subscribe(({ updateOrganization }) => {
       if (updateOrganization && updateOrganization.id) {
         const organizations = this.organizations.map(org => new Organization(org));
@@ -54,9 +54,9 @@ export class ManageOrganizationsComponent implements OnInit {
         // may need to update behaviorsubject.
         this.applyFilter(organizations);
         if (approved) {
-          this.appService.openSnackBar(`${updateOrganization.name} is now approved.`);
+          this.appService.openSnackBar(`${org.name} is now approved.`);
         } else {
-          this.appService.openSnackBar(`${updateOrganization.name} is now marked as unapproved.`);
+          this.appService.openSnackBar(`${org.name} is now marked as unapproved.`);
         }
       }
     });
