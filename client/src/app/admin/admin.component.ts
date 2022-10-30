@@ -6,6 +6,8 @@ import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { ManageOrganizationsComponent } from './manage-organizations/manage-organizations.component';
 import { Organization, User } from '../models';
 
+import * as jsonFile from 'src/app/organizations.json'
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -35,7 +37,7 @@ export class AdminComponent implements OnInit {
       icon: 'list',
       description: 'View and filter all the GPPORGS organizations',
       isLoading: false,
-    },
+    }
   ];
 
   constructor(private appService: AppService, private dialog: MatDialog) {}
@@ -74,4 +76,30 @@ export class AdminComponent implements OnInit {
       });
     });
   }
+
+  // loadOrgs() {
+  //   const orgs = (jsonFile as any).default as any[];
+  //   let mutation;
+  //   orgs.forEach(org => {
+  //     org['approved'] = org['approved'] == 1;
+  //     const revs = org['reviews'];
+  //     delete org['reviews'];
+  //     mutation = `mutation { createOrganization(org: ${this.appService.queryFy(org)}) { id } }`
+  //     this.appService.mutationService(mutation).subscribe(data => {
+  //       if (!!data) {
+  //         revs.forEach(rev => {
+  //           rev['anonymous'] = rev['anonymous'] == 1;
+  //           mutation = `mutation { createReview(orgId:${data.createOrganization.id}, rev: ${this.appService.queryFy(rev)}) { id } }`
+  //           this.appService.mutationService(mutation).subscribe(data => {
+  //             if (!data) {
+  //               console.log(mutation);
+  //             }
+  //           });
+  //         });
+  //       } else {
+  //         console.log(mutation);
+  //       }
+  //     });
+  //   });
+  // }
 }
