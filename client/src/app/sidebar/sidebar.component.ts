@@ -101,8 +101,9 @@ constructor(private appService: AppService, private dialog: MatDialog, private f
   }
 
   openLookUpDialog(): void {
-    this.dialog.open(LookUpComponent, {
-      panelClass: 'mat-dialog--sm'
-    });
+    this.appService.openSnackBar('Sorry, database is currently only readonly.')
+    // this.dialog.open(LookUpComponent, {
+    //   panelClass: 'mat-dialog--sm'
+    // });
   }
 }
